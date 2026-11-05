@@ -290,7 +290,6 @@ html[dir="ltr"] .search{flex-direction:row}
 .about-dlg{margin:auto;max-width:min(560px,94vw);max-height:86vh;overflow:auto}
 .about-dlg h2{margin:0 0 12px;font-size:1.15rem;color:var(--heading);text-align:center}
 .about-body p{text-align:justify}
-.about-body .about-sub{margin:18px 0 8px;font-size:1.02rem;color:var(--heading)}
 .about-dlg .save-actions{position:sticky;bottom:-18px;background:var(--night2);padding:10px 0 4px;margin-top:6px}
 .about-body .about-dua{text-align:center;font-weight:700;color:var(--heading);font-size:1.15rem;margin:16px 0 6px}
 .about-body .about-dua-tr{text-align:center;margin:0 0 4px}
@@ -584,4 +583,83 @@ html.hadith-open{overflow:hidden}
   .date::after{display:none}
   .reciters{font-size:.8rem}
   .foot-actions .btn,.foot-actions .donate-btn,.foot-actions .save-btn,.foot-actions .city-list-btn{min-width:104px;padding:0 10px;font-size:.84rem}
+}
+
+
+/* ===== header v2: slim icon buttons in the corners + a soft mosque skyline behind the logo ===== */
+.top{--logo-h:clamp(112px,16vw,136px);--top-pad:4px;
+  display:flex;justify-content:center;align-items:flex-start;position:relative;isolation:isolate;overflow:hidden;
+  padding:var(--top-pad) 0 0;min-height:calc(var(--top-pad) + var(--logo-h))}
+.top .logo-wrap{position:relative;z-index:1}
+.top .logo-img{height:var(--logo-h)}
+.top .top-side{position:absolute;top:8px;z-index:2;width:auto}
+.top .top-start{inset-inline-start:2px}
+.top .top-end{inset-inline-end:2px}
+/* the two selects become round icon buttons; they still are the same <select>s, so the scripts keep working */
+.top .top-side .lang-select{-webkit-appearance:none;appearance:none;width:42px;height:42px;min-width:0;max-width:none;padding:0;
+  border-radius:50%;border:1px solid var(--gold);color:transparent;font-size:16px;text-indent:-9999px;overflow:hidden;
+  background-color:var(--panel-strong);background-repeat:no-repeat;background-position:center;background-size:22px 22px;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);transition:filter .15s,transform .15s}
+.top .top-side .lang-select:hover{filter:brightness(1.15)}
+.top .top-side .lang-select:active{transform:scale(.94)}
+.top .top-side .lang-select option{text-indent:0;color:#13303a;background:#fff}
+#langSelect{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f0d58a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18'/%3E%3C/svg%3E")}
+#themeSelect{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f0d58a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z'/%3E%3C/svg%3E")}
+:root[data-theme="light"] #langSelect{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a6a1f' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18'/%3E%3C/svg%3E")}
+:root[data-theme="light"] #themeSelect{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a6a1f' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/%3E%3C/svg%3E")}
+/* skyline: a gold silhouette, faint on purpose so the logo stays the star */
+.top::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:50%;
+  height:calc(var(--logo-h) * 1.2);aspect-ratio:640/190;top:calc(var(--top-pad) - var(--logo-h) * .18 + 24px);
+  transform:translateX(-50%);background:var(--sky-c,#f0d58a);opacity:.2;
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 190'%3E%3Cdefs%3E%3ClinearGradient id='g' gradientUnits='userSpaceOnUse' x1='0' y1='0' x2='0' y2='190'%3E%3Cstop offset='0' stop-color='%23fff'/%3E%3Cstop offset='.62' stop-color='%23fff' stop-opacity='.85'/%3E%3Cstop offset='1' stop-color='%23fff' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23g)'%3E%3Cpath d='M236 138C236 102 270 82 320 52C370 82 404 102 404 138Z'/%3E%3Crect x='317.5' y='26' width='5' height='28'/%3E%3Ccircle cx='320' cy='22' r='6'/%3E%3Crect x='244' y='138' width='152' height='60'/%3E%3Cpath d='M150 164C150 142 172 130 190 116C208 130 230 142 230 164Z'/%3E%3Crect x='186.5' y='98' width='7' height='20'/%3E%3Ccircle cx='190' cy='95' r='4'/%3E%3Cpath d='M410 164C410 142 432 130 450 116C468 130 490 142 490 164Z'/%3E%3Crect x='446.5' y='98' width='7' height='20'/%3E%3Ccircle cx='450' cy='95' r='4'/%3E%3Crect x='148' y='164' width='344' height='40'/%3E%3Cg id='m'%3E%3Cpath d='M84 62L96 20L108 62Z'/%3E%3Crect x='94.5' y='8' width='3' height='14'/%3E%3Crect x='86' y='62' width='20' height='8'/%3E%3Crect x='80' y='70' width='32' height='7'/%3E%3Crect x='88' y='77' width='16' height='40'/%3E%3Crect x='80' y='117' width='32' height='6'/%3E%3Crect x='86' y='123' width='20' height='80'/%3E%3C/g%3E%3Cuse href='%23m' transform='translate(448 0)'/%3E%3Crect x='108' y='170' width='42' height='30'/%3E%3Crect x='490' y='170' width='42' height='30'/%3E%3Cpath d='M10 196C10 176 30 168 48 154C66 168 86 176 86 196Z'/%3E%3Cpath d='M554 196C554 176 574 168 592 154C610 168 630 176 630 196Z'/%3E%3C/g%3E%3C/svg%3E"),linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:source-in;mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 190'%3E%3Cdefs%3E%3ClinearGradient id='g' gradientUnits='userSpaceOnUse' x1='0' y1='0' x2='0' y2='190'%3E%3Cstop offset='0' stop-color='%23fff'/%3E%3Cstop offset='.62' stop-color='%23fff' stop-opacity='.85'/%3E%3Cstop offset='1' stop-color='%23fff' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23g)'%3E%3Cpath d='M236 138C236 102 270 82 320 52C370 82 404 102 404 138Z'/%3E%3Crect x='317.5' y='26' width='5' height='28'/%3E%3Ccircle cx='320' cy='22' r='6'/%3E%3Crect x='244' y='138' width='152' height='60'/%3E%3Cpath d='M150 164C150 142 172 130 190 116C208 130 230 142 230 164Z'/%3E%3Crect x='186.5' y='98' width='7' height='20'/%3E%3Ccircle cx='190' cy='95' r='4'/%3E%3Cpath d='M410 164C410 142 432 130 450 116C468 130 490 142 490 164Z'/%3E%3Crect x='446.5' y='98' width='7' height='20'/%3E%3Ccircle cx='450' cy='95' r='4'/%3E%3Crect x='148' y='164' width='344' height='40'/%3E%3Cg id='m'%3E%3Cpath d='M84 62L96 20L108 62Z'/%3E%3Crect x='94.5' y='8' width='3' height='14'/%3E%3Crect x='86' y='62' width='20' height='8'/%3E%3Crect x='80' y='70' width='32' height='7'/%3E%3Crect x='88' y='77' width='16' height='40'/%3E%3Crect x='80' y='117' width='32' height='6'/%3E%3Crect x='86' y='123' width='20' height='80'/%3E%3C/g%3E%3Cuse href='%23m' transform='translate(448 0)'/%3E%3Crect x='108' y='170' width='42' height='30'/%3E%3Crect x='490' y='170' width='42' height='30'/%3E%3Cpath d='M10 196C10 176 30 168 48 154C66 168 86 176 86 196Z'/%3E%3Cpath d='M554 196C554 176 574 168 592 154C610 168 630 176 630 196Z'/%3E%3C/g%3E%3C/svg%3E"),linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-size:100% 100%;mask-repeat:no-repeat;mask-composite:intersect}
+:root[data-theme="light"] .top::before{--sky-c:#b8862a;opacity:.26}
+.top::after{width:min(360px,80%)}
+@media(max-width:639px){
+  .top{--logo-h:clamp(84px,25vw,104px);--top-pad:4px;min-height:calc(var(--top-pad) + var(--logo-h))}
+  .top::before{top:calc(var(--top-pad) - var(--logo-h) * .18 + 14px)}
+  .top .top-side{top:4px}
+  .top .top-side .lang-select{width:38px;height:38px;background-size:20px 20px}
+  .top .top-side .lang-select{min-width:0}
+}
+
+
+/* ===== "adhan is near": replaces the hadith ticker for the last 15 minutes before an adhan ===== */
+.hadith.is-alert .hadith-btn{display:none}
+.adhan-alert{display:flex;align-items:center;gap:10px;width:100%;height:46px;padding:0 14px;border-radius:var(--r);border:1px solid #8be8ad;
+  background:linear-gradient(135deg,#0d7a3b,#22a95a);color:#fff;font:inherit;text-align:start;cursor:pointer;
+  box-shadow:0 2px 12px rgba(34,169,90,.35)}
+.adhan-alert[hidden]{display:none}
+.adhan-alert:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.aa-ico{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);animation:aa-pulse 2s ease-in-out infinite}
+.aa-text{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px;overflow:hidden;white-space:nowrap}
+.aa-name{font-size:1.02rem;font-weight:800}
+.aa-title{font-size:.8rem;opacity:.85;overflow:hidden;text-overflow:ellipsis}
+.aa-time{flex:none;font:800 1.45rem/1 Vazirmatn,sans-serif;letter-spacing:.5px;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+.adhan-alert.is-now{background:linear-gradient(135deg,#0b6a33,#17924a)}
+.adhan-alert.is-now .aa-name{font-size:1.1rem}
+.hadith.is-last .adhan-alert{background:linear-gradient(135deg,#b45309,#e08a1a);border-color:#ffd08a;box-shadow:0 2px 12px rgba(224,138,26,.4)}
+.hadith.is-last .adhan-alert.is-now{background:linear-gradient(135deg,#0b6a33,#17924a);border-color:#8be8ad}
+@keyframes aa-pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,255,255,.45)}50%{transform:scale(1.07);box-shadow:0 0 0 7px rgba(255,255,255,0)}}
+@media(prefers-reduced-motion:reduce){.aa-ico{animation:none}}
+@media(max-width:639px){
+  .adhan-alert{height:40px;padding:0 10px;gap:8px}
+  .aa-ico{width:26px;height:26px}
+  .aa-name{font-size:.92rem}
+  .aa-title{font-size:.72rem}
+  .aa-time{font-size:1.2rem}
+}
+
+
+/* the manual latitude/longitude/city fields and the calculate button are not shown any more (the map, search and GPS set the place; the scripts still use the fields internally) */
+.coords{display:none}
+
+
+/* phones and tablets (one column): order is map, times and adhan, moon, save settings, calendar. The columns stop being boxes here so cards can swap places; from 980px up nothing changes. */
+@media(max-width:979px){
+  .grid>.main-col,.grid>.side{display:contents}
+  .grid>.main-col>.card:first-child{order:1}
+  .grid>.right-col{order:2}
+  .grid>.side>.card:first-child{order:3}
+  .grid>.main-col>.card[aria-labelledby="sv-h"]{order:4}
+  .grid>.side>.card:not(:first-child){order:5}
 }

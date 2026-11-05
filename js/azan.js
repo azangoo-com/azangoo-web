@@ -636,12 +636,15 @@
   /* countdown to the next adhan (fajr, dhuhr, maghrib, tomorrow's fajr) */
   var cdEl=document.getElementById("countdown");
   var COUNT=[["fajr","adhan_fajr"],["dhuhr","adhan_dhuhr"],["maghrib","adhan_maghrib"],["fajrNext","adhan_fajr_next"]];
+  /* tells the hadith bar which adhan is next, so it can show the "adhan is near" alert */
+  var alertPrev=null,alertHold=0,alertHoldKey="";
+  function emitNext(d){try{window.dispatchEvent(new CustomEvent("azan:nextadhan",{detail:d}))}catch(e){}}
   function updateCountdown(){
     if(!lastTimes||!cdEl)return;
     markNext();                                      /* highlight moves to the next adhan the moment one starts */
     /* while the adhan is playing (from its start or from the middle) the line says so;
        the moment it ends, the countdown to the next adhan comes back */
-    if(player&&!player.paused&&!player.ended){cdEl.textContent=window.AzanLang.t("adhan_now");return}
+    if(player&&!player.paused&&!player.ended){cdEl.textContent=window.AzanLang.t("adhan_now");emitNext({now:true,key:alertPrev?alertPrev.key:""});return}
     var d=new Date(Date.now()+lastOffset*3600000);
     var nowS=d.getUTCHours()*3600+d.getUTCMinutes()*60+d.getUTCSeconds();
     var prev=-1,next=null,nextS=0;
@@ -653,8 +656,13 @@
       prev=s;
       if(next===null&&s>nowS){next=x;nextS=s}
     });
-    if(!next){cdEl.textContent="";return}
+    if(!next){cdEl.textContent="";emitNext({rem:-1});return}
     var A=window.AzanLang, rem=nextS-nowS;
+    /* the target changes the moment an adhan starts: hold the "it is time" message for a few seconds */
+    if(alertPrev&&alertPrev.key!==next[0]&&alertPrev.rem<=3){alertHold=Date.now()+8000;alertHoldKey=alertPrev.key}
+    alertPrev={key:next[0],rem:rem};
+    if(Date.now()<alertHold)emitNext({now:true,key:alertHoldKey});
+    else emitNext({key:next[0],rem:rem});
     cdEl.textContent=A.t("countdown",{
       name:A.t(next[1]),
       h:A.num(Math.floor(rem/3600)),

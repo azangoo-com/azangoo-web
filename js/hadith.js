@@ -29,7 +29,7 @@
     var lang=window.AzanLang?window.AzanLang.current():"fa",i=dayIndex(),key=lang+":"+i;
     if(key===shownKey)return;
     load(lang).then(function(list){
-      if(!list||!list.length){bar.hidden=true;return}
+      if(!list||!list.length){if(!alertOn)bar.hidden=true;return}
       var h=list[i%list.length];
       shownKey=key;
       track.setAttribute("lang",lang);
@@ -39,7 +39,7 @@
       el.t.textContent=h.t||"";
       el.s.textContent=h.s||"";
       el.t.setAttribute("lang",lang);
-      bar.hidden=false;
+      if(!alertOn)bar.hidden=false;
       /* about 50 pixels a second, whatever the length of the text */
       requestAnimationFrame(function(){
         var w=track.scrollWidth||800;
@@ -66,6 +66,40 @@
     if(e.key==="Escape")closeDialog();
     else if(e.key==="Tab"){e.preventDefault();close.focus()}     /* the close button is the only thing to focus */
   });
+  /* ---- "adhan is near" alert: for the last 15 minutes before an adhan the bar shows a green strip with a live countdown ---- */
+  var NAME={fajr:"adhan_fajr",dhuhr:"adhan_dhuhr",maghrib:"adhan_maghrib",fajrNext:"adhan_fajr"},
+      LIMIT=15*60,alertOn=false,alertKey="",alertLang="";
+  var al=document.createElement("button");
+  al.type="button";al.className="adhan-alert";al.hidden=true;
+  al.innerHTML='<span class="aa-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span>'+
+    '<span class="aa-text"><b class="aa-name"></b><span class="aa-title"></span></span><time class="aa-time" dir="ltr"></time>';
+  bar.appendChild(al);
+  var aaName=al.querySelector(".aa-name"),aaTitle=al.querySelector(".aa-title"),aaTime=al.querySelector(".aa-time");
+  al.addEventListener("click",function(){if(shownKey)openDialog()});     /* the hadith is still one tap away */
+  function pad2(n){return (n<10?"0":"")+n}
+  function alertUpdate(e){
+    var d=(e&&e.detail)||{},A=window.AzanLang;
+    if(!A)return;
+    var now=!!d.now,rem=d.rem,on=now||(rem>0&&rem<=LIMIT);
+    if(!on){
+      if(alertOn){alertOn=false;al.hidden=true;bar.classList.remove("is-alert","is-last");bar.hidden=!shownKey}
+      return;
+    }
+    if(!alertOn){alertOn=true;al.hidden=false;bar.hidden=false;bar.classList.add("is-alert")}
+    var lang=A.current();
+    if(alertKey!==d.key+"|"+now||alertLang!==lang){
+      alertKey=d.key+"|"+now;alertLang=lang;
+      aaName.textContent=NAME[d.key]?A.t(NAME[d.key]):"";
+      aaTitle.textContent=now?A.t("alert_now"):A.t("alert_title");
+      al.classList.toggle("is-now",now);
+      al.setAttribute("aria-label",aaTitle.textContent+" "+aaName.textContent);
+    }
+    if(now){aaTime.textContent="";bar.classList.remove("is-last");return}
+    aaTime.textContent=A.num(pad2(Math.floor(rem/60))+":"+pad2(rem%60));
+    bar.classList.toggle("is-last",rem<=60);          /* the last minute turns amber */
+  }
+  window.addEventListener("azan:nextadhan",alertUpdate);
+  window.addEventListener("azan:langchange",function(){alertKey=""});
   window.addEventListener("azan:langchange",show);
   setInterval(show,10*60*1000);                                    /* a new day began */
   show();
