@@ -89,10 +89,11 @@
     var lang=A.current();
     if(alertKey!==d.key+"|"+now||alertLang!==lang){
       alertKey=d.key+"|"+now;alertLang=lang;
-      aaName.textContent=NAME[d.key]?A.t(NAME[d.key]):"";
-      aaTitle.textContent=now?A.t("alert_now"):A.t("alert_title");
+      var pn=NAME[d.key]?A.t(NAME[d.key]):"";
+      if(now){aaName.textContent=pn;aaTitle.textContent=A.t("alert_now")}
+      else{aaName.textContent=A.t("alert_until",{name:pn});aaTitle.textContent=""}      /* "until Maghrib adhan" */
       al.classList.toggle("is-now",now);
-      al.setAttribute("aria-label",aaTitle.textContent+" "+aaName.textContent);
+      al.setAttribute("aria-label",aaTitle.textContent?aaTitle.textContent+" "+aaName.textContent:aaName.textContent);
     }
     if(now){aaTime.textContent="";bar.classList.remove("is-last");return}
     aaTime.textContent=A.num(pad2(Math.floor(rem/60))+":"+pad2(rem%60));
