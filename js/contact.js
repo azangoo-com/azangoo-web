@@ -56,7 +56,7 @@
 })();
 
 /* Site settings that the owner may change without touching the code: data/config.json
-   { "paypalButtonId": "...", "contactEmail": "..." }: the PayPal donation button and the contact e-mail. The value written in the page stays as the fallback:
+   { "paypalButtonId": "...", "contactEmail": "..." }: the PayPal payment-link ID (paypal.com/ncp/payment/<ID>) and the contact e-mail. The value written in the page stays as the fallback:
    if the file cannot be read, the button works with it. The file is read in the background; the value is put in
    the form at the moment of the click, so the page is never delayed. */
 (function () {
@@ -74,7 +74,6 @@
   if (!form) return;
   form.addEventListener('submit', function () {
     var id = cfg && typeof cfg.paypalButtonId === 'string' ? cfg.paypalButtonId.trim() : '';
-    var input = form.querySelector('input[name="hosted_button_id"]');
-    if (id && input) input.value = id;
+    if (/^[A-Za-z0-9]+$/.test(id)) form.action = 'https://www.paypal.com/ncp/payment/' + id;
   });
 })();
