@@ -39,6 +39,9 @@
       showDate("d-j",sh.day,A.names("shamsi")[sh.month-1],sh.year);
       showDate("d-h",hj.day,A.names("hijri")[hj.month-1],hj.year);
       showDate("d-g",d.getUTCDate(),A.names("greg")[d.getUTCMonth()],d.getUTCFullYear());
+      /* the Hijri date above is only the calendar's own value: the site's lunar-month forecast (moon card) decides it in every language,
+         so let the moon card write it again (it also fills the date in right after a language change) */
+      try{if(window.MoonInfo&&window.MoonInfo.render)window.MoonInfo.render()}catch(e){}
       if(!first&&!skipNewDay&&onNewDay)onNewDay();     /* a new day began at that place: recalculate the times */
     }
   }
