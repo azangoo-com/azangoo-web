@@ -11,7 +11,7 @@
   var track=document.getElementById("hadithTrack"),open=document.getElementById("hadithOpen"),
       modal=document.getElementById("hadithModal"),close=document.getElementById("hadithClose"),
       el={n:document.getElementById("hadithN"),a:document.getElementById("hadithA"),t:document.getElementById("hadithT"),s:document.getElementById("hadithS")};
-  var cache={},shownKey="",lastFocus=null,items=[],cur=0,rotT=0,reqId=0;
+  var cache={},shownKey="",lastFocus=null,items=[],cur=0,rotT=0,reqId=0,lastSwitch=0;
   var tag=bar.querySelector(".hadith-tag"),modalT=document.getElementById("hadithModalT");
   var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   var QS=new URLSearchParams(location.search);
@@ -80,11 +80,19 @@
     el.t.textContent=it.t||"";
     el.s.textContent=it.s||"";
     el.t.setAttribute("lang",it.lang);
-    /* about 50 pixels a second, whatever the length of the text */
-    requestAnimationFrame(function(){
-      var w=track.scrollWidth||800;
-      track.style.setProperty("--hadith-dur",Math.max(20,Math.min(150,Math.round(w/50)))+"s");
-    });
+    fit();
+  }
+  /* about 50 pixels a second, whatever the length of the text. The animation is restarted every time the duration changes:
+     changing the duration of a running animation makes the browser recount which round it is in and fire another
+     "animationiteration" at once, which used to flip between the hadith and the verse many times a second. */
+  function fit(){
+    var w=track.scrollWidth;
+    if(!w)return;                     /* not on screen right now; fit() runs again when the bar is shown */
+    track.style.setProperty("--hadith-dur",Math.max(20,Math.min(150,Math.round(w/50)))+"s");
+    track.style.animation="none";
+    void track.offsetWidth;           /* reflow, so the animation really starts again from the beginning */
+    track.style.animation="";
+    lastSwitch=Date.now();
   }
   function next(){
     if(items.length<2||!modal.hidden)return;           /* never change the text under someone who is reading it */
@@ -92,7 +100,7 @@
     render();
   }
   /* the next text starts when the moving text has gone by once; with reduced motion nothing moves, so a timer is used */
-  track.addEventListener("animationiteration",function(){if(!reduce)next()});
+  track.addEventListener("animationiteration",function(){if(!reduce&&Date.now()-lastSwitch>5000)next()});
   function show(){
     var A=window.AzanLang,lang=A?A.current():"fa",dt=testDate()||new Date(),i=dayIndex(),key=lang+":"+i+":"+dt.getMonth()+"-"+dt.getDate();
     if(key===shownKey)return;
@@ -109,6 +117,7 @@
       shownKey=key;items=out;cur=0;
       render();
       if(!alertOn)bar.hidden=false;
+      fit();
       clearInterval(rotT);
       if(reduce&&items.length>1)rotT=setInterval(next,12000);
     });
@@ -148,7 +157,7 @@
     if(!A)return;
     var now=!!d.now,rem=d.rem,on=now||(rem>0&&rem<=LIMIT);
     if(!on){
-      if(alertOn){alertOn=false;al.hidden=true;bar.classList.remove("is-alert","is-last");bar.hidden=!shownKey}
+      if(alertOn){alertOn=false;al.hidden=true;bar.classList.remove("is-alert","is-last");bar.hidden=!shownKey;fit()}
       return;
     }
     if(!alertOn){alertOn=true;al.hidden=false;bar.hidden=false;bar.classList.add("is-alert")}
