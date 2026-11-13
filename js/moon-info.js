@@ -583,7 +583,8 @@
       pop = document.createElement("div"); pop.className = "moon-pop"; pop.hidden = true;
       pop.setAttribute("role", "dialog"); pop.setAttribute("aria-modal", "true");
       pop.innerHTML = '<button type="button" class="moon-pop-x">×</button><div class="moon-pop-body"><img class="moon-pop-img" width="600" height="600" alt="">' +
-        '<div class="moon-pop-pct"><span></span><b></b></div></div>';
+        '<div class="moon-pop-pct"><span></span><b></b></div></div>' +
+        '<div class="moon-pop-mark" aria-hidden="true"><img src="icons/icon-32.png" width="16" height="16" alt=""><span>azangoo.com</span></div>';
       document.body.appendChild(pop);
       pop.addEventListener("click", closePop);
       document.addEventListener("keydown", function (e) {
