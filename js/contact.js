@@ -4,14 +4,16 @@
 /* Contact button: opens a small dialog with the email, a mailto link and a copy button. */
 (function () {
   'use strict';
-  var EMAIL = 'info.azangoo@gmail.com';          /* fallback; data/config.json (contactEmail) replaces it when it can be read */
+  var EMAIL = 'info@azangoo.com';          /* fallback; data/config.json (contactEmail) replaces it when it can be read */
   function email() {
     var c = window.AzanConfig && window.AzanConfig.contactEmail;
     return (typeof c === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.trim())) ? c.trim() : EMAIL;
   }
   function showEmail() {
-    var a = document.querySelector('#contactDlg .contact-mail a'), e = email();
-    if (a) { a.setAttribute('href', 'mailto:' + e); a.textContent = e; }
+    var e = email();
+    document.querySelectorAll('#contactDlg .contact-mail a, #aboutDlg .about-mail').forEach(function (a) {
+      a.setAttribute('href', 'mailto:' + e); a.textContent = e;
+    });
   }
   var dlg = document.getElementById('contactDlg'),
       openBtn = document.getElementById('contactBtn'),
@@ -46,17 +48,24 @@
       closeAbout = document.getElementById('closeAbout');
   if (aboutDlg && aboutBtn) {
     aboutBtn.addEventListener('click', function () {
+      showEmail();
       if (aboutDlg.showModal) aboutDlg.showModal(); else aboutDlg.setAttribute('open', '');
       aboutDlg.scrollTop = 0;
     });
     if (closeAbout) closeAbout.addEventListener('click', function () {
       if (aboutDlg.close) aboutDlg.close(); else aboutDlg.removeAttribute('open');
     });
+    /* the "Contact us" link inside the text: closes this dialog and opens the contact one */
+    var aboutContact = document.getElementById('aboutContactLink');
+    if (aboutContact) aboutContact.addEventListener('click', function () {
+      if (aboutDlg.close) aboutDlg.close(); else aboutDlg.removeAttribute('open');
+      openBtn.click();
+    });
   }
 })();
 
 /* Site settings that the owner may change without touching the code: data/config.json
-   { "paypalButtonId": "...", "contactEmail": "..." }: the PayPal payment-link ID (paypal.com/ncp/payment/<ID>) and the contact e-mail. The value written in the page stays as the fallback:
+   { "paypalUrl": "...", "contactEmail": "..." }: the PayPal donation link and the contact e-mail. The value written in the page stays as the fallback:
    if the file cannot be read, the button works with it. The file is read in the background; the value is put in
    the form at the moment of the click, so the page is never delayed. */
 (function () {
@@ -73,7 +82,7 @@
   var form = document.querySelector('form.donate');
   if (!form) return;
   form.addEventListener('submit', function () {
-    var id = cfg && typeof cfg.paypalButtonId === 'string' ? cfg.paypalButtonId.trim() : '';
-    if (/^[A-Za-z0-9]+$/.test(id)) form.action = 'https://www.paypal.com/ncp/payment/' + id;
+    var u = cfg && typeof cfg.paypalUrl === 'string' ? cfg.paypalUrl.trim() : '';
+    if (/^https:\/\/www\.paypal\.com\//.test(u)) form.action = u;
   });
 })();

@@ -1,0 +1,659 @@
+/* The slideshow in the middle of the page: the events of the Hijri day as cards (data/lunar-events/, see evPages), pictures of the Hijri day's occasion (data/events.json, images/events/), the daily
+   Ramadan dua picture, or the default pictures, followed by the verse of the day. What follows describes the verse part.
+   Verse of the day.
+   In the middle of the page a slideshow sits over the map, in the same frame (so it has the same size and the map is never
+   resized). It shows the verse (Arabic text + translation) for today's date. A long text is split over several slides,
+   the slides move on by themselves, and they can be paused, swiped, or stepped with the arrow buttons.
+   The map comes back when the person uses the GPS button or the search (js/azan.js calls AzanStage.showMap()), or taps
+   the "Map" button; after a minute without any use of the map the slides come back.
+   If the data cannot be loaded, nothing here is shown and the map stays as it was.
+   Data: data/ayah/<lang>-<MM>.json, one file per language and month. { days: { "MM-DD": [ entry, ... ] }, about: [unit] }
+   An entry is a list of units { r: "39:53", a: Arabic, t: translation, tl: language of t if it is not the page language }.
+   When a date has several entries (the source covers more than one year) the year chooses between them; a date with no
+   entry shows "about". Surah names: data/surahs.json. */
+(function () {
+  "use strict";
+  var stage = document.getElementById("stage");
+  if (!stage || !window.fetch) return;
+  var frame = stage.parentNode, mapEl = document.getElementById("map"), mapBack = document.getElementById("mapBack");
+  var A = window.AzanLang;
+  if (!A) return;
+
+  var IDLE_MS = 60 * 1000;            /* the slides return after this long without any use of the map */
+  var TIERS = [[2.3, 1.28], [2.05, 1.16], [1.8, 1.08], [1.55, 1.0], [1.35, .95], [1.2, .9], [1.1, .86]];   /* font sizes in rem: [Arabic, translation] */
+  var SHOW_VERSE = false;             /* false: only the pictures (the verse is still shown if there are no pictures); the verse of the day lives in the hadith bar (js/hadith.js) */
+  var IMG_MS = 8000, IMG_DIR = "images/events/";
+  var cache = {}, surahs = null;
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var S = { doc: null, key: "", pages: [], i: 0, userPaused: reduce, hover: false, mapMode: false, timer: 0, idle: 0, resizeT: 0, dlg: false };
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function t(k, v) { return A.t(k, v); }
+  function hasMap() { return !!window.L; }
+
+  /* ---------- structure ---------- */
+  var ICON = {
+    star: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.4 6.1 6.1 2.4-6.1 2.4L12 19.5l-2.4-6.1-6.1-2.4 6.1-2.4z"/></svg>',
+    prev: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>',
+    next: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>',
+    play: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>',
+    pin: '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.4-6.5-10.5a6.5 6.5 0 0 1 13 0C18.5 15.6 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.4"/></svg>'
+  };
+  stage.setAttribute("role", "region");
+  stage.setAttribute("aria-roledescription", "carousel");
+  stage.tabIndex = 0;
+  stage.innerHTML =
+    '<div class="stage-bg" id="stBg" aria-hidden="true"></div>' +
+    '<div class="stage-pattern" aria-hidden="true"></div>' +
+    '<div class="st-test" id="stTest" hidden></div>' +
+    '<div class="st-head">' + ICON.star + '<span id="stTitle"></span></div>' +
+    '<div class="st-body" id="stBody"><div class="slide measure" aria-hidden="true"><div class="slide-box" id="stMeasure"></div></div></div>' +
+    '<div class="st-prog" id="stProg" aria-hidden="true"><i></i></div>' +
+    '<div class="st-foot">' +
+      '<button type="button" class="st-btn st-flip" id="stPrev">' + ICON.prev + '</button>' +
+      '<div class="st-dots" id="stDots"></div>' +
+      '<button type="button" class="st-btn st-flip" id="stNext">' + ICON.next + '</button>' +
+      '<button type="button" class="st-btn" id="stPause"></button>' +
+      '<button type="button" class="st-mapbtn" id="stMap">' + ICON.pin + '<span id="stMapTxt"></span></button>' +
+    '</div>';
+  var el = {
+    title: document.getElementById("stTitle"), body: document.getElementById("stBody"), measure: document.getElementById("stMeasure"),
+    prog: document.getElementById("stProg"), dots: document.getElementById("stDots"), prev: document.getElementById("stPrev"),
+    next: document.getElementById("stNext"), pause: document.getElementById("stPause"), map: document.getElementById("stMap"),
+    mapTxt: document.getElementById("stMapTxt"), test: document.getElementById("stTest"), bg: document.getElementById("stBg")
+  };
+  if (mapBack) mapBack.innerHTML = ICON.star + '<span id="mapBackTxt"></span>';
+
+  function labels() {
+    stage.setAttribute("aria-label", t("st_slides"));
+    el.prev.setAttribute("aria-label", t("st_prev")); el.prev.title = t("st_prev");
+    el.next.setAttribute("aria-label", t("st_next")); el.next.title = t("st_next");
+    el.mapTxt.textContent = t("st_map");
+    el.map.setAttribute("aria-label", t("st_map")); el.map.title = t("st_map");
+    var bt = document.getElementById("mapBackTxt");
+    if (bt) bt.textContent = t("st_slides");
+    if (mapBack) mapBack.setAttribute("aria-label", t("st_slides"));
+    pauseUi();
+  }
+  function pauseUi() {
+    el.pause.innerHTML = S.userPaused ? ICON.play : ICON.pause;
+    var l = t(S.userPaused ? "st_play" : "st_pause");
+    el.pause.setAttribute("aria-label", l); el.pause.title = l;
+    el.pause.setAttribute("aria-pressed", S.userPaused ? "true" : "false");
+  }
+
+  /* ---------- data ---------- */
+  function getJson(url) {
+    if (!cache[url]) cache[url] = fetch(url).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .catch(function () { cache[url] = null; return null; });
+    return cache[url];
+  }
+  function dayKey(d) { return pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  /* today's Hijri month and day: the official list of the site when it covers the day, otherwise the calendar's own value
+     (the same rule as the date shown at the top of the page) */
+  var fHijri = new Intl.DateTimeFormat("en-u-ca-islamic-tbla-nu-latn", { month: "numeric", day: "numeric", timeZone: "UTC" });
+  function hijriToday(n) {
+    var cur = window.MoonInfo && window.MoonInfo.current ? window.MoonInfo.current() : null;     /* the date shown in the date tile */
+    if (cur && cur.hijriDay && cur.hijriMonth) return { m: cur.hijriMonth, d: cur.hijriDay };
+    var u = Date.UTC(n.getFullYear(), n.getMonth(), n.getDate());
+    var ymd = n.getFullYear() + "-" + pad(n.getMonth() + 1) + "-" + pad(n.getDate());
+    var O = window.AzanOfficial, e = (O && O.covering) ? O.covering(ymd) : null;
+    if (e && O.dayMs) return { m: ((+e.hijriMonth - 1 + 12) % 12) + 1, d: Math.round((u - O.dayMs(e.start)) / 86400000) + 1 };
+    var o = {};
+    fHijri.formatToParts(new Date(u)).forEach(function (x) { if (x.type !== "literal") o[x.type] = +x.value; });
+    return { m: o.month, d: o.day };
+  }
+  /* ---------- mood of an occasion: mourning (martyrdom, passing away ...), joy (birth, Eid ...) or neither ----------
+     it decides the colours of the card. The words are searched in the title; a title without any of them follows the month
+     (Muharram and Safar are months of mourning). Mourning wins when a title has both kinds of words. */
+  var TONE_RE = {
+    fa: [/شهادت|رحلت|وفات|ضربت|عزا|سوگ|درگذشت|مصیبت|هجوم|عاشورا|تاسوعا|اربعین|مسموم|دفن|ماتم|اسارت|کربلا/, /ولادت|میلاد|عید|مبعث|بعثت|غدیر|مباهله|جشن|فتح|هجرت|ازدواج|عقد|بیعت|شب قدر|نزول|نیمه|پیروزی/],
+    en: [/martyr|demise|passing away|passed away|funeral|mourning|tragedy|assassinat|poison|ashura|tasu|arbaeen|karbala|captiv|burial|wafat|calamity/i, /birth|born|eid|mab.?ath|prophethood|ghadir|mubahala|celebrat|victory|conquest|hijra|marriage|wedding|pledge|qadr|revelation|nisf/i],
+    ur: [/شہادت|وفات|رحلت|ضربت|سوگ|عزا|مصیبت|عاشور|تاسوعا|اربعین|زہر|دفن|کربلا|اسیر/, /ولادت|میلاد|عید|مبعث|بعثت|غدیر|مباہلہ|جشن|فتح|ہجرت|شادی|نکاح|بیعت|قدر|نزول|نیمہ/],
+    ar: [/استشهاد|شهادة|وفاة|رحيل|ضربة|مصاب|عاشوراء|تاسوعاء|الأربعين|كربلاء|سبي|دفن|تسميم|الهجوم|زيارة/, /ولادة|مولد|ميلاد|عيد|مبعث|بعثة|غدير|مباهلة|فتح|هجرة|زواج|عقد|بيعة|قدر|نزول|نصف|انتصار|عقيقة|بداية إمامة/]
+  };
+  /* the sorrow of Karbala (Muharram, Ashura, Tasua, Arbaeen ...) has its own colour: black with red; other mourning is black with silver */
+  var KARBALA_RE = {
+    fa: /عاشورا|تاسوعا|اربعین|کربلا|اسارت|اسیر|علی ?اکبر|علی ?اصغر|ابوالفضل|قاسم|شام غریبان|سید ?الشهدا|اباعبدالله/,
+    en: /ashura|tasu|arbaeen|karbala|captiv|ali akbar|ali asghar|abbas|qasim|sayyid al-shuhada|abu abdillah|abu abdullah/i,
+    ur: /عاشور|تاسوعا|اربعین|کربلا|اسیر|علی ?اکبر|علی ?اصغر|ابوالفضل|قاسم|سید ?الشہداء?|ابا ?عبد/,
+    ar: /عاشوراء|تاسوعاء|الأربعين|كربلاء|سبي|علي الأكبر|علي الأصغر|أبو الفضل|العباس|القاسم|سيد الشهداء|أبي عبد الله/
+  };
+  function toneOf(title, m) {
+    var l = A.current(), r = TONE_RE[l] || TONE_RE.fa, s = title || "";
+    if (r[0].test(s)) return ((KARBALA_RE[l] || KARBALA_RE.fa).test(s) || m === 1) ? "karbala" : "mourn";
+    if (r[1].test(s)) return "joy";
+    return m === 1 ? "karbala" : m === 2 ? "mourn" : "";
+  }
+  /* which picture belongs to which event card: the words of the two titles are compared (the words every title has, like
+     "birth" or "Imam", do not count); a picture without a card keeps its own slide */
+  var STOP = {};
+  "ولادت شهادت رحلت وفات امام حضرت علیه علیها علیهم السلام صلی الله آله وسلم بن ابن عید سعید روز شب ماه مبارک اکرم".split(" ").forEach(function (w) { STOP[w] = 1; });
+  function toks(s) {
+    var o = {};
+    (s || "").replace(/[\u064B-\u065F\u0670\u200C\u200D\u200E\u200F]/g, " ").replace(/ي/g, "ی").replace(/ك/g, "ک").replace(/ة/g, "ه")
+      .replace(/[()«»\-–—،,.:؛]/g, " ").split(/\s+/).forEach(function (w) { if (w.length > 1 && !STOP[w]) o[w] = 1; });
+    if (o["عاشورا"]) o["حسین"] = 1;
+    return o;
+  }
+  function pairPictures(imgs, evt) {
+    if (!imgs.length || !evt.length) return imgs;
+    var left = imgs.slice();
+    evt.forEach(function (c) {
+      if (c.all || c.next) return;
+      var tc = toks(c.title), tcn = Object.keys(tc).length, best = -1, bs = 0;
+      if (!tcn) return;
+      left.forEach(function (p, i) {
+        if (p.kind !== "day") return;
+        var tp = toks(p.title), n = 0, un = tcn + Object.keys(tp).length;
+        Object.keys(tp).forEach(function (w) { if (tc[w]) n++; });
+        var sc = n / (un - n);
+        if (n && sc > bs) { bs = sc; best = i; }
+      });
+      if (best > -1) { c.pic = left[best].img; left.splice(best, 1); }
+    });
+    return left;
+  }
+  /* occasions whose day depends on the start of a lunar month: their caption carries a small note that the date follows the
+     lunar-month forecast of the site */
+  /* the picture slides of today: the occasion of the day, the Ramadan dua of the day, the occasions of the whole month,
+     and the default pictures when there is nothing else */
+  function imagePages(ev, h, lang, noDefaults) {
+    if (!ev) return [];
+    var out = [], mName = A.names("hijri")[h.m - 1], key = pad(h.m) + "-";
+    function add(e, kind, extra) { var o = { img: e, kind: kind }; for (var k in extra) o[k] = extra[k]; out.push(o); }
+    (ev.events[key + pad(h.d)] || []).forEach(function (e) {
+      var ti = ev.titles && ev.titles[e.s];
+      var tt = ti ? (ti[lang] || ti.fa) : "";
+      add(e, "day", { title: tt, date: A.num(h.d) + " " + mName, tone: toneOf(tt, h.m) });
+    });
+    if (h.m === 9) {
+      var dua = ev.dua && ev.dua[pad(h.d)];
+      var di = dua && (dua[lang === "fa" ? "fa" : "en"] || dua.fa || dua.en);
+      if (di) add(di, "dua", { n: h.d, tone: "joy" });
+    }
+    (ev.events[key + "00"] || []).forEach(function (e) { add(e, "month", { m: mName, tone: toneOf("", h.m) }); });
+    if (!out.length && !noDefaults) (ev.defaults || []).forEach(function (e) { add(e, "default", {}); });
+    return out;
+  }
+  /* ---------- events of the Hijri day (data/lunar-events/<lang>-<M>.json, made by tools/split-lunar-events.js) ----------
+     One card per event of today; more than EV_MAX events: the first EV_MAX and a last card that opens the whole list.
+     A day without events shows the next event of the month (or of the next month). A language without these files keeps the
+     default pictures. The events "last" (last day of the month) and "extra" (no fixed day) of the files are not used yet. */
+  var EV_MAX = 5;
+  function evOf(doc, k) { var x = doc && doc.days && doc.days[k]; return (x && x.events) || []; }
+  function monthEvents(lang, m) { return getJson("data/lunar-events/" + lang + "-" + m + ".json"); }
+  function excerpt(s) {
+    s = (s || "").replace(/\s+/g, " ").trim();
+    if (s.length <= 260) return s;
+    var cut = s.slice(0, 260), p = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("؟ "), cut.lastIndexOf("۔ "), cut.lastIndexOf("! "));
+    return (p > 120 ? cut.slice(0, p + 1) : cut.replace(/\s+\S*$/, "")) + "…";
+  }
+  function evCard(id, it, date, items, d, m) {
+    return { ev: id, date: date, m: m, dn: A.num(d), mn: A.names("hijri")[m - 1], tone: toneOf(it.title, m), title: it.title, excerpt: excerpt(it.text), items: items,
+      more: it.text.length > 110 || it.sources.length > 0 };
+  }
+  function evItems(list, date, doc) {
+    return list.map(function (e) { return { title: e.title || "", text: e.text || "", sources: e.sources || [], date: date, hon: (doc && doc.honorifics) || null }; });
+  }
+  function nextDay(doc, d) {
+    var best = 0;
+    Object.keys((doc && doc.days) || {}).forEach(function (k) {
+      var n = /^\d+$/.test(k) ? +k : 0;
+      if (n > d && (!best || n < best) && evOf(doc, k).length) best = n;
+    });
+    return best;
+  }
+  function nextCard(doc, day, h, date, m2) {
+    var m = m2 || h.m, label = A.num(day) + " " + A.names("hijri")[m - 1];
+    var it = evItems(evOf(doc, String(day)), label, doc)[0];
+    var c = evCard("n" + m + "-" + day, it, date, [it], day, m);
+    c.next = true;
+    c.when = m2 ? t("ev_on_date", { d: label }) : (day - h.d === 1 ? t("ev_tomorrow", { d: label }) : t("ev_in_days", { n: A.num(day - h.d), d: label }));
+    return c;
+  }
+  function evPages(doc, h, lang) {
+    if (!doc) return Promise.resolve([]);
+    var date = A.num(h.d) + " " + A.names("hijri")[h.m - 1], list = evOf(doc, String(h.d));
+    if (list.length) {
+      var items = evItems(list, date, doc), out = items.slice(0, EV_MAX).map(function (it, i) { return evCard("e" + h.m + "-" + h.d + "-" + i, it, date, [it], h.d, h.m); });
+      if (items.length > EV_MAX) out.push({ ev: "all" + h.m + "-" + h.d, all: true, date: date, m: h.m, dn: A.num(h.d), mn: A.names("hijri")[h.m - 1], tone: toneOf("", h.m), count: items.length, items: items, more: true,
+        title: t("ev_list_title", { d: date }), excerpt: items.slice(EV_MAX).map(function (x) { return x.title; }).join(" • ") });
+      return Promise.resolve(out);
+    }
+    var day = nextDay(doc, h.d);
+    if (day) return Promise.resolve([nextCard(doc, day, h, date, 0)]);
+    var m2 = h.m % 12 + 1;
+    return monthEvents(lang, m2).then(function (n) {
+      var d2 = n && n.days ? nextDay(n, 0) : 0;
+      return d2 ? [nextCard(n, d2, h, date, m2)] : [];
+    });
+  }
+  /* test mode, only for the person who opens such a link (nothing is stored, other visitors are not affected):
+       ?hijri=1-10          shows the pictures of 10 Muharram (month-day, month 1 = Muharram ... 12 = Dhu al-Hijjah)
+       ?date=2026-06-25     shows the verse of that Gregorian date (and the Hijri date that goes with it)
+     both can be used together, and the page language is the one of the page you open (fa, en, ur, ar) */
+  var QS = new URLSearchParams(location.search), TEST = "";
+  function testDate() {
+    var m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(QS.get("date") || "");
+    return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+  }
+  function testHijri() {
+    var m = /^(\d{1,2})-(\d{1,2})$/.exec(QS.get("hijri") || "");
+    return (m && +m[1] >= 1 && +m[1] <= 12 && +m[2] >= 1 && +m[2] <= 30) ? { m: +m[1], d: +m[2] } : null;
+  }
+  function load() {
+    var td = testDate(), th = testHijri();
+    var d = td || new Date(), lang = A.current(), h = th || hijriToday(d);
+    TEST = (td || th) ? ("TEST " + (td ? pad(td.getMonth() + 1) + "/" + pad(td.getDate()) + " " : "") + (th ? "hijri " + th.m + "-" + th.d : "")) : "";
+    return Promise.all([getJson("data/ayah/" + lang + "-" + pad(d.getMonth() + 1) + ".json"), surahs ? 0 : getJson("data/surahs.json"), getJson("data/events.json"), monthEvents(lang, h.m)])
+      .then(function (r) {
+        if (r[1]) surahs = r[1];
+        var doc = r[0], units = null, aboutShown = false;
+        if (doc && doc.days) {
+          var e = doc.days[dayKey(d)];
+          if (e && e.length) units = e[d.getFullYear() % e.length];
+          else { units = doc.about || []; aboutShown = !!(units[0] && !units[0].a); }
+          if (!units.length) units = null;
+        }
+        var lm = r[3] && r[3].days ? r[3] : null;
+        /* the pictures carry Persian writing, and the verse lives in the hadith bar: other languages show only the event cards */
+        var pics = lang === "fa", imgs = pics ? imagePages(r[2], h, lang, !!lm) : [];
+        if (!pics) units = null;
+        return evPages(lm, h, lang).then(function (evt) {
+          imgs = pairPictures(imgs, evt);
+          if (!units && !imgs.length && !evt.length) return null;
+          return { units: units || [], imgs: imgs, evt: evt, aboutShown: aboutShown, key: lang + ":" + dayKey(d) + ":" + h.m + "-" + h.d + (lm ? ":ev" : "") };
+        });
+      });
+  }
+
+  /* ---------- text of a slide ---------- */
+  function refLabel(r) {
+    if (!r) return "";
+    var m = /^(\d+):(.+)$/.exec(r);
+    if (!m || r.indexOf(";") > -1 || !surahs) return t("ayah_quran", { r: A.num(r) });
+    var L = A.current(), names = L === "fa" ? surahs.fa : (L === "en" ? surahs.en : surahs.ar), c = +m[1];
+    return t(/[–-]/.test(m[2]) ? "ayah_ref_many" : "ayah_ref_one", { s: names[c - 1] || c, c: A.num(c), v: A.num(m[2]) });
+  }
+  /* the head line, caption and alt text of a slide */
+  function headOf(pg) {
+    if (pg.ev) return t(pg.next ? "ev_next_head" : "ev_today");
+    if (!pg.img) return t(pg.about ? "ayah_about_title" : "ayah_title");
+    if (pg.kind === "day") return t("ev_today");
+    if (pg.kind === "dua") return t("ev_dua", { n: A.num(pg.n) });
+    if (pg.kind === "month") return t("ev_month", { m: pg.m });
+    return t("ev_default");
+  }
+  /* a picture over its own blurred copy: the picture is never cropped (it carries writing) */
+  function hero(pic, alt) {
+    var h = document.createElement("div"), bg = document.createElement("div"), im = document.createElement("img");
+    h.className = "cv-hero"; bg.className = "cv-hero-bg"; bg.style.backgroundImage = "url(" + IMG_DIR + pic.f + ")";
+    im.src = IMG_DIR + pic.f; im.width = pic.w; im.height = pic.h; im.alt = alt; im.decoding = "async";
+    im.addEventListener("error", function () { h.classList.add("broken"); });
+    h.appendChild(bg); h.appendChild(im);
+    return h;
+  }
+  /* the line "date + kind of slide", e.g. "3 Jumada II · Occasion of the Day" */
+  function meta(date, head) {
+    var m = mk("div", "cv-meta", "");
+    if (date) m.appendChild(mk("span", "cv-chip", date));
+    if (head) m.appendChild(mk("span", "cv-kicker", head));
+    return m;
+  }
+  function fillImage(box, pg) {
+    box.textContent = "";
+    box.classList.add("cv", "cv-shot");
+    box.appendChild(hero(pg.img, pg.title || headOf(pg)));
+    var cap = mk("div", "cv-cap", "");
+    if (pg.kind === "day" && pg.title) {
+      cap.appendChild(meta(pg.date, headOf(pg)));
+      cap.appendChild(mk("div", "cv-title", pg.title));
+    } else cap.appendChild(mk("div", "cv-kicker cv-solo", headOf(pg)));
+    box.appendChild(cap);
+  }
+  /* an event card: the date, the title and the first lines of the text; the button opens the whole text.
+     With a picture of the event: the picture on top, the date and the title below it. */
+  function mk(tag, cls, text) { var n = document.createElement(tag); n.className = cls; n.textContent = text; return n; }
+  function fillEvent(box, pg) {
+    box.textContent = "";
+    box.classList.add("cv", pg.pic ? "cv-pic" : "cv-plain");
+    var body = box, ti;
+    if (pg.pic) {
+      box.appendChild(hero(pg.pic, pg.title || ""));
+      body = mk("div", "cv-panel", ""); box.appendChild(body);
+      body.appendChild(meta(pg.date, headOf(pg)));
+    } else {
+      var top = mk("div", "cv-top", "");
+      if (pg.next) top.appendChild(mk("span", "cv-kicker", headOf(pg)));
+      var bd = mk("div", "cv-badge", "");
+      bd.appendChild(mk("b", "", pg.dn)); top.appendChild(bd);
+      top.appendChild(mk("div", "cv-month", pg.mn));
+      top.appendChild(mk("div", "cv-kicker", pg.when ? t("ev_next_when", { w: pg.when }) : headOf(pg)));
+      box.appendChild(top);
+      body = mk("div", "cv-panel", ""); box.appendChild(body);
+    }
+    ti = mk("div", "ev-title cv-title", pg.title); ti.setAttribute("role", "heading"); ti.setAttribute("aria-level", "2"); body.appendChild(ti);   /* not an h2: the site gives every h2 inside a card an icon */
+    if (!pg.pic) body.appendChild(mk("div", "cv-rule", ""));
+    body.appendChild(mk("p", "ev-text cv-text", pg.excerpt));
+    if (pg.more) {
+      var b = mk("button", "ev-more", pg.all ? t("ev_all_btn", { n: A.num(pg.count) }) : t("ev_more"));
+      b.type = "button";
+      b.addEventListener("click", function () { openDlg(pg); });
+      body.appendChild(b);
+    }
+  }
+  /* the window with the whole text (or the list of all the events of the day) */
+  var dlg = null, dlgPg = null, dlgFocus = null;
+  function ensureDlg() {
+    if (dlg) return dlg;
+    dlg = document.createElement("div"); dlg.className = "hadith-modal ev-dlg"; dlg.hidden = true;
+    dlg.setAttribute("role", "dialog"); dlg.setAttribute("aria-modal", "true"); dlg.setAttribute("aria-labelledby", "evDlgT");
+    dlg.innerHTML = '<div class="hadith-card"><button type="button" class="hadith-x" id="evDlgX">×</button>' +
+      '<button type="button" class="ev-back" id="evDlgBack" hidden></button><h3 id="evDlgT"></h3><div id="evDlgBody"></div></div>';
+    document.body.appendChild(dlg);
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) closeDlg(); });
+    dlg.querySelector("#evDlgX").addEventListener("click", closeDlg);
+    dlg.querySelector("#evDlgBack").addEventListener("click", function () { renderDlg(dlgPg, -1); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && dlg && !dlg.hidden) closeDlg(); });
+    return dlg;
+  }
+  function renderDlg(pg, idx) {
+    var title = dlg.querySelector("#evDlgT"), body = dlg.querySelector("#evDlgBody"), back = dlg.querySelector("#evDlgBack");
+    body.textContent = "";
+    /* the window has the colours of the card it was opened from: mourning, joy or neither (an item of the list has its own) */
+    var tn = idx < 0 ? pg.tone : toneOf(pg.items[idx].title, pg.m);
+    if (tn) dlg.setAttribute("data-tone", tn); else dlg.removeAttribute("data-tone");
+    back.hidden = !(pg.all && idx >= 0); back.textContent = t("ev_back");
+    dlg.querySelector("#evDlgX").setAttribute("aria-label", t("hadith_close"));
+    if (idx < 0) {
+      title.textContent = t("ev_list_title", { d: pg.date });
+      pg.items.forEach(function (it, i) {
+        var row = mk("div", "ev-row", "");
+        row.appendChild(mk("h4", "", it.title));
+        row.appendChild(mk("p", "", excerpt(it.text)));
+        var b = mk("button", "ev-more", t("ev_more")); b.type = "button";
+        b.addEventListener("click", function () { renderDlg(pg, i); });
+        row.appendChild(b); body.appendChild(row);
+      });
+    } else {
+      var it = pg.items[idx];
+      title.textContent = it.title || it.date;
+      body.appendChild(mk("p", "ev-dateline", it.date));
+      body.appendChild(mk("p", "ev-full", it.text));
+      if (it.sources.length) body.appendChild(mk("p", "hadith-src", t("ev_src") + ": " + it.sources.join(" ")));
+      /* what the abbreviations used in this text mean, e.g. (PBUH) */
+      var used = it.hon ? Object.keys(it.hon).filter(function (k) { return it.text.indexOf(k) > -1; }) : [];
+      if (used.length) {
+        var lg = mk("div", "ev-legend", "");
+        used.forEach(function (k) { lg.appendChild(mk("p", "", k + " — " + it.hon[k])); });
+        body.appendChild(lg);
+      }
+    }
+    dlg.querySelector(".hadith-card").scrollTop = 0;
+  }
+  function openDlg(pg) {
+    ensureDlg(); dlgPg = pg; dlgFocus = document.activeElement;
+    renderDlg(pg, pg.all ? -1 : 0);
+    dlg.hidden = false; document.documentElement.classList.add("hadith-open");
+    S.dlg = true; schedule();
+    dlg.querySelector("#evDlgX").focus();
+  }
+  function closeDlg() {
+    if (!dlg || dlg.hidden) return;
+    dlg.hidden = true; document.documentElement.classList.remove("hadith-open");
+    S.dlg = false; schedule();
+    if (dlgFocus && dlgFocus.focus) dlgFocus.focus();
+  }
+  function fill(box, pg) {
+    if (pg.ev) { fillEvent(box, pg); return; }
+    if (pg.img) { fillImage(box, pg); return; }
+    box.textContent = "";
+    function add(tag, cls, text, lang, dir) {
+      var n = document.createElement(tag); n.className = cls; n.textContent = text;
+      if (lang) { n.setAttribute("lang", lang); n.setAttribute("dir", dir || "rtl"); }
+      box.appendChild(n); return n;
+    }
+    if (pg.r) add("span", "slide-ref", refLabel(pg.r));
+    if (pg.a) add("p", "slide-ar", pg.a, "ar", "rtl");
+    if (pg.a && pg.t) add("span", "slide-orn", "").setAttribute("aria-hidden", "true");
+    if (pg.t) { var l = pg.tl || A.current(); add("p", "slide-tr", pg.t, l, l === "en" ? "ltr" : "rtl"); }
+    box.style.setProperty("--ar", pg.tier[0] + "rem");
+    box.style.setProperty("--tr", pg.tier[1] + "rem");
+  }
+  function fits(pg) {
+    fill(el.measure, pg);
+    return el.measure.offsetHeight <= el.body.clientHeight - 6;
+  }
+  /* cut a long text into pieces that each fit one slide; pieces end at a sentence end when there is one near the limit */
+  function chunk(text, mk) {
+    var words = text.split(/\s+/), out = [], i = 0;
+    while (i < words.length) {
+      var lo = 1, hi = words.length - i, best = 1;
+      while (lo <= hi) {
+        var mid = (lo + hi) >> 1;
+        if (fits(mk(words.slice(i, i + mid).join(" ")))) { best = mid; lo = mid + 1; } else hi = mid - 1;
+      }
+      if (i + best < words.length) {
+        for (var j = best; j >= Math.ceil(best * 0.6); j--) if (/[.!?؟۔؛:;»”"]$/.test(words[i + j - 1])) { best = j; break; }
+      }
+      out.push(words.slice(i, i + best).join(" ")); i += best;
+    }
+    return out;
+  }
+  function paginate(units) {
+    var pages = [];
+    units.forEach(function (u) {
+      var k, whole;
+      for (k = 0; k < TIERS.length; k++) {
+        whole = { r: u.r, a: u.a, t: u.t, tl: u.tl, tier: TIERS[k] };
+        if (fits(whole)) { pages.push(whole); return; }
+      }
+      var tier = TIERS[4];
+      if (u.a) chunk(u.a, function (s) { return { r: u.r, a: s, tier: tier }; }).forEach(function (s) { pages.push({ r: u.r, a: s, tier: tier }); });
+      if (u.t) chunk(u.t, function (s) { return { r: u.r, t: s, tl: u.tl, tier: tier }; }).forEach(function (s) { pages.push({ r: u.r, t: s, tl: u.tl, tier: tier }); });
+    });
+    return pages;
+  }
+
+  /* ---------- showing the slides ---------- */
+  function dur(pg) {
+    if (pg.ev) return 14000;
+    if (pg.img) return IMG_MS;
+    var n = (pg.a ? pg.a.length * 0.8 : 0) + (pg.t ? pg.t.length : 0);
+    return Math.max(7000, Math.min(20000, 5000 + n * 40));
+  }
+  function canPlay() { return !S.userPaused && !S.hover && !S.dlg && !S.mapMode && !document.hidden && S.pages.length > 1; }
+  function schedule() {
+    clearTimeout(S.timer);
+    el.prog.classList.remove("run");
+    if (!canPlay()) { stage.classList.add("paused"); return; }
+    stage.classList.remove("paused");
+    var d = dur(S.pages[S.i]);
+    el.prog.style.setProperty("--dur", d + "ms");
+    void el.prog.offsetWidth;                                   /* restart the bar */
+    el.prog.classList.add("run");
+    S.timer = setTimeout(function () { go(S.i + 1, true); }, d);
+  }
+  function drawDots() {
+    var n = S.pages.length;
+    el.dots.textContent = "";
+    var many = n > 12;
+    if (many) { var c = document.createElement("span"); c.id = "stCount"; el.dots.appendChild(c); return; }
+    S.pages.forEach(function (p, i) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "st-dot";
+      b.setAttribute("aria-label", t("st_page", { n: A.num(i + 1), total: A.num(n) }));
+      b.addEventListener("click", function () { manual(i); });
+      el.dots.appendChild(b);
+    });
+  }
+  function go(i, auto) {
+    var n = S.pages.length;
+    if (!n) return;
+    S.i = ((i % n) + n) % n;
+    Array.prototype.slice.call(el.body.children).forEach(function (c) { if (!c.classList.contains("measure")) el.body.removeChild(c); });
+    var s = document.createElement("div"), box = document.createElement("div");
+    s.className = "slide in"; box.className = "slide-box"; s.appendChild(box);
+    var pg = S.pages[S.i];
+    fill(box, pg);
+    el.body.appendChild(s);
+    el.title.textContent = headOf(pg);
+    var card = !!(pg.ev || pg.img);
+    stage.classList.toggle("is-card", card);
+    if (card && pg.tone) stage.setAttribute("data-tone", pg.tone); else stage.removeAttribute("data-tone");
+    var nx = S.pages[(S.i + 1) % n], np = nx && (nx.pic || nx.img);
+    if (np && n > 1) (new Image()).src = IMG_DIR + np.f;
+    var label = t("st_page", { n: A.num(S.i + 1), total: A.num(n) });
+    s.setAttribute("role", "group"); s.setAttribute("aria-roledescription", "slide"); s.setAttribute("aria-label", label);
+    var dots = el.dots.children;
+    if (n > 12) { var c = document.getElementById("stCount"); if (c) c.textContent = label; }
+    else for (var k = 0; k < dots.length; k++) dots[k].setAttribute("aria-current", k === S.i ? "true" : "false");
+    el.body.setAttribute("aria-live", auto ? "off" : "polite");
+    schedule();
+  }
+  function build(keepUnit) {
+    if (!S.doc) return;
+    labels();
+    el.test.hidden = !TEST; el.test.textContent = TEST;
+    var cur = S.pages[S.i], verse = [];
+    if (SHOW_VERSE || (!S.doc.imgs.length && !(S.doc.evt && S.doc.evt.length))) {
+      verse = paginate(S.doc.units);
+      verse.forEach(function (v) { v.about = S.doc.aboutShown; });
+    }
+    S.pages = S.doc.imgs.concat(S.doc.evt || [], verse);
+    var start = 0;
+    function same(a, b) { if (a.ev || b.ev) return a.ev === b.ev; return a.img ? (b.img && a.img.f === b.img.f) : (!b.img && a.r === b.r && (a.a || "").slice(0, 8) === (b.a || "").slice(0, 8) && (a.t || "").slice(0, 8) === (b.t || "").slice(0, 8)); }
+    if (keepUnit && cur) for (var k = 0; k < S.pages.length; k++) if (same(S.pages[k], cur)) { start = k; break; }
+    var multi = S.pages.length > 1;
+    el.prev.hidden = el.next.hidden = el.pause.hidden = el.dots.hidden = !multi;
+    el.map.hidden = !hasMap();
+    drawDots();
+    go(start);
+  }
+  /* nothing to show for this language and day: the slideshow goes away and the map is there as it was */
+  function hideStage() {
+    S.doc = null; S.pages = [];
+    clearTimeout(S.timer); clearTimeout(S.idle);
+    S.mapMode = false; frame.classList.remove("is-map");
+    setInert(stage, false); if (hasMap()) setInert(mapEl, false);
+    closeDlg();
+    stage.hidden = true;
+    syncNotes();
+  }
+  function refresh(keepUnit) {
+    return load().then(function (r) {
+      if (!r) { hideStage(); return; }
+      var changed = !S.doc || S.doc.key !== r.key;
+      S.doc = r;
+      if (stage.hidden) { stage.hidden = false; stage.classList.add("fade-in"); }
+      syncNotes();
+      if (changed || !keepUnit) build(keepUnit);
+    });
+  }
+
+  /* ---------- map <-> slides ---------- */
+  /* the Qibla sentence and the "double-click the map" hint under the frame are about the map: they show only while the map is shown */
+  var qiblaNote = document.getElementById("qibla"), mapHint = qiblaNote && qiblaNote.nextElementSibling;
+  function syncNotes() {
+    var slides = !stage.hidden && !S.mapMode;
+    if (qiblaNote) qiblaNote.hidden = slides;
+    if (mapHint && mapHint.classList.contains("hint")) mapHint.hidden = slides;
+    /* one general sentence under the frame for all the occasion slides (dates follow the lunar-month forecast) */
+    var evNote = document.getElementById("slidesNote");
+    if (evNote) evNote.hidden = !(slides && S.doc && (S.doc.imgs.some(function (p) { return p.kind !== "default"; }) || (S.doc.evt && S.doc.evt.length)));
+  }
+  function setInert(node, on) {
+    if (!node) return;
+    node.inert = on;
+    if (on) node.setAttribute("aria-hidden", "true"); else node.removeAttribute("aria-hidden");
+  }
+  function armIdle() {
+    clearTimeout(S.idle);
+    if (S.mapMode) S.idle = setTimeout(showSlides, IDLE_MS);
+  }
+  function showMap(focus) {
+    if (!hasMap() || stage.hidden) return;
+    var wasIn = stage.contains(document.activeElement);
+    S.mapMode = true;
+    frame.classList.add("is-map");
+    syncNotes();
+    setInert(stage, true); setInert(mapEl, false);
+    clearTimeout(S.timer); el.prog.classList.remove("run");
+    armIdle();
+    if (wasIn && mapBack) mapBack.focus({ preventScroll: true });
+  }
+  function showSlides() {
+    var wasIn = frame.contains(document.activeElement) && document.activeElement !== document.body && document.activeElement.id === "mapBack";
+    S.mapMode = false;
+    clearTimeout(S.idle);
+    frame.classList.remove("is-map");
+    syncNotes();
+    setInert(stage, false); if (hasMap()) setInert(mapEl, true);
+    schedule();
+    if (wasIn) el.map.focus({ preventScroll: true });
+  }
+  window.AzanStage = { showMap: showMap, showSlides: showSlides, isMap: function () { return S.mapMode; } };
+
+  /* ---------- controls ---------- */
+  /* a step made by the person always restarts the autoplay, even if the mouse is still over the slides */
+  function manual(i) { S.hover = false; go(i); }
+  el.prev.addEventListener("click", function () { manual(S.i - 1); });
+  el.next.addEventListener("click", function () { manual(S.i + 1); });
+  el.pause.addEventListener("click", function () { S.userPaused = !S.userPaused; pauseUi(); schedule(); });
+  el.map.addEventListener("click", function () { showMap(); });
+  if (mapBack) mapBack.addEventListener("click", showSlides);
+  function pausedNow(on) { S.hover = on; schedule(); }
+  /* autoplay waits while a mouse is over the slides or the keyboard focus is in them; a finger or a tap never pauses it
+     (a tap leaves a "hover" and the focus behind, which used to stop the autoplay for good) */
+  stage.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") pausedNow(true); });
+  stage.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") pausedNow(false); });
+  stage.addEventListener("focusin", function (e) { if (e.target.matches && e.target.matches(":focus-visible")) pausedNow(true); });
+  stage.addEventListener("focusout", function () { pausedNow(false); });
+  stage.addEventListener("keydown", function (e) {
+    var rtl = document.documentElement.dir === "rtl";
+    if (e.key === "ArrowLeft") { manual(S.i + (rtl ? 1 : -1)); e.preventDefault(); }
+    else if (e.key === "ArrowRight") { manual(S.i + (rtl ? -1 : 1)); e.preventDefault(); }
+  });
+  /* swipe: a finger moving towards the start of the line goes to the next slide */
+  var sx = null, sy = 0;
+  el.body.addEventListener("pointerdown", function (e) { sx = e.clientX; sy = e.clientY; });
+  el.body.addEventListener("pointerup", function (e) {
+    if (sx === null) return;
+    var dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
+    var rtl = document.documentElement.dir === "rtl";
+    manual(S.i + ((dx > 0) === rtl ? 1 : -1));
+  });
+  el.body.addEventListener("pointercancel", function () { sx = null; });
+
+  /* any use of the map keeps it on screen */
+  ["pointerdown", "wheel", "keydown", "touchstart"].forEach(function (n) {
+    frame.addEventListener(n, function () { if (S.mapMode) armIdle(); }, { capture: true, passive: true });
+  });
+  var q = document.getElementById("q");
+  if (q) ["input", "focus"].forEach(function (n) { q.addEventListener(n, function () { if (S.mapMode) armIdle(); }); });
+  document.addEventListener("visibilitychange", schedule);
+
+  /* ---------- lifecycle ---------- */
+  if (window.AzanOfficial && AzanOfficial.onChange) AzanOfficial.onChange(function () { refresh(true); });
+  window.addEventListener("azan:hijri", function () { refresh(true); });               /* the moon card has a new Hijri date */
+  window.addEventListener("azan:langchange", function () { S.doc = null; refresh(false); });
+  setInterval(function () { refresh(true); }, 10 * 60 * 1000);                   /* a new day began */
+  if (window.ResizeObserver) {
+    var lastW = 0, lastH = 0;
+    new ResizeObserver(function () {
+      var w = el.body.clientWidth, h = el.body.clientHeight;
+      if (!S.doc || stage.hidden || (w === lastW && h === lastH)) { lastW = w; lastH = h; return; }
+      lastW = w; lastH = h;
+      clearTimeout(S.resizeT);
+      S.resizeT = setTimeout(function () { build(true); }, 250);
+    }).observe(el.body);
+  }
+  function begin() {
+    if (hasMap()) setInert(mapEl, true);
+    refresh(false);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (S.doc) build(true); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", begin); else begin();
+})();
