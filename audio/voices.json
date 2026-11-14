@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "base_url": "https://www.azangoo.com/audio/",
   "voices": [
     {
       "file": "AZAN-Najafi.mp3",
@@ -19,5 +20,23 @@
         "ur": "حسین صبحدل"
       }
     }
-  ]
+  ],
+  "duas": {
+    "files": {
+      "week_sat": "doa/doa-sat.mp3",
+      "week_sun": "doa/doa-sun.mp3",
+      "week_mon": "doa/doa-mon.mp3",
+      "week_tue": "doa/doa-tue.mp3",
+      "week_wed": "doa/doa-wed.mp3",
+      "week_thu": "doa/doa-thu.mp3",
+      "week_fri": "doa/doa-fri.mp3",
+      "faraj": "doa/DOA-FARAJ-Farahmand.mp3",
+      "ahd": "doa/DOA-AHD-Farahmand.mp3",
+      "sahar_fa": "doa/ramadan/Dua-Sahar-fa.mp3",
+      "sahar_ar": "doa/ramadan/Dua-Sahar-ar.mp3",
+      "iftar_fa": "doa/ramadan/Dua-Eftar-fa.mp3",
+      "iftar_ar": "doa/ramadan/Dua-Eftar-ar.mp3",
+      "after_iftar": "doa/ramadan/Eftar_after_Azan.mp3"
+    }
+  }
 }
