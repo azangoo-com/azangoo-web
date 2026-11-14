@@ -69,7 +69,6 @@
       moon_best_none: 'در غروب {weekday} {gd} {gm}، هلال ماه {next} در این مکان قابل مشاهده نیست.',
       moon_best_tip: 'برای دیدن هلال، افق در آن جهت باید باز و بدون مانع باشد.',
       moon_alt: 'ماه، {p} درصد روشن',
-      moon_zoom: 'بزرگ‌نمایی ماه',
       dir: 'از جهت {card}، {deg} درجه به سمت {side}',
       qibla: 'جهت قبله: {deg}° از شمال، در جهت عقربه‌های ساعت', qibla_label: 'جهت قبله',
       adhan_title: 'صدای اذان', r_moazen: 'موذن‌زاده اردبیلی', r_abather: 'اباذر الحلواجی', r_sobhdel: 'حسین صبحدل', r_najafi: 'فرید نجفی', r_aghati: 'محمد آقاتی', auto_label: 'پخش خودکار اذان و دعا',
@@ -191,7 +190,6 @@
       moon_best_none: 'At sunset on {weekday}, {gd} {gm}, the new crescent of {next} is not visible in this place.',
       moon_best_tip: 'You need a clear, unobstructed horizon in that direction.',
       moon_alt: 'Moon, {p}% illuminated',
-      moon_zoom: 'Enlarge the moon',
       dir: '{deg}° {side} of {card}',
       qibla: 'Qibla: {deg}° from north, clockwise', qibla_label: 'Qibla direction',
       adhan_title: 'Adhan sound', r_moazen: 'Moazenzadeh Ardebili', r_abather: 'Abather Alhalwachi', r_sobhdel: 'Hossein Sobhdel', r_najafi: 'Farid Najafi', r_aghati: 'Mohammad Aghati', auto_label: 'Automatic adhan and dua playback',
@@ -312,7 +310,6 @@
       moon_best_none: '{weekday} {gd} {gm} کے غروب آفتاب پر {next} کا ہلال اس جگہ نظر نہیں آتا۔',
       moon_best_tip: 'ہلال دیکھنے کے لیے اس سمت میں افق کھلا اور رکاوٹ سے پاک ہونا چاہیے۔',
       moon_alt: 'چاند، {p} فیصد روشن',
-      moon_zoom: 'چاند کو بڑا کر کے دیکھیں',
       dir: 'جہت {card}، {deg} درجہ {side} کی طرف',
       qibla: 'قبلہ: شمال سے {deg}° گھڑی کی سمت', qibla_label: 'قبلہ کی سمت',
       adhan_title: 'اذان کی آواز', r_moazen: 'موذن زادہ اردبیلی', r_abather: 'اباذر الحلواجی', r_sobhdel: 'حسین صبحدل', r_najafi: 'فرید نجفی', r_aghati: 'محمد آقاتی', auto_label: 'خودکار اذان اور دعا چلائیں',
@@ -457,7 +454,6 @@
       moon_best_none: 'عند غروب الشمس مساء {weekday} {gd} {gm} لا يُرى هلال {next} في هذا المكان.',
       moon_best_tip: 'يلزم أن يكون الأفق في ذلك الاتجاه مفتوحًا وخاليًا من العوائق.',
       moon_alt: 'القمر، مضاء بنسبة {p}%',
-      moon_zoom: 'تكبير القمر',
       dir: '{deg}° {side} من {card}',
       qibla: 'القبلة: {deg}° من الشمال باتجاه عقارب الساعة',
       qibla_label: 'اتجاه القبلة',
@@ -671,7 +667,9 @@
       .replace(/٫/g, '.').replace(/٬|،/g, ',').replace(/[−–]/g, '-').trim();
   }
   function names(kind) { return NAMES[lang][kind]; }
-  function percent(x) { return num(x) + (info(lang).digits === 'latin' ? '%' : '٪'); }
+  /* RTL scripts: the number is kept as its own left-to-right run and the sign sits after it in reading order,
+     i.e. visually on its left (٪۶٫۶۵) */
+  function percent(x) { return info(lang).digits === 'latin' ? num(x) + '%' : '\u2066' + num(x) + '\u2069٪'; }
   function isRtl() { return info(lang).rtl; }
 
   function apply() {

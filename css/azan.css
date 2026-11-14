@@ -150,8 +150,12 @@ html:not([lang="fa"]) .date-shamsi{display:none}
 .ev-more::after{content:"‹";margin-inline-start:.5em;font-size:1.2em;line-height:1}
 [dir="ltr"] .ev-more::after{content:"›"}
 .ev-more:focus-visible,.ev-back:focus-visible{outline:2px solid var(--turq);outline-offset:2px}
-.ev-dlg .hadith-card{max-width:600px}
-.ev-dlg h3{margin:0 0 8px;color:var(--heading);font-size:1.1rem;line-height:1.7;padding-inline-end:34px}
+.ev-dlg .hadith-card{max-width:600px;padding:0;overflow:hidden;display:flex;flex-direction:column}
+/* only the text scrolls; the close button stays fixed on the card */
+.ev-dlg .ev-scroll{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:6px 20px 18px;flex:1 1 auto;min-height:0}
+.ev-dlg .hadith-card{max-height:85vh}
+.ev-dlg .hadith-x{z-index:2}
+.ev-dlg h3{margin:0 0 8px;color:var(--heading);font-size:1.1rem;line-height:1.7}
 .ev-date{display:inline-block}
 .ev-full{margin:10px 0;line-height:2.05;white-space:pre-line}
 .ev-legend{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:.8rem;line-height:1.7;color:var(--muted)}
@@ -609,8 +613,14 @@ html.hadith-open{overflow:hidden}
 .ev-dlg .ev-back{color:var(--ta)}
 .ev-dlg .ev-more{background:linear-gradient(var(--tb1),var(--tb2));color:var(--tk);border:0;font-weight:800}
 .ev-dlg .ev-more:hover{filter:brightness(1.08)}
-.ev-dlg .hadith-x{color:#fff}
-.ev-dlg .hadith-x:hover{background:rgba(255,255,255,.18)}
+/* a solid accent-coloured close button, so it never blends with the text; plus a full-width one that is always visible at the bottom */
+.ev-dlg .ev-head{flex:none;display:flex;justify-content:flex-end;padding:8px 10px 0}
+.ev-dlg .hadith-x{position:static;width:36px;height:36px;color:var(--tk);background:linear-gradient(var(--tb1),var(--tb2));border:2px solid rgba(255,255,255,.85);box-shadow:0 2px 8px rgba(0,0,0,.5);font-size:1.4rem;font-weight:700}
+.ev-dlg .hadith-x:hover{filter:brightness(1.1);background:linear-gradient(var(--tb1),var(--tb2))}
+.ev-dlg .ev-foot{flex:none;padding:10px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.22)}
+.ev-dlg .ev-close{display:block;width:100%;padding:10px;border:0;border-radius:12px;background:linear-gradient(var(--tb1),var(--tb2));color:var(--tk);font:inherit;font-weight:800;cursor:pointer}
+.ev-dlg .ev-close:hover{filter:brightness(1.08)}
+.ev-dlg .ev-close:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .ev-dlg .ev-more:focus-visible,.ev-dlg .ev-back:focus-visible,.ev-dlg .hadith-x:focus-visible{outline:2px solid var(--ta);outline-offset:2px}
 
 /* date tiles, a little smaller: the prayer times and the map should be what the eye sees first */
@@ -717,6 +727,8 @@ html.hadith-open{overflow:hidden}
   .about-body p{font-size:.86rem}
   .about-dlg .save-actions{bottom:-14px}
   .hadith-card{padding:18px 14px 14px}
+  .ev-dlg .hadith-card{padding:0}
+  .ev-dlg .ev-scroll{padding:6px 14px 14px}
   .hadith-ar{font-size:1.1rem;line-height:2}
   .hadith-t{font-size:.9rem;line-height:1.9}
 }

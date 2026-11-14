@@ -350,11 +350,12 @@
     if (dlg) return dlg;
     dlg = document.createElement("div"); dlg.className = "hadith-modal ev-dlg"; dlg.hidden = true;
     dlg.setAttribute("role", "dialog"); dlg.setAttribute("aria-modal", "true"); dlg.setAttribute("aria-labelledby", "evDlgT");
-    dlg.innerHTML = '<div class="hadith-card"><button type="button" class="hadith-x" id="evDlgX">×</button>' +
-      '<button type="button" class="ev-back" id="evDlgBack" hidden></button><h3 id="evDlgT"></h3><div id="evDlgBody"></div></div>';
+    dlg.innerHTML = '<div class="hadith-card"><div class="ev-head"><button type="button" class="hadith-x" id="evDlgX">×</button></div>' +
+      '<div class="ev-scroll" id="evDlgScroll"><button type="button" class="ev-back" id="evDlgBack" hidden></button><h3 id="evDlgT"></h3><div id="evDlgBody"></div></div><div class="ev-foot"><button type="button" class="ev-close" id="evDlgClose"></button></div></div>';
     document.body.appendChild(dlg);
     dlg.addEventListener("click", function (e) { if (e.target === dlg) closeDlg(); });
     dlg.querySelector("#evDlgX").addEventListener("click", closeDlg);
+    dlg.querySelector("#evDlgClose").addEventListener("click", closeDlg);
     dlg.querySelector("#evDlgBack").addEventListener("click", function () { renderDlg(dlgPg, -1); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && dlg && !dlg.hidden) closeDlg(); });
     return dlg;
@@ -367,6 +368,7 @@
     if (tn) dlg.setAttribute("data-tone", tn); else dlg.removeAttribute("data-tone");
     back.hidden = !(pg.all && idx >= 0); back.textContent = t("ev_back");
     dlg.querySelector("#evDlgX").setAttribute("aria-label", t("hadith_close"));
+    dlg.querySelector("#evDlgClose").textContent = t("hadith_close");
     if (idx < 0) {
       title.textContent = t("ev_list_title", { d: pg.date });
       pg.items.forEach(function (it, i) {
@@ -391,7 +393,7 @@
         body.appendChild(lg);
       }
     }
-    dlg.querySelector(".hadith-card").scrollTop = 0;
+    dlg.querySelector("#evDlgScroll").scrollTop = 0;
   }
   function openDlg(pg) {
     ensureDlg(); dlgPg = pg; dlgFocus = document.activeElement;
