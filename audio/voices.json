@@ -3,6 +3,15 @@
   "base_url": "https://www.azangoo.com/audio/",
   "voices": [
     {
+      "file": "AZAN-Salim-Moazen-zadeh.mp3",
+      "names": {
+        "fa": "سلیم مؤذن‌زاده",
+        "en": "Salim Moazenzadeh",
+        "ar": "سليم مؤذن‌زاده",
+        "ur": "سلیم مؤذن‌زاده"
+      }
+    },
+    {
       "file": "AZAN-Najafi.mp3",
       "names": {
         "fa": "فرید نجفی",
