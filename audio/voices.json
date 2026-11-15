@@ -12,12 +12,129 @@
       }
     },
     {
-      "file": "Azan-Hossein-Sobhdel.mp3",
+      "file": "AZAN-Hossein-Sobhdel.mp3",
       "names": {
         "fa": "حسین صبحدل",
         "en": "Hossein Sobhdel",
         "ar": "حسين صبحدل",
         "ur": "حسین صبحدل"
+      }
+    },
+    {
+      "file": "AZAN-Abdolhossein-Mohammadpour.mp3",
+      "names": {
+        "fa": "عبدالحسن محمدپور",
+        "en": "Abdolhassan Mohammadpour",
+        "ar": "عبدالحسن محمدبور",
+        "ur": "عبدالحسن محمدپور"
+      }
+    },
+    {
+      "file": "AZAN-Ali-Sobhani.mp3",
+      "names": {
+        "fa": "علی سبحانی",
+        "en": "Ali Sobhani",
+        "ar": "علي سبحاني",
+        "ur": "علی سبحانی"
+      }
+    },
+    {
+      "file": "AZAN-Haram-Emam-Reza.mp3",
+      "names": {
+        "fa": "حرم امام رضا (ع)",
+        "en": "Imam Reza Shrine",
+        "ar": "حرم الإمام الرضا (ع)",
+        "ur": "حرم امام رضا (ع)"
+      }
+    },
+    {
+      "file": "AZAN-Hossein-Karami.mp3",
+      "names": {
+        "fa": "حسین کرمی",
+        "en": "Hossein Karami",
+        "ar": "حسين كرمي",
+        "ur": "حسین کرمی"
+      }
+    },
+    {
+      "file": "AZAN-Mansori.mp3",
+      "names": {
+        "fa": "کریم منصوری",
+        "en": "Karim Mansouri",
+        "ar": "كريم منصوري",
+        "ur": "کریم منصوری"
+      }
+    },
+    {
+      "file": "AZAN-Meisam-Mahmoudi.mp3",
+      "names": {
+        "fa": "میثم محمودی",
+        "en": "Meisam Mahmoudi",
+        "ar": "ميثم محمودي",
+        "ur": "میثم محمودی"
+      }
+    },
+    {
+      "file": "AZAN-Mohammad-Tokhi.mp3",
+      "names": {
+        "fa": "محمد طوخی",
+        "en": "Mohammad Tokhi",
+        "ar": "محمد طوخي",
+        "ur": "محمد طوخی"
+      }
+    },
+    {
+      "file": "AZAN-Mohsen-Khatibi.mp3",
+      "names": {
+        "fa": "محسن خطیبی",
+        "en": "Mohsen Khatibi",
+        "ar": "محسن خطيبي",
+        "ur": "محسن خطیبی"
+      }
+    },
+    {
+      "file": "AZAN-Morteza-Sadat.mp3",
+      "names": {
+        "fa": "مرتضی سادات",
+        "en": "Morteza Sadat",
+        "ar": "مرتضى سادات",
+        "ur": "مرتضی سادات"
+      }
+    },
+    {
+      "file": "AZAN-Ramezanianpour.mp3",
+      "names": {
+        "fa": "رمضانیان‌پور",
+        "en": "Ramezanianpour",
+        "ar": "رمضانيان‌بور",
+        "ur": "رمضانیان‌پور"
+      }
+    },
+    {
+      "file": "AZAN-Rezaeian.mp3",
+      "names": {
+        "fa": "رضاییان",
+        "en": "Rezaeian",
+        "ar": "رضائيان",
+        "ur": "رضاییان"
+      }
+    },
+    {
+      "file": "AZAN-Rouhollah-Kazemizadeh.mp3",
+      "names": {
+        "fa": "روح‌الله کاظمی‌زاده",
+        "en": "Rouhollah Kazemizadeh",
+        "ar": "روح‌الله كاظمي‌زاده",
+        "ur": "روح‌الله کاظمی‌زاده"
+      }
+    },
+    {
+      "file": "AZAN-Taj-Esfahani.mp3",
+      "names": {
+        "fa": "تاج اصفهانی",
+        "en": "Taj Esfahani",
+        "ar": "تاج الأصفهاني",
+        "ur": "تاج اصفهانی"
       }
     }
   ],
