@@ -245,6 +245,17 @@
     var m = /^(\d{1,2})-(\d{1,2})$/.exec(QS.get("hijri") || "");
     return (m && +m[1] >= 1 && +m[1] <= 12 && +m[2] >= 1 && +m[2] <= 30) ? { m: +m[1], d: +m[2] } : null;
   }
+  var loadable = {};
+  function canLoad(f) {
+    if (!loadable[f]) loadable[f] = new Promise(function (res) {
+      var im = new Image(), done = false;
+      function fin(v) { if (!done) { done = true; res(v); } }
+      im.onload = function () { fin(true); }; im.onerror = function () { fin(false); };
+      setTimeout(function () { fin(true); }, 8000);      /* slow network: keep the picture */
+      im.src = IMG_DIR + f;
+    });
+    return loadable[f];
+  }
   function load() {
     var td = testDate(), th = testHijri();
     var d = td || new Date(), lang = A.current(), h = th || hijriToday(d);
@@ -266,7 +277,11 @@
         var dua = dd && dd.arabic ? { n: h.d, title: dd.title || "", a: dd.arabic, t: dd.translation || "", tl: lang } : null;
         var imgs = imagePages(r[2], h, lang, !!lm, !!dua, lang !== "fa");
         if (lang !== "fa") units = null;
-        return evPages(lm, h, lang).then(function (evt) {
+        /* a picture whose file is missing on the server would be an empty slide: such pictures are left out */
+        return Promise.all(imgs.map(function (p) { return canLoad(p.img.f); })).then(function (ok) {
+          imgs = imgs.filter(function (p, i) { return ok[i]; });
+          return evPages(lm, h, lang);
+        }).then(function (evt) {
           imgs = pairPictures(imgs, evt);
           if (!units && !imgs.length && !evt.length && !dua) return null;
           return { units: units || [], imgs: imgs, evt: evt, dua: dua, aboutShown: aboutShown, key: lang + ":" + dayKey(d) + ":" + h.m + "-" + h.d + (lm ? ":ev" : "") + (dua ? ":d" : "") };
