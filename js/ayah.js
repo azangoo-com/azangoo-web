@@ -38,6 +38,7 @@
     next: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>',
     pause: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>',
     play: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>',
+    crescent: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 14.6A8.4 8.4 0 1 1 9.4 4.4a6.8 6.8 0 0 0 10.2 10.2z"/><path d="M17.6 3.2l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8z"/></svg>',
     pin: '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.4-6.5-10.5a6.5 6.5 0 0 1 13 0C18.5 15.6 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.4"/></svg>'
   };
   stage.setAttribute("role", "region");
@@ -159,16 +160,17 @@
      lunar-month forecast of the site */
   /* the picture slides of today: the occasion of the day, the Ramadan dua of the day, the occasions of the whole month,
      and the default pictures when there is nothing else */
-  function imagePages(ev, h, lang, noDefaults) {
+  function imagePages(ev, h, lang, noDefaults, noDuaPic, arOnly) {
     if (!ev) return [];
     var out = [], mName = A.names("hijri")[h.m - 1], key = pad(h.m) + "-";
-    function add(e, kind, extra) { var o = { img: e, kind: kind }; for (var k in extra) o[k] = extra[k]; out.push(o); }
+    /* pictures made for Persian are shown in Persian only; a picture whose file name ends with _ar (Arabic writing only) is shown in every language */
+    function add(e, kind, extra) { if (arOnly && !/_ar\.webp$/.test(e.f)) return; var o = { img: e, kind: kind }; for (var k in extra) o[k] = extra[k]; out.push(o); }
     (ev.events[key + pad(h.d)] || []).forEach(function (e) {
       var ti = ev.titles && ev.titles[e.s];
       var tt = ti ? (ti[lang] || ti.fa) : "";
       add(e, "day", { title: tt, date: A.num(h.d) + " " + mName, tone: toneOf(tt, h.m) });
     });
-    if (h.m === 9) {
+    if (h.m === 9 && !noDuaPic) {
       var dua = ev.dua && ev.dua[pad(h.d)];
       var di = dua && (dua[lang === "fa" ? "fa" : "en"] || dua.fa || dua.en);
       if (di) add(di, "dua", { n: h.d, tone: "joy" });
@@ -247,7 +249,7 @@
     var td = testDate(), th = testHijri();
     var d = td || new Date(), lang = A.current(), h = th || hijriToday(d);
     TEST = (td || th) ? ("TEST " + (td ? pad(td.getMonth() + 1) + "/" + pad(td.getDate()) + " " : "") + (th ? "hijri " + th.m + "-" + th.d : "")) : "";
-    return Promise.all([getJson("data/ayah/" + lang + "-" + pad(d.getMonth() + 1) + ".json"), surahs ? 0 : getJson("data/surahs.json"), getJson("data/events.json"), monthEvents(lang, h.m)])
+    return Promise.all([getJson("data/ayah/" + lang + "-" + pad(d.getMonth() + 1) + ".json"), surahs ? 0 : getJson("data/surahs.json"), getJson("data/events.json?v=20261211"), monthEvents(lang, h.m), h.m === 9 ? getJson("data/ramadan-duas-" + lang + ".json") : null])
       .then(function (r) {
         if (r[1]) surahs = r[1];
         var doc = r[0], units = null, aboutShown = false;
@@ -258,13 +260,16 @@
           if (!units.length) units = null;
         }
         var lm = r[3] && r[3].days ? r[3] : null;
-        /* the pictures carry Persian writing, and the verse lives in the hadith bar: other languages show only the event cards */
-        var pics = lang === "fa", imgs = pics ? imagePages(r[2], h, lang, !!lm) : [];
-        if (!pics) units = null;
+        /* the verse lives in the hadith bar: other languages show the event cards and the pictures marked _ar */
+        /* Ramadan: the dua of the day as a text card (Arabic + translation) in every language; it replaces the old dua picture */
+        var dd = h.m === 9 && r[4] && r[4].duas ? r[4].duas.filter(function (x) { return x.day === h.d; })[0] : null;
+        var dua = dd && dd.arabic ? { n: h.d, title: dd.title || "", a: dd.arabic, t: dd.translation || "", tl: lang } : null;
+        var imgs = imagePages(r[2], h, lang, !!lm, !!dua, lang !== "fa");
+        if (lang !== "fa") units = null;
         return evPages(lm, h, lang).then(function (evt) {
           imgs = pairPictures(imgs, evt);
-          if (!units && !imgs.length && !evt.length) return null;
-          return { units: units || [], imgs: imgs, evt: evt, aboutShown: aboutShown, key: lang + ":" + dayKey(d) + ":" + h.m + "-" + h.d + (lm ? ":ev" : "") };
+          if (!units && !imgs.length && !evt.length && !dua) return null;
+          return { units: units || [], imgs: imgs, evt: evt, dua: dua, aboutShown: aboutShown, key: lang + ":" + dayKey(d) + ":" + h.m + "-" + h.d + (lm ? ":ev" : "") + (dua ? ":d" : "") };
         });
       });
   }
@@ -279,6 +284,7 @@
   }
   /* the head line, caption and alt text of a slide */
   function headOf(pg) {
+    if (pg.dua) return t("ev_dua", { n: A.num(pg.n) });
     if (pg.ev) return t(pg.next ? "ev_next_head" : "ev_today");
     if (!pg.img) return t(pg.about ? "ayah_about_title" : "ayah_title");
     if (pg.kind === "day") return t("ev_today");
@@ -408,7 +414,24 @@
     S.dlg = false; schedule();
     if (dlgFocus && dlgFocus.focus) dlgFocus.focus();
   }
+  /* the Ramadan dua card: crescent, day of Ramadan, title, the Arabic text and the translation (tone "ramadan") */
+  function fillDua(box, pg) {
+    box.textContent = "";
+    box.classList.add("cv", "cv-dua");
+    var top = mk("div", "cv-dua-top", "");
+    var ic = document.createElement("span"); ic.innerHTML = ICON.crescent; top.appendChild(ic);
+    top.appendChild(mk("span", "cv-chip", pg.date));
+    box.appendChild(top);
+    var ti = mk("div", "cv-dua-title", pg.title); ti.setAttribute("role", "heading"); ti.setAttribute("aria-level", "2"); box.appendChild(ti);
+    box.appendChild(mk("div", "cv-rule", ""));
+    if (pg.a) { var a = mk("p", "slide-ar", pg.a); a.setAttribute("lang", "ar"); a.setAttribute("dir", "rtl"); box.appendChild(a); }
+    if (pg.a && pg.t) box.appendChild(mk("span", "slide-orn", "")).setAttribute("aria-hidden", "true");
+    if (pg.t) { var tr = mk("p", "slide-tr", pg.t); tr.setAttribute("lang", pg.tl); tr.setAttribute("dir", pg.tl === "en" ? "ltr" : "rtl"); box.appendChild(tr); }
+    box.style.setProperty("--ar", pg.tier[0] + "rem");
+    box.style.setProperty("--tr", pg.tier[1] + "rem");
+  }
   function fill(box, pg) {
+    if (pg.dua) { fillDua(box, pg); return; }
     if (pg.ev) { fillEvent(box, pg); return; }
     if (pg.img) { fillImage(box, pg); return; }
     box.textContent = "";
@@ -426,7 +449,9 @@
   }
   function fits(pg) {
     fill(el.measure, pg);
-    return el.measure.offsetHeight <= el.body.clientHeight - 6;
+    var ok = el.measure.offsetHeight <= el.body.clientHeight - 6;
+    el.measure.className = "slide-box";
+    return ok;
   }
   /* cut a long text into pieces that each fit one slide; pieces end at a sentence end when there is one near the limit */
   function chunk(text, mk) {
@@ -459,9 +484,26 @@
     return pages;
   }
 
+  /* the dua of the day: one card when it fits (the biggest letters that fit); otherwise the Arabic and the translation each in pieces */
+  function paginateDua(u) {
+    var date = A.num(u.n) + " " + A.names("hijri")[8], k, whole, out = [];
+    function pg(a, t2, tier) { return { dua: true, n: u.n, title: u.title, date: date, a: a, t: t2, tl: u.tl, tier: tier, tone: "ramadan" }; }
+    for (k = 2; k < TIERS.length; k++) { whole = pg(u.a, u.t, TIERS[k]); if (fits(whole)) return [whole]; }
+    /* too much for one card (a phone): the Arabic and the translation get a card each, in the biggest letters that fit; a very long part is cut in pieces */
+    function pieces(isAr, txt) {
+      var j, w, mkp = function (x, tier) { return isAr ? pg(x, "", tier) : pg("", x, tier); };
+      for (j = 1; j < TIERS.length; j++) { w = mkp(txt, TIERS[j]); if (fits(w)) return [w]; }
+      return chunk(txt, function (x) { return mkp(x, TIERS[4]); }).map(function (x) { return mkp(x, TIERS[4]); });
+    }
+    out = pieces(true, u.a);
+    if (u.t) out = out.concat(pieces(false, u.t));
+    return out;
+  }
+
   /* ---------- showing the slides ---------- */
   function dur(pg) {
     if (pg.ev) return 14000;
+    if (pg.dua) return Math.max(10000, Math.min(26000, 5000 + ((pg.a || "").length * 0.8 + (pg.t || "").length) * 35));
     if (pg.img) return IMG_MS;
     var n = (pg.a ? pg.a.length * 0.8 : 0) + (pg.t ? pg.t.length : 0);
     return Math.max(7000, Math.min(20000, 5000 + n * 40));
@@ -501,7 +543,7 @@
     fill(box, pg);
     el.body.appendChild(s);
     el.title.textContent = headOf(pg);
-    var card = !!(pg.ev || pg.img);
+    var card = !!(pg.ev || pg.img || pg.dua);
     stage.classList.toggle("is-card", card);
     if (card && pg.tone) stage.setAttribute("data-tone", pg.tone); else stage.removeAttribute("data-tone");
     var nx = S.pages[(S.i + 1) % n], np = nx && (nx.pic || nx.img);
@@ -519,13 +561,14 @@
     labels();
     el.test.hidden = !TEST; el.test.textContent = TEST;
     var cur = S.pages[S.i], verse = [];
-    if (SHOW_VERSE || (!S.doc.imgs.length && !(S.doc.evt && S.doc.evt.length))) {
+    var duaPages = S.doc.dua ? paginateDua(S.doc.dua) : [];
+    if (SHOW_VERSE || (!S.doc.imgs.length && !duaPages.length && !(S.doc.evt && S.doc.evt.length))) {
       verse = paginate(S.doc.units);
       verse.forEach(function (v) { v.about = S.doc.aboutShown; });
     }
-    S.pages = S.doc.imgs.concat(S.doc.evt || [], verse);
+    S.pages = S.doc.imgs.concat(duaPages, S.doc.evt || [], verse);
     var start = 0;
-    function same(a, b) { if (a.ev || b.ev) return a.ev === b.ev; return a.img ? (b.img && a.img.f === b.img.f) : (!b.img && a.r === b.r && (a.a || "").slice(0, 8) === (b.a || "").slice(0, 8) && (a.t || "").slice(0, 8) === (b.t || "").slice(0, 8)); }
+    function same(a, b) { if (a.ev || b.ev) return a.ev === b.ev; if (a.dua || b.dua) return !!a.dua === !!b.dua && a.n === b.n && (a.a || "").slice(0, 8) === (b.a || "").slice(0, 8) && (a.t || "").slice(0, 8) === (b.t || "").slice(0, 8); return a.img ? (b.img && a.img.f === b.img.f) : (!b.img && a.r === b.r && (a.a || "").slice(0, 8) === (b.a || "").slice(0, 8) && (a.t || "").slice(0, 8) === (b.t || "").slice(0, 8)); }
     if (keepUnit && cur) for (var k = 0; k < S.pages.length; k++) if (same(S.pages[k], cur)) { start = k; break; }
     var multi = S.pages.length > 1;
     el.prev.hidden = el.next.hidden = el.pause.hidden = el.dots.hidden = !multi;
@@ -563,7 +606,7 @@
     if (mapHint && mapHint.classList.contains("hint")) mapHint.hidden = slides;
     /* one general sentence under the frame for all the occasion slides (dates follow the lunar-month forecast) */
     var evNote = document.getElementById("slidesNote");
-    if (evNote) evNote.hidden = !(slides && S.doc && (S.doc.imgs.some(function (p) { return p.kind !== "default"; }) || (S.doc.evt && S.doc.evt.length)));
+    if (evNote) evNote.hidden = !(slides && S.doc && (S.doc.imgs.some(function (p) { return p.kind !== "default"; }) || (S.doc.evt && S.doc.evt.length) || S.doc.dua));
   }
   function setInert(node, on) {
     if (!node) return;
