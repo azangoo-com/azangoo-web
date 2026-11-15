@@ -431,6 +431,11 @@
     var out = { illumNow: illumNow, waxing: waxing, img: imageName(illumNow, waxing), rise: null, set: null,
                 sunsetIllum: null, text: "" };
 
+    /* is the Moon above the horizon of this place right now, and when does that change (next moonrise if it is below, next moonset if above) */
+    out.up = moonAt(now, lat, lng).alt > 0;
+    var nx = crossings(function (x) { return moonAt(x, lat, lng).alt; }, H0_MOON, now, now + 30 * 3600000)[0];
+    out.horizT = nx ? nx.t : null;
+
     var td = dayStart(now, off);
     crossings(function (x) { return moonAt(x, lat, lng).alt; }, H0_MOON, td, td + DAY).forEach(function (e) {
       if (e.rising && !out.rise) out.rise = { t: e.t, az: moonAt(e.t, lat, lng).az };
@@ -506,7 +511,56 @@
     }
     var zb = document.getElementById("moonZoom");
     if (zb) { var zl = root.AzanLang.t("moon_zoom"); zb.setAttribute("aria-label", zl); zb.title = zl; }
+    rendering = true;
+    try { applyHorizon(o); } finally { rendering = false; }
   }
+
+  /* Moon below the horizon: the picture is faded and a label sits under it; a countdown shows the time left until
+     moonrise (below the horizon) or moonset (above it) with a short note. The countdown ticks every second from the
+     time found in compute(); when it reaches zero the card is computed again. */
+  var rendering = false, cdTarget = null;
+  function p2s(n) { return (n < 10 ? "0" : "") + n; }
+  function horizonEls() {
+    var img = document.getElementById("moonImg"), box = img && img.parentNode;
+    if (!box) return null;
+    var below = document.getElementById("moonBelow"), cd = document.getElementById("moonCd");
+    if (!below) {
+      below = document.createElement("div"); below.id = "moonBelow"; below.className = "moon-below"; below.hidden = true;
+      box.appendChild(below);
+    }
+    if (!cd) {
+      cd = document.createElement("div"); cd.id = "moonCd"; cd.className = "moon-cd"; cd.hidden = true;
+      cd.innerHTML = '<div class="moon-cd-l" id="moonCdL"></div><div class="moon-cd-t" id="moonCdT" dir="ltr"></div><div class="moon-cd-n" id="moonCdN"></div>';
+      box.parentNode.insertBefore(cd, box.nextSibling);
+    }
+    return { box: box, below: below, cd: cd };
+  }
+  function tickCd() {
+    var el = document.getElementById("moonCdT");
+    if (!el || cdTarget === null) return;
+    var left = cdTarget - Date.now();
+    if (left <= 0) { cdTarget = null; if (!rendering) render(); return; }
+    var s = Math.floor(left / 1000), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60);
+    el.textContent = fa(p2s(h) + ":" + p2s(m) + ":" + p2s(s % 60));
+  }
+  function applyHorizon(o) {
+    var E = horizonEls(), A = root.AzanLang;
+    if (!E) return;
+    var isBelow = !o.up;
+    E.box.classList.toggle("is-below", isBelow);
+    E.below.hidden = !isBelow;
+    E.below.textContent = isBelow ? A.t("moon_below") : "";
+    if (o.horizT && o.horizT > Date.now()) {
+      cdTarget = o.horizT;
+      document.getElementById("moonCdL").textContent = A.t(isBelow ? "moon_cd_rise" : "moon_cd_set");
+      document.getElementById("moonCdN").textContent = A.t(isBelow ? "moon_cd_rise_note" : "moon_cd_set_note");
+      E.cd.hidden = false;
+      tickCd();
+    } else {
+      cdTarget = null; E.cd.hidden = true;
+    }
+  }
+  if (typeof document !== "undefined") setInterval(tickCd, 1000);
   /* the card has two tabs: "the Moon right now" (the numbers) and "<next month> sighting" (every explanation: the main messages, the start
      of the month, why, the best time, the weather outlook and the note about the criterion). The second tab shows only when there is
      something behind it. */
