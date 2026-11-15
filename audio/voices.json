@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "base_url": "https://www.azangoo.com/audio/",
   "voices": [
     {
@@ -12,7 +12,7 @@
       }
     },
     {
-      "file": "AZAN-Hossein-Sobhdel.mp3",
+      "file": "Azan-Hossein-Sobhdel.mp3",
       "names": {
         "fa": "حسین صبحدل",
         "en": "Hossein Sobhdel",
