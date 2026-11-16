@@ -515,21 +515,24 @@
     try { applyHorizon(o); } finally { rendering = false; }
   }
 
-  /* Moon below the horizon: the picture sinks behind a horizon line (CSS only); the countdown card shows the status
-     (arrow + "below / above the horizon") and the time left until moonrise (below the horizon) or moonset (above it). The countdown ticks every second from the
+  /* Moon below the horizon: the picture is more transparent and a plain label sits under it; the countdown card shows the time left until moonrise (below the horizon) or moonset (above it). The countdown ticks every second from the
      time found in compute(); when it reaches zero the card is computed again. */
   var rendering = false, cdTarget = null;
   function p2s(n) { return (n < 10 ? "0" : "") + n; }
   function horizonEls() {
     var img = document.getElementById("moonImg"), box = img && img.parentNode;
     if (!box) return null;
-    var cd = document.getElementById("moonCd");
+    var below = document.getElementById("moonBelow"), cd = document.getElementById("moonCd");
+    if (!below) {
+      below = document.createElement("div"); below.id = "moonBelow"; below.className = "moon-below"; below.hidden = true;
+      box.appendChild(below);
+    }
     if (!cd) {
       cd = document.createElement("div"); cd.id = "moonCd"; cd.className = "moon-cd"; cd.hidden = true;
-      cd.innerHTML = '<div class="moon-cd-s" id="moonCdS"></div><div class="moon-cd-l" id="moonCdL"></div><div class="moon-cd-t" id="moonCdT" dir="ltr"></div>';
+      cd.innerHTML = '<div class="moon-cd-l" id="moonCdL"></div><div class="moon-cd-t" id="moonCdT" dir="ltr"></div>';
       box.parentNode.insertBefore(cd, box.nextSibling);
     }
-    return { box: box, cd: cd };
+    return { box: box, below: below, cd: cd };
   }
   function tickCd() {
     var el = document.getElementById("moonCdT");
@@ -544,12 +547,11 @@
     if (!E) return;
     var isBelow = !o.up;
     E.box.classList.toggle("is-below", isBelow);
+    E.below.hidden = !isBelow;
+    E.below.textContent = isBelow ? A.t("moon_below") : "";
     if (o.horizT && o.horizT > Date.now()) {
       cdTarget = o.horizT;
       document.getElementById("moonCdL").textContent = A.t(isBelow ? "moon_cd_rise" : "moon_cd_set");
-      var st = document.getElementById("moonCdS");
-      st.textContent = A.t(isBelow ? "moon_below" : "moon_above");
-      st.className = "moon-cd-s" + (isBelow ? "" : " up");
       E.cd.hidden = false;
       tickCd();
     } else {
