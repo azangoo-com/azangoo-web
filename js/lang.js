@@ -772,12 +772,6 @@
     if (widgetLink) widgetLink.setAttribute('href', lang + '/widget/index.html');
     var listBtn = document.getElementById('cityListLink');
     if (listBtn) listBtn.setAttribute('href', lang + '/prayer-times/index.html');
-    var logo = document.querySelector('img.logo-img');
-    if (logo) {
-      var key = logo.getAttribute('data-src-' + lang) ? lang : 'fa';   /* Urdu uses the Persian logo */
-      logo.setAttribute('src', logo.getAttribute('data-src-' + key));
-      logo.setAttribute('srcset', logo.getAttribute('data-srcset-' + key));
-    }
     var sel = document.getElementById('langSelect');
     if (sel) {
       if (!sel.options.length) {

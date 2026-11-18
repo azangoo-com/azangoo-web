@@ -453,12 +453,14 @@
     if (start !== null) {
       var nextStart = entry ? start + (+entry.length) * DAY : cm.next;
       var lastEve = nextStart - DAY;                                 /* evening of the last day */
-      var lastEv = dayEvent(lastEve, lat, lng);
+      /* illumination and sunset-to-moonset time are both taken at the SUNSET of the last day, from evening(), the same
+         function the "why" line uses, so the two texts always show the same numbers */
+      var lastEv = evening(lastEve, lat, lng), lastFb = lastEv ? null : dayEvent(lastEve, lat, lng);
       out.len = Math.round((nextStart - start) / DAY);
       out.last = {
         visible: passes(lastEve, lat, lng),
-        illum: lastEv.illum,
-        dur: Math.max(0, Math.round(lastEv.lag))
+        illum: lastEv ? lastEv.illum : lastFb.illum,
+        dur: lastEv ? lastEv.dur : Math.max(0, Math.round(lastFb.lag))
       };
       out.cur = entry ? names[(+entry.hijriMonth - 1 + 12) % 12] : hijriName(start, off);
       out.hijriMonth = names.indexOf(out.cur) + 1;                   /* 1 = Muharram ... 12 = Dhu al-Hijjah, for the other scripts of the site */
