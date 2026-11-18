@@ -1,0 +1,234 @@
+{
+ "schema": 1,
+ "min_app_version": 1,
+ "base_url": "https://www.azangoo.com/data/duas/",
+ "categories": [
+  {
+   "id": "dua",
+   "title": "دعاها",
+   "title_en": "Duas",
+   "title_ar": "الأدعية",
+   "title_ur": "دعائیں"
+  },
+  {
+   "id": "ziyarat",
+   "title": "زیارت‌ها",
+   "title_en": "Ziyarat",
+   "title_ar": "الزيارات",
+   "title_ur": "زیارات"
+  },
+  {
+   "id": "quran",
+   "title": "سوره‌ها",
+   "title_en": "Surahs",
+   "title_ar": "السُّوَر",
+   "title_ur": "سورتیں"
+  },
+  {
+   "id": "dhikr",
+   "title": "ذکرها",
+   "title_en": "Dhikr",
+   "title_ar": "الأذكار",
+   "title_ur": "اذکار"
+  }
+ ],
+ "files": [
+  {
+   "id": "dua",
+   "file": "duas.json",
+   "version": 1
+  },
+  {
+   "id": "ziyarat",
+   "file": "ziyarat.json",
+   "version": 1
+  },
+  {
+   "id": "quran",
+   "file": "quran.json",
+   "version": 1
+  }
+ ],
+ "items": [
+  {
+   "id": "yasin",
+   "category": "ziyarat",
+   "file": "ziyarat.json",
+   "title": "زیارت آل یاسین",
+   "title_en": "Ziyarat Ale Yasin",
+   "title_ur": "زیارت آلِ یاسین",
+   "title_ar": "زيارة آل ياسين"
+  },
+  {
+   "id": "ahd",
+   "category": "dua",
+   "file": "duas.json",
+   "title": "دعای عهد",
+   "title_en": "Dua al-Ahd",
+   "title_ur": "دعائے عہد",
+   "title_ar": "دعاء العهد"
+  },
+  {
+   "id": "ashura",
+   "category": "ziyarat",
+   "file": "ziyarat.json",
+   "title": "زیارت عاشورا",
+   "title_en": "Ziyarat Ashura",
+   "title_ur": "زیارت عاشورا",
+   "title_ar": "زيارة عاشوراء"
+  },
+  {
+   "id": "aminallah",
+   "category": "ziyarat",
+   "file": "ziyarat.json",
+   "title": "زیارت امین‌الله",
+   "title_en": "Ziyarat Aminullah",
+   "title_ur": "زیارتِ امین اللہ",
+   "title_ar": "زِيَارَةُ أَمِينِ اللَّهِ"
+  },
+  {
+   "id": "jamea_kabira",
+   "category": "ziyarat",
+   "file": "ziyarat.json",
+   "title": "زیارت جامعه کبیره",
+   "title_en": "Ziyarat Jami‘a Kabira",
+   "title_ur": "زیارت جامعہ کبیرہ",
+   "title_ar": "زِيَارَةُ الْجَامِعَةِ الْكَبِيرَةِ"
+  },
+  {
+   "id": "kisa",
+   "category": "dua",
+   "file": "duas.json",
+   "title": "حدیث کسا",
+   "title_en": "Hadith al-Kisa",
+   "title_ur": "حدیث کسا",
+   "title_ar": "حديث الكساء"
+  },
+  {
+   "id": "kumayl",
+   "category": "dua",
+   "file": "duas.json",
+   "title": "دعای کمیل",
+   "title_en": "Dua Kumayl",
+   "title_ur": "دعائے کمیل",
+   "title_ar": "دعاء كميل"
+  },
+  {
+   "id": "tawassul",
+   "category": "dua",
+   "file": "duas.json",
+   "title": "دعای توسل",
+   "title_en": "Dua Tawassul",
+   "title_ur": "دعائے توسل",
+   "title_ar": "دعاء التوسل"
+  },
+  {
+   "id": "nudbah",
+   "category": "dua",
+   "file": "duas.json",
+   "title": "دعای ندبه",
+   "title_en": "Dua Nudbah",
+   "title_ur": "دعائے ندبہ",
+   "title_ar": "دُعَاءُ النُّدْبَةِ"
+  },
+  {
+   "id": "faraj",
+   "category": "dua",
+   "file": "duas.json",
+   "title": "دعای فرج",
+   "title_en": "Dua al-Faraj",
+   "title_ur": "دعائے فرج",
+   "title_ar": "دعاء الفرج"
+  },
+  {
+   "id": "ayat_kursi",
+   "category": "quran",
+   "file": "quran.json",
+   "title": "آیت‌الکرسی",
+   "title_en": "Ayat al-Kursi",
+   "title_ur": "آیت الکرسی",
+   "title_ar": "آيَةُ الْكُرْسِيِّ"
+  },
+  {
+   "id": "surah_qadr",
+   "category": "quran",
+   "file": "quran.json",
+   "title": "سوره قدر",
+   "title_en": "Surah Al-Qadr",
+   "title_ur": "سورۃ القدر",
+   "title_ar": "سُورَةُ الْقَدْرِ"
+  },
+  {
+   "id": "surah_kawthar",
+   "category": "quran",
+   "file": "quran.json",
+   "title": "سوره کوثر",
+   "title_en": "Surah Al-Kawthar",
+   "title_ur": "سورۃ الکوثر",
+   "title_ar": "سُورَةُ الْكَوْثَرِ"
+  },
+  {
+   "id": "surah_kafirun",
+   "category": "quran",
+   "file": "quran.json",
+   "title": "سوره کافرون",
+   "title_en": "Surah Al-Kafirun",
+   "title_ur": "سورۃ الکافرون",
+   "title_ar": "سُورَةُ الْكَافِرُونَ"
+  },
+  {
+   "id": "surah_ikhlas",
+   "category": "quran",
+   "file": "quran.json",
+   "title": "سوره اخلاص",
+   "title_en": "Surah Al-Ikhlas",
+   "title_ur": "سورۃ الاخلاص",
+   "title_ar": "سُورَةُ الْإِخْلَاصِ"
+  },
+  {
+   "id": "surah_falaq",
+   "category": "quran",
+   "file": "quran.json",
+   "title": "سوره فلق",
+   "title_en": "Surah Al-Falaq",
+   "title_ur": "سورۃ الفلق",
+   "title_ar": "سُورَةُ الْفَلَقِ"
+  },
+  {
+   "id": "surah_nas",
+   "category": "quran",
+   "file": "quran.json",
+   "title": "سوره ناس",
+   "title_en": "Surah An-Nas",
+   "title_ur": "سورۃ الناس",
+   "title_ar": "سُورَةُ النَّاسِ"
+  },
+  {
+   "id": "surah_asr",
+   "category": "quran",
+   "file": "quran.json",
+   "title": "سوره عصر",
+   "title_en": "Surah Al-Asr",
+   "title_ur": "سورۃ العصر",
+   "title_ar": "سُورَةُ الْعَصْرِ"
+  },
+  {
+   "id": "surah_waqia",
+   "category": "quran",
+   "file": "quran.json",
+   "title": "سوره واقعه",
+   "title_en": "Surah Al-Waqi'ah",
+   "title_ur": "سورۃ الواقعہ",
+   "title_ar": "سُورَةُ الْوَاقِعَةِ"
+  },
+  {
+   "id": "surah_jumua",
+   "category": "quran",
+   "file": "quran.json",
+   "title": "سوره جمعه",
+   "title_en": "Surah Al-Jumu'ah",
+   "title_ur": "سورۃ الجمعہ",
+   "title_ar": "سُورَةُ الْجُمُعَةِ"
+  }
+ ]
+}

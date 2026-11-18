@@ -473,8 +473,153 @@
       out.startText = buildStartText(out) + " " + root.AzanLang.t(entry ? "official_mark" : "predicted_mark");
       out.whyText = buildWhy(out, entry, start, nextStart, lat, lng, off, now);
       out.bestText = buildBest(out, nextStart, lat, lng, off, now);
+      out.sight = buildSight(out, start, lat, lng, off, now);
     }
     return out;
+  }
+
+  /* ---- second tab: the sky at the best moment to see the new crescent (evening of day 29) ----
+     Sky colours follow how far the Sun is below the horizon at that moment; the Moon is placed at its real height and
+     direction relative to the Sun and turned so that its lit edge faces the Sun. The Moon is drawn larger than real so it can be seen. */
+  var SKY = [   /* Sun depression (degrees) -> [horizon, middle, top] colours */
+    [0,  [255, 176, 96],  [244, 150, 120], [96, 128, 190]],
+    [3,  [248, 150, 100], [206, 120, 130], [60, 86, 160]],
+    [6,  [214, 120, 110], [120, 92, 140],  [32, 52, 120]],
+    [9,  [120, 92, 130],  [52, 56, 110],   [14, 26, 72]],
+    [12, [52, 62, 110],   [24, 38, 88],    [8, 16, 52]],
+    [15, [28, 44, 92],    [14, 26, 66],    [5, 10, 36]],
+    [18, [14, 24, 60],    [8, 16, 44],     [4, 8, 28]]
+  ];
+  function rgbS(c) { return "rgb(" + Math.round(c[0]) + "," + Math.round(c[1]) + "," + Math.round(c[2]) + ")"; }
+  function skyColors(d) {
+    d = Math.max(0, Math.min(18, d));
+    var i = Math.min(SKY.length - 2, Math.floor(d / 3)), f = (d - SKY[i][0]) / 3, out = [];
+    for (var k = 1; k <= 3; k++) {
+      var a = SKY[i][k], b = SKY[i + 1][k];
+      out.push([a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f]);
+    }
+    return out;
+  }
+  /* the unlit part of the real moon photo is dimmed (about 30 %), the lit part stays as it is; the transparent corners stay transparent */
+  var FILTER_MK = '<filter id="{id}" color-interpolation-filters="sRGB" x="0" y="0" width="1" height="1">' +
+    '<feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 1.8 3.6 0.6 0 -0.9" result="k"/>' +
+    '<feComponentTransfer in="k" result="t"><feFuncA type="table" tableValues="0.3 1"/></feComponentTransfer>' +
+    '<feComposite in="t" in2="SourceAlpha" operator="in"/></filter>';
+  function groundSVG(col) {
+    var gp = "M0,40 L0,24";
+    for (var gx = 0; gx <= 360; gx += 12) gp += " L" + gx + "," + (24 - (3.2 + 2.6 * Math.sin(gx * 0.028 + 1.3) + 1.8 * Math.sin(gx * 0.071 + 0.4)) * 1.2).toFixed(1);
+    return '<svg viewBox="0 0 360 40" preserveAspectRatio="none" width="100%" height="100%" aria-hidden="true"><path d="' + gp + ' L360,40 Z" fill="' + col + '"/></svg>';
+  }
+  function sceneSVG(s, uid, moonD, label, zoom) {
+    var W = 360, H = 210, hy = 168, i;
+    var d = Math.max(0, -s.sunAlt), sk = skyColors(d), top = rgbS(sk[2]), mid = rgbS(sk[1]), hor = rgbS(sk[0]);
+    var R = Math.max(14, s.moonAlt + 6), k = (hy - 30) / R;                       /* pixels per degree */
+    var dxRaw = wrap(s.sunAz - s.moonAz) * Math.cos(Math.max(0, s.moonAlt) * RAD) * k;
+    var vx = Math.max(-W * 0.55, Math.min(W * 0.55, dxRaw));
+    var mx = Math.max(70, Math.min(W - 70, W / 2 - vx / 2)), sx = mx + vx;
+    var my = Math.max(moonD / 2 + 6, Math.min(hy - moonD / 2 - 6, hy - s.moonAlt * k));
+    var ang = Math.atan2(-(s.sunAlt - s.moonAlt) * k, dxRaw) * DEG;              /* the lit side of the picture (right) turns towards the Sun */
+    var glow = Math.max(0, 1 - d / 12) * 0.6;
+    var vw = W / (zoom || 1), vh = H / (zoom || 1);                                 /* zoomed view: closer to the Moon, horizon kept in view */
+    var vx0 = Math.max(0, Math.min(W - vw, mx - vw / 2)), vy0 = Math.max(0, Math.min(H - vh, my - vh * 0.45));
+    var o = '<svg viewBox="' + vx0.toFixed(1) + ' ' + vy0.toFixed(1) + ' ' + vw.toFixed(1) + ' ' + vh.toFixed(1) + '" role="img" aria-label="' + label + '" xmlns="http://www.w3.org/2000/svg">' +
+      '<defs>' +
+      '<linearGradient id="sk' + uid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + top + '"/><stop offset=".55" stop-color="' + mid + '"/><stop offset="1" stop-color="' + hor + '"/></linearGradient>' +
+      '<radialGradient id="sg' + uid + '"><stop offset="0" stop-color="rgb(255,170,90)" stop-opacity="' + glow.toFixed(2) + '"/><stop offset="1" stop-color="rgb(255,170,90)" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="hz' + uid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + hor + '" stop-opacity="0"/><stop offset="1" stop-color="' + hor + '" stop-opacity=".4"/></linearGradient>' +
+      FILTER_MK.replace("{id}", "mk" + uid) +
+      '</defs>' +
+      '<rect width="' + W + '" height="' + (hy + 2) + '" fill="url(#sk' + uid + ')"/>';
+    if (glow > 0) o += '<ellipse cx="' + sx.toFixed(1) + '" cy="' + hy + '" rx="190" ry="120" fill="url(#sg' + uid + ')"/>';
+    var sa = Math.max(0, Math.min(1, (d - 7) / 8)) * 0.85;                         /* stars come out once the sky is dark enough */
+    if (sa > 0) {
+      var seed = 7;
+      for (i = 0; i < 46; i++) {
+        seed = (seed * 9301 + 49297) % 233280; var r1 = seed / 233280;
+        seed = (seed * 9301 + 49297) % 233280; var r2 = seed / 233280;
+        seed = (seed * 9301 + 49297) % 233280; var r3 = seed / 233280;
+        var x = r1 * W, y = 4 + r2 * (hy - 38);
+        if (s.show && Math.abs(x - mx) < 30 && Math.abs(y - my) < 30) continue;
+        o += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (0.6 + r3 * 0.9).toFixed(2) + '" fill="#fff" opacity="' +
+          (sa * (0.4 + 0.6 * r3) * Math.min(1, (hy - y) / 70)).toFixed(2) + '"/>';
+      }
+    }
+    o += '<rect y="' + (hy - 38) + '" width="' + W + '" height="40" fill="url(#hz' + uid + ')"/>';
+    if (s.show) {
+      /* a faint dotted ring marks the place of the Moon (a very thin crescent is hard to see); the unlit part of the picture is made transparent */
+      o += '<circle cx="' + mx.toFixed(1) + '" cy="' + my.toFixed(1) + '" r="' + (moonD / 2 + 7) + '" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="1" stroke-dasharray="2 5" stroke-linecap="round"/>';
+      o += '<image href="images/moon/' + s.img + '" x="' + (mx - moonD / 2).toFixed(1) + '" y="' + (my - moonD / 2).toFixed(1) + '" width="' + moonD +
+        '" height="' + moonD + '" opacity="' + s.alpha + '" filter="url(#mk' + uid + ')" transform="rotate(' + ang.toFixed(1) + ' ' + mx.toFixed(1) + ' ' + my.toFixed(1) + ')"/>';
+    }
+    var gp = "M0," + H + " L0," + (hy + 1);
+    for (var gx = 0; gx <= W; gx += 12) {
+      gp += " L" + gx + "," + (hy + 1 - (3.2 + 2.6 * Math.sin(gx * 0.028 + 1.3) + 1.8 * Math.sin(gx * 0.071 + 0.4))).toFixed(1);
+    }
+    gp += " L" + W + "," + H + " Z";
+    o += '<path d="' + gp + '" fill="' + rgbS([sk[0][0] * 0.2 + 8, sk[0][1] * 0.2 + 9, sk[0][2] * 0.2 + 14]) + '"/></svg>';
+    return o;
+  }
+
+  /* the evening of day 29 of the current month (always shown, even when that evening is already past) - except on day 30 of a
+     30-day month, when it is the evening of day 30 that is shown: the best moment (4/9 of the way
+     from sunset to moonset), the Moon and Sun there, how it can be seen. */
+  function buildSight(o, start, lat, lng, off, now) {
+    if (!(o.len === 29 || o.len === 30)) return null;
+    function moment(e) { return (e && e.age > 0 && e.dur > 0) ? e.t + (4 / 9) * e.dur * MIN : null; }
+    var day = (o.len === 30 && o.hijriDay === 30) ? 30 : 29, ev = evening(start + (day - 1) * DAY, lat, lng), bt = moment(ev);
+    if (!ev) return null;
+    var tS = bt !== null ? bt : ev.t + 25 * MIN;
+    var sA = sunAt(tS, lat, lng), mA = moonAt(tS, lat, lng);
+    var il = (1 - Math.cos(sep(sA.eq, mA.eq) * RAD)) / 2 * 100;
+    var level = (bt === null || ev.V < -0.96) ? "no" : (ev.V >= 5.65 ? "yes" : (ev.V >= 2 ? "maybe" : "aid"));
+    return {
+      day: day, t: ev.t, bt: bt, illum: il, level: level,
+      is29: day === 29 ? ev.visible : o.len === 29,
+      img: imageName(il, true), alpha: { yes: 1, maybe: 0.93, aid: 0.6, no: 0.3 }[level],
+      moonAlt: mA.alt, moonAz: mA.az, sunAlt: sA.alt, sunAz: sA.az, show: bt !== null && mA.alt > -1
+    };
+  }
+  var ZOOM_SVG = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="6.3" fill="none" stroke="currentColor" stroke-width="1.9"/>' +
+    '<path d="M6.6 8.4a4 4 0 0 1 2.6-2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".75"/>' +
+    '<path d="M15 15l5.4 5.4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>' +
+    '<path d="M10 7.5v5M7.5 10h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+  function sightBits(s, o) {
+    var A = root.AzanLang, g = new Date(s.t + state.off * 3600000);
+    return {
+      when: A.t("moon_sight_when", { weekday: A.names("weekdays")[g.getUTCDay()], gd: fa(g.getUTCDate()), gm: A.names("greg")[g.getUTCMonth()], d: fa(s.day), cur: o.cur }),
+      label: s.bt !== null
+        ? '<span>' + A.t("moon_sight_best") + ': <b>' + hm(s.bt, state.off) + '</b></span><span>' + A.t("moon_sight_pct") + ': <b>' + A.percent(s.illum.toFixed(2)) + '</b></span>'
+        : '<span>' + A.t("moon_sight_none") + '</span>',
+      len: A.t(s.day === 30 ? "moon_sight_30" : (s.is29 ? "moon_sight_29" : "moon_sight_no29"), { cur: o.cur, n: fa(29), m: fa(30) }),
+      eye: A.t("moon_eye_" + s.level),
+      pos: s.show ? A.t("moon_sight_pos", { alt: fa(Math.max(1, Math.round(s.moonAlt))), dir: dirText(s.moonAz) }) : ""
+    };
+  }
+  function sceneBox(s, o, uid, moonD, withBtn, zoom) {
+    var A = root.AzanLang, b = sightBits(s, o);
+    return '<div class="moon-scene">' + sceneSVG(s, uid, moonD, A.t("moon_sight_alt"), zoom) + '<div class="moon-scene-label">' + b.label + '</div>' +
+      (withBtn ? '<button type="button" class="moon-zoom" aria-label="' + A.t("moon_zoom") + '" title="' + A.t("moon_zoom") + '">' + ZOOM_SVG + '</button>' : '') + '</div>';
+  }
+  var sightKey = "";
+  function renderSight(o) {
+    var box = document.getElementById("moonMore");
+    if (!box) return;
+    var el = document.getElementById("moonSight");
+    if (!el) {
+      el = document.createElement("div"); el.id = "moonSight"; el.className = "moon-sight"; el.hidden = true;
+      box.insertBefore(el, document.getElementById("moonClip"));
+      el.addEventListener("click", function (e) {
+        var t = e.target;
+        if (t && t.closest && t.closest(".moon-scene")) openPop(t.closest(".moon-zoom") || el, "sight");
+      });
+    }
+    var s = o.sight;
+    if (!s) { el.hidden = true; el.innerHTML = ""; sightKey = ""; return; }
+    var b = sightBits(s, o);
+    var html = '<p class="moon-sight-when">' + b.when + '</p>' + sceneBox(s, o, "c", 44, true) +
+      '<p class="moon-sight-len">' + b.len + '</p><p class="moon-eye is-' + s.level + '">' + b.eye + '</p>';
+    if (html !== sightKey) { el.innerHTML = html; sightKey = html; }
+    el.hidden = false;
   }
 
   /* ---- page ---- */
@@ -501,7 +646,8 @@
     put("mStart", o.startText || "");
     put("mWhy", o.whyText || "");
     put("mBest", o.bestText || "");
-    put("mIntro", o.next ? root.AzanLang.t("moon_sight_intro", { next: o.next }) : "");
+    put("mIntro", "");
+    renderSight(o);
     arrangeMessages();
     var img = document.getElementById("moonImg");
     if (img) {
@@ -565,7 +711,7 @@
   function arrangeMessages() {
     var tabs = document.getElementById("moonTabs");
     if (!tabs) return;
-    var extra = ["mText", "mStart", "mWhy", "mBest", "mNote"].some(function (id) { var e = document.getElementById(id); return e && e.textContent; });
+    var extra = !!(lastOut && lastOut.sight) || ["mText", "mStart", "mWhy", "mBest", "mNote"].some(function (id) { var e = document.getElementById(id); return e && e.textContent; });
     tabs.hidden = !extra;
     if (!extra) showTab("now");
     setTabLabels();
@@ -598,7 +744,8 @@
     if (!more || !clip || !btn || more.hidden) return;
     var nowEl = document.getElementById("moonPanelNow");
     if (nowEl && !nowEl.hidden && nowEl.offsetHeight) nowH = nowEl.offsetHeight; /* the first tab is shorter now: always follow its real height */
-    var limit = Math.max(120, (nowH || 260) - 44);
+    var sg = document.getElementById("moonSight"), sgH = (sg && !sg.hidden) ? sg.offsetHeight + 12 : 0;
+    var limit = Math.max(120, (nowH || 260) - 44 - sgH);
     clip.style.maxHeight = "none";
     var full = clip.scrollHeight;
     if (full <= limit + 12) { /* it fits: no cut, no button */
@@ -628,14 +775,15 @@
     pop.hidden = true; document.documentElement.classList.remove("moon-pop-open");
     if (popOpener && popOpener.focus) popOpener.focus();
   }
-  function openPop(opener) {
+  function openPop(opener, mode) {
     var o = lastOut, A = root.AzanLang;
     if (!o) return;
     if (!pop) {
       pop = document.createElement("div"); pop.className = "moon-pop"; pop.hidden = true;
       pop.setAttribute("role", "dialog"); pop.setAttribute("aria-modal", "true");
-      pop.innerHTML = '<button type="button" class="moon-pop-x">×</button><div class="moon-pop-body"><img class="moon-pop-img" width="600" height="600" alt="">' +
-        '<div class="moon-pop-pct"><span></span><b></b></div></div>' +
+      pop.innerHTML = '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>' + FILTER_MK.replace("{id}", "moonMkP") + '</defs></svg>' +
+        '<div class="moon-pop-ground"></div><button type="button" class="moon-pop-x">×</button><div class="moon-pop-body"><img class="moon-pop-img" width="600" height="600" alt="">' +
+        '<div class="moon-pop-pct"><span></span><b></b></div><div class="moon-pop-sight"></div></div>' +
         '<div class="moon-pop-mark" aria-hidden="true"><img src="icons/icon-32.png" width="16" height="16" alt=""><span>azangoo.com</span></div>';
       document.body.appendChild(pop);
       pop.addEventListener("click", closePop);
@@ -645,12 +793,33 @@
         else if (e.key === "Tab") { e.preventDefault(); pop.querySelector(".moon-pop-x").focus(); }
       });
     }
-    var alt = A.t("moon_alt", { p: fa(o.illumNow.toFixed(1)) });
-    pop.setAttribute("aria-label", alt);
+    var isSight = mode === "sight" && !!o.sight;
+    pop.classList.toggle("is-sight", isSight);
+    var ps = pop.querySelector(".moon-pop-sight"), im = pop.querySelector(".moon-pop-img"), pb = pop.querySelector(".moon-pop-pct b"), pl = pop.querySelector(".moon-pop-pct span");
     pop.querySelector(".moon-pop-x").setAttribute("aria-label", A.t("hadith_close"));
-    var im = pop.querySelector(".moon-pop-img"); im.src = "images/moon/" + o.img; im.alt = alt;
-    pop.querySelector(".moon-pop-pct span").textContent = A.t("moon_now");
-    pop.querySelector(".moon-pop-pct b").textContent = A.percent(o.illumNow.toFixed(2));
+    if (isSight) {
+      /* the real moon picture (as in the first tab) over the sky of that moment: its colours follow the Sun's depth below the horizon */
+      var sg = o.sight, bits = sightBits(sg, o), dep = Math.max(0, -sg.sunAlt), sk = skyColors(dep);
+      pop.style.background = "radial-gradient(ellipse 120% 55% at 50% 100%, rgba(255,170,90," + (Math.max(0, 1 - dep / 12) * 0.55).toFixed(2) + "), transparent 70%), " +
+        "linear-gradient(to bottom, " + rgbS(sk[2]) + " 0%, " + rgbS(sk[1]) + " 55%, " + rgbS(sk[0]) + " 100%)";
+      pop.classList.toggle("has-stars", dep > 8);
+      pop.querySelector(".moon-pop-ground").innerHTML = groundSVG(rgbS([sk[0][0] * 0.2 + 8, sk[0][1] * 0.2 + 9, sk[0][2] * 0.2 + 14]));
+      pop.setAttribute("aria-label", A.t("moon_sight_alt"));
+      im.hidden = !sg.show; im.style.opacity = sg.alpha; im.src = "images/moon/" + sg.img; im.alt = A.t("moon_alt", { p: fa(sg.illum.toFixed(1)) });
+      if (sg.bt !== null) { pl.textContent = A.t("moon_sight_best") + ": " + hm(sg.bt, state.off); pb.textContent = A.percent(sg.illum.toFixed(2)); }
+      else { pl.textContent = A.t("moon_sight_none"); pb.textContent = ""; }
+      ps.innerHTML = '<p class="moon-sight-when">' + bits.when + '</p><p>' + bits.len + '</p>' +
+        '<p class="moon-eye is-' + sg.level + '">' + bits.eye + '</p>' + (bits.pos ? '<p>' + bits.pos + '</p>' : '') +
+        '<p class="moon-sight-scale">' + A.t("moon_sight_scale") + '</p>';
+    } else {
+      pop.style.background = ""; pop.classList.remove("has-stars"); ps.innerHTML = "";
+      im.hidden = false; im.style.opacity = "";
+      var alt = A.t("moon_alt", { p: fa(o.illumNow.toFixed(1)) });
+      pop.setAttribute("aria-label", alt);
+      im.src = "images/moon/" + o.img; im.alt = alt;
+      pl.textContent = A.t("moon_now");
+      pb.textContent = A.percent(o.illumNow.toFixed(2));
+    }
     popOpener = opener; pop.hidden = false; document.documentElement.classList.add("moon-pop-open");
     pop.querySelector(".moon-pop-x").focus();
   }
@@ -660,10 +829,7 @@
       /* the button sits in the bottom-left corner of the night-sky box behind the moon, not on the moon */
       var zoomBtn = document.createElement("button");
       zoomBtn.type = "button"; zoomBtn.id = "moonZoom"; zoomBtn.className = "moon-zoom";
-      zoomBtn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="6.3" fill="none" stroke="currentColor" stroke-width="1.9"/>' +
-        '<path d="M6.6 8.4a4 4 0 0 1 2.6-2.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".75"/>' +
-        '<path d="M15 15l5.4 5.4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>' +
-        '<path d="M10 7.5v5M7.5 10h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+      zoomBtn.innerHTML = ZOOM_SVG;
       moonPic.parentNode.appendChild(zoomBtn);
       zoomBtn.addEventListener("click", function () { openPop(zoomBtn); });
       moonPic.addEventListener("click", function () { openPop(zoomBtn); });

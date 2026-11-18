@@ -170,3 +170,36 @@ html.moon-pop-open{overflow:hidden}
   .moon-cd-l{font-size:.82rem}
   .moon-cd-t{font-size:1.45rem}
 }
+
+/* second tab: the sky at the best moment to see the new crescent */
+.moon-sight{margin:0 0 12px}
+.moon-sight[hidden]{display:none}
+.moon-sight p{margin:8px 0 0;font-size:.88rem;line-height:1.7}
+.moon-sight .moon-sight-when{margin:0 0 8px;font-size:.8rem;opacity:.85}
+.moon-scene{position:relative;overflow:hidden;border-radius:14px;border:1px solid rgba(240,213,138,.45);background:#0a1530;cursor:zoom-in;line-height:0}
+.moon-scene svg{display:block;width:100%;height:auto}
+.moon-scene .moon-zoom{top:10px;bottom:auto}
+.moon-scene-label{position:absolute;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;justify-content:center;gap:2px 14px;padding:0 10px 8px;
+  font-weight:700;font-size:.82rem;line-height:1.5;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.9),0 0 8px rgba(0,0,0,.6);pointer-events:none}
+.moon-scene-label b{color:#f3d98e;unicode-bidi:isolate}
+.moon-eye{display:flex;align-items:flex-start;gap:8px;font-weight:700}
+.moon-eye::before{content:"";flex:none;width:10px;height:10px;margin-top:.55em;border-radius:50%;background:#8a8a8a}
+.moon-eye.is-yes::before{background:#3fbf7a}
+.moon-eye.is-maybe::before{background:#e6c04a}
+.moon-eye.is-aid::before{background:#f0913a}
+.moon-eye.is-no::before{background:#e5585a}
+.moon-pop-sight{display:none}
+.moon-pop-ground{display:none;position:absolute;left:0;right:0;bottom:0;height:9vh;pointer-events:none}
+.moon-pop.is-sight{cursor:zoom-out}
+.moon-pop.is-sight:not(.has-stars)::before,.moon-pop.is-sight:not(.has-stars)::after{display:none}
+.moon-pop.is-sight .moon-pop-ground{display:block}
+.moon-pop.is-sight .moon-pop-body::before{display:none}
+.moon-pop.is-sight .moon-pop-img{width:min(74vw,38vh,420px);filter:url(#moonMkP);box-shadow:none}
+.moon-pop.is-sight .moon-pop-img[hidden]{display:none}
+.moon-pop.is-sight .moon-pop-pct span{font-size:1rem}
+.moon-pop.is-sight .moon-pop-sight{display:flex;flex-direction:column;align-items:stretch;gap:8px;width:min(94vw,640px);text-align:center;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.moon-pop-sight p{margin:0;font-size:.95rem;line-height:1.7}
+.moon-pop-sight .moon-sight-when{font-size:.85rem;opacity:.9}
+.moon-pop-sight .moon-sight-scale{font-size:.75rem;opacity:.75}
+.moon-pop-sight .moon-eye{justify-content:center}
+@media(max-width:639px){.moon-scene-label{font-size:.76rem}}
