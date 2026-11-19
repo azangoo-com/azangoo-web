@@ -127,7 +127,8 @@
       dua_timer: 'دعای روز ({day}) ساعت {start} قبل از {adhan} شروع می‌شود.', dua_loading: 'دعای روزانه: در حال آماده‌سازی…',
       dua_opt: 'پخش خودکار دعای روزانه قبل از اذان',
       terms_link: 'شرایط استفاده',
-      widget_link: 'افزودن اوقات شرعی به سایت شما',
+      widget_link: 'افزودن اوقات شرعی و رؤیت ماه به سایت شما',
+      moon_widget_cta: 'این کارت را در سایت خود بگذارید',
       city_list_btn: 'فهرست شهرها',
       cities_title: 'شهرهای پرکاربرد', city_aurora: 'آرورا، کانادا', city_tehran: 'تهران، ایران',
       gps_btn: 'موقعیت فعلی من', gps_denied: 'دسترسی به موقعیت داده نشده است. آن را در تنظیمات مرورگر (کنار نشانی سایت) فعال کنید و دوباره تلاش کنید.',
@@ -266,7 +267,8 @@
       dua_timer: 'Dua of the day ({day}) starts at {start}, before the {adhan}.', dua_loading: 'Daily dua: loading…',
       dua_opt: 'Automatic daily dua before the adhan',
       terms_link: 'Terms and conditions',
-      widget_link: 'Add prayer times to your website',
+      widget_link: 'Add prayer times and moon sighting to your website',
+      moon_widget_cta: 'Put this card on your website',
       city_list_btn: 'Browse cities',
       cities_title: 'Popular cities', city_aurora: 'Aurora, Canada', city_tehran: 'Tehran, Iran',
       gps_btn: 'Use my current location', gps_denied: 'Location access is blocked. Allow it in your browser settings (next to the site address) and try again.',
@@ -404,7 +406,8 @@
       dua_timer: 'دن کی دعا ({day}) {start} پر {adhan} سے پہلے شروع ہوگی۔', dua_loading: 'روزانہ دعا: لوڈ ہو رہی ہے…',
       dua_opt: 'اذان سے پہلے روزانہ دعا خودکار چلائیں',
       terms_link: 'شرائط استعمال',
-      widget_link: 'اپنی ویب سائٹ پر اوقاتِ نماز لگائیں',
+      widget_link: 'اپنی ویب سائٹ پر اوقاتِ نماز اور رؤیتِ ہلال لگائیں',
+      moon_widget_cta: 'یہ کارڈ اپنی ویب سائٹ پر لگائیں',
       city_list_btn: 'شہروں کی فہرست',
       cities_title: 'مقبول شہر', city_aurora: 'اورورا، کینیڈا', city_tehran: 'تہران، ایران',
       gps_btn: 'میرا موجودہ مقام', gps_denied: 'مقام تک رسائی بند ہے۔ براؤزر کی ترتیبات میں اجازت دیں (ویب سائٹ کے پتے کے ساتھ) اور دوبارہ کوشش کریں۔',
@@ -581,7 +584,8 @@
       dua_timer: 'يبدأ دعاء اليوم ({day}) في {start} قبل {adhan}.', dua_loading: 'الدعاء اليومي: جارٍ التحميل…',
       dua_opt: 'تشغيل الدعاء اليومي تلقائيًا قبل الأذان',
       terms_link: 'شروط الاستخدام',
-      widget_link: 'أضف أوقات الصلاة إلى موقعك',
+      widget_link: 'أضف أوقات الصلاة ورؤية الهلال إلى موقعك',
+      moon_widget_cta: 'ضع هذه البطاقة في موقعك',
       city_list_btn: 'تصفح المدن',
       cities_title: 'مدن شائعة', city_aurora: 'أورورا، كندا', city_tehran: 'طهران، إيران',
       gps_btn: 'استخدام موقعي الحالي', gps_denied: 'الوصول إلى الموقع محظور. اسمح به من إعدادات المتصفح (بجانب عنوان الموقع) وحاول مرة أخرى.',
@@ -774,6 +778,8 @@
     if (privLink) privLink.setAttribute('href', lang + '/privacy/index.html');
     var widgetLink = document.querySelector('a.widget-link');
     if (widgetLink) widgetLink.setAttribute('href', lang + '/widget/index.html');
+    var moonCta = document.querySelector('a.moon-cta');
+    if (moonCta) moonCta.setAttribute('href', lang + '/widget/index.html?type=moon');
     var listBtn = document.getElementById('cityListLink');
     if (listBtn) listBtn.setAttribute('href', lang + '/prayer-times/index.html');
     var sel = document.getElementById('langSelect');

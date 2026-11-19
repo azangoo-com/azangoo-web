@@ -49,7 +49,9 @@
       if (val('cc')) a.push(['country', val('cc').toUpperCase()]);
     }
     if (val('tz')) a.push(['timezone', val('tz')]);
-    a.push(['lang', val('lang')], ['theme', val('theme')], ['layout', val('layout')]);
+    if (val('type') === 'moon') a.unshift(['type', 'moon'], ['view', val('view')]);
+    a.push(['lang', val('lang')], ['theme', val('theme')]);
+    if (val('type') !== 'moon') a.push(['layout', val('layout')]);
     if (val('clock') === '12') a.push(['clock', '12']);
     if (el('custom').checked) a.push(['accent', val('accent')], ['bg', val('bg')], ['radius', val('radius')]);
     return a;
@@ -68,7 +70,7 @@
   }
   var timer = null;
   function later() { clearTimeout(timer); timer = setTimeout(update, 350); }
-  ['city', 'cc', 'lat', 'lng', 'tz', 'lang', 'theme', 'layout', 'clock', 'accent', 'bg', 'radius', 'custom'].forEach(function (k) {
+  ['type', 'view', 'city', 'cc', 'lat', 'lng', 'tz', 'lang', 'theme', 'layout', 'clock', 'accent', 'bg', 'radius', 'custom'].forEach(function (k) {
     el(k).addEventListener('input', later); el(k).addEventListener('change', later);
   });
   var copy = document.getElementById('wb-copy'), copyLabel = copy.textContent;
@@ -79,5 +81,7 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(out.value).then(done, function () { document.execCommand('copy'); done(); });
     else { try { document.execCommand('copy'); } catch (e) { /* the text stays selected */ } done(); }
   });
+  /* a link with ?type=moon (the card on the home page) opens the builder on the moon widget */
+  try { if (/[?&]type=moon\b/.test(location.search)) el('type').value = 'moon'; } catch (e) { /* keep the default */ }
   update();
 })();

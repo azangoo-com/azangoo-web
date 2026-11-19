@@ -23,7 +23,10 @@
      next            1 | 0   mark the next adhan  (default 1)
      width           max width, e.g. "340px"      (default 360px)
      accent, bg, color, radius, font, size   your own look: any CSS color / length / font family
-   The same look can also be set with CSS variables on the div: --azw-accent, --azw-bg, --azw-color, --azw-radius, --azw-font, --azw-size. */
+   The same look can also be set with CSS variables on the div: --azw-accent, --azw-bg, --azw-color, --azw-radius, --azw-font, --azw-size.
+
+   Moon sighting: data-type="moon" shows the Moon instead of the prayer times (see js/azangoo-moon.js for its options):
+     <div class="azangoo-widget" data-type="moon" data-view="full" data-lat="43.65" data-lng="-79.38" data-timezone="America/Toronto" data-lang="en"></div> */
 (function (root) {
   'use strict';
   if (root.AzangooWidget) return;
@@ -39,13 +42,13 @@
 
   /* ---------- texts ---------- */
   var LANGS = {
-    fa: { rtl: true,  brand: 'اذان‌گو', err: 'اوقات شرعی بارگذاری نشد', loc: 'شهر پیدا نشد', locale: 'fa-IR', am: 'ق.ظ', pm: 'ب.ظ', digits: '۰۱۲۳۴۵۶۷۸۹',
+    fa: { rtl: true,  brand: 'اذان‌گو', err: 'اوقات شرعی بارگذاری نشد', get: 'افزودن به سایت شما', loc: 'شهر پیدا نشد', locale: 'fa-IR', am: 'ق.ظ', pm: 'ب.ظ', digits: '۰۱۲۳۴۵۶۷۸۹',
           n: { fajr: 'فجر', sunrise: 'طلوع', dhuhr: 'ظهر', sunset: 'غروب', maghrib: 'مغرب', midnight: 'نیمه‌شب' } },
-    en: { rtl: false, brand: 'Azangoo', err: 'Could not load prayer times', loc: 'City not found', locale: 'en', am: 'AM', pm: 'PM', digits: '0123456789',
+    en: { rtl: false, brand: 'Azangoo', err: 'Could not load prayer times', get: 'Get this widget', loc: 'City not found', locale: 'en', am: 'AM', pm: 'PM', digits: '0123456789',
           n: { fajr: 'Fajr', sunrise: 'Sunrise', dhuhr: 'Dhuhr', sunset: 'Sunset', maghrib: 'Maghrib', midnight: 'Midnight' } },
-    ur: { rtl: true,  brand: 'اذان گو', err: 'اوقاتِ نماز لوڈ نہیں ہو سکے', loc: 'شہر نہیں ملا', locale: 'ur', am: 'صبح', pm: 'شام', digits: '۰۱۲۳۴۵۶۷۸۹',
+    ur: { rtl: true,  brand: 'اذان گو', err: 'اوقاتِ نماز لوڈ نہیں ہو سکے', get: 'یہ ویجٹ لگائیں', loc: 'شہر نہیں ملا', locale: 'ur', am: 'صبح', pm: 'شام', digits: '۰۱۲۳۴۵۶۷۸۹',
           n: { fajr: 'فجر', sunrise: 'طلوع', dhuhr: 'ظہر', sunset: 'غروب', maghrib: 'مغرب', midnight: 'نصف شب' } },
-    ar: { rtl: true,  brand: 'أذان غو', err: 'تعذّر تحميل أوقات الصلاة', loc: 'لم يتم العثور على المدينة', locale: 'ar', am: 'ص', pm: 'م', digits: '٠١٢٣٤٥٦٧٨٩',
+    ar: { rtl: true,  brand: 'أذان غو', err: 'تعذّر تحميل أوقات الصلاة', get: 'أضف هذا الودجت', loc: 'لم يتم العثور على المدينة', locale: 'ar', am: 'ص', pm: 'م', digits: '٠١٢٣٤٥٦٧٨٩',
           n: { fajr: 'الفجر', sunrise: 'الشروق', dhuhr: 'الظهر', sunset: 'الغروب', maghrib: 'المغرب', midnight: 'منتصف الليل' } }
   };
   var ORDER = ['fajr', 'sunrise', 'dhuhr', 'sunset', 'maghrib', 'midnight'];
@@ -169,10 +172,68 @@
     return digits(pad(h) + ':' + pad(mm), L, dg);
   }
 
+  /* the footer of a widget: the site, and a link to the page that explains how to put the widget on one's own site */
+  function footerOf(lang, type) {
+    var L = LANGS[lang] || LANGS.en, f = document.createElement('div'); f.className = 'ft';
+    var a = document.createElement('a'); a.href = BASE + lang + '/index.html'; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'azangoo.com';
+    var b = document.createElement('a'); b.href = BASE + lang + '/widget/index.html' + (type === 'moon' ? '?type=moon' : ''); b.target = '_blank'; b.rel = 'noopener'; b.textContent = L.get;
+    f.appendChild(a); f.appendChild(document.createTextNode(' · ')); f.appendChild(b);
+    return f;
+  }
+  /* the place of a widget: lat + lng (+ timezone) or a city name -> { lat, lng, zone, name } */
+  function placeOf(o, lang) {
+    var lat = parseFloat(o.lat), lng = parseFloat(o.lng);
+    if (isFinite(lat) && isFinite(lng)) {
+      return (o.timezone ? Promise.resolve(o.timezone) : zoneOf(lat, lng)).then(function (z) { return { lat: lat, lng: lng, zone: z, name: '' }; });
+    }
+    if (o.city) {
+      return findCity(o.city, o.country, lang).then(function (c) { return { lat: c.lat, lng: c.lng, zone: o.timezone || c.zone, name: c.name || o.city }; });
+    }
+    var e = new Error('nocity'); e.code = 'nocity';
+    return Promise.reject(e);
+  }
+  function applyLook(host, o) {
+    if (o.accent) host.style.setProperty('--azw-accent', o.accent);
+    if (o.bg) host.style.setProperty('--azw-bg', o.bg);
+    if (o.color) host.style.setProperty('--azw-color', o.color);
+    if (o.radius) host.style.setProperty('--azw-radius', /^\d+$/.test(o.radius) ? o.radius + 'px' : o.radius);
+    if (o.font) host.style.setProperty('--azw-font', o.font);
+    if (o.size) host.style.setProperty('--azw-size', /^\d+$/.test(o.size) ? o.size + 'px' : o.size);
+    if (o.width) host.style.setProperty('--azw-width', /^\d+$/.test(o.width) ? o.width + 'px' : o.width);
+  }
+
+  /* the moon type: its code (js/moon-info.js + js/azangoo-moon.js) is loaded from the Azangoo site only when a moon widget is on the page */
+  var moonLoading = null;
+  function loadScript(name, done, fail) {
+    var s = document.createElement('script');
+    s.src = BASE + 'js/' + name + (VER ? '?v=' + encodeURIComponent(VER) : '');
+    s.onload = done; s.onerror = fail;
+    document.head.appendChild(s);
+  }
+  function withMoon(cb) {
+    if (root.AzangooWidget && root.AzangooWidget.moonReady) return cb(null);
+    if (moonLoading) { moonLoading.push(cb); return; }
+    moonLoading = [cb];
+    function finish(err) { var q = moonLoading; moonLoading = null; q.forEach(function (f) { f(err); }); }
+    function fail() { finish(new Error('moon')); }
+    function second() { loadScript('azangoo-moon.js', function () { finish(null); }, fail); }
+    if (root.MoonInfo && root.MoonInfo.withLang) second(); else loadScript('moon-info.js', second, fail);
+  }
+  function renderMoon(el, o) {
+    withMoon(function (err) {
+      if (err || !root.AzangooWidget.moon) {
+        var L = LANGS[o.lang] || LANGS.en;
+        el.textContent = L.err;
+        return;
+      }
+      root.AzangooWidget.moon(el, o);
+    });
+  }
+
   /* ---------- the widget ---------- */
   function readOptions(el, given) {
     var o = {}, ds = el && el.dataset ? el.dataset : {};
-    ['city', 'country', 'lat', 'lng', 'name', 'timezone', 'lang', 'theme', 'layout', 'show', 'clock', 'digits', 'next', 'width',
+    ['type', 'view', 'city', 'country', 'lat', 'lng', 'name', 'timezone', 'lang', 'theme', 'layout', 'show', 'clock', 'digits', 'next', 'width',
      'accent', 'bg', 'color', 'radius', 'font', 'size'].forEach(function (k) {
       if (given && given[k] != null) o[k] = given[k]; else if (ds[k] != null) o[k] = ds[k];
     });
@@ -183,6 +244,7 @@
     if (!el || el.__azw) return;
     el.__azw = true;
     var o = readOptions(el, given);
+    if (o.type === 'moon') { renderMoon(el, o); return; }
     var lang = LANGS[o.lang] ? o.lang : 'en', L = LANGS[lang];
     var theme = /^(auto|light|night|dark|emerald|ocean|sand|rose)$/.test(o.theme) ? o.theme : 'auto';
     var layout = /^(list|grid|row)$/.test(o.layout) ? o.layout : 'list';
@@ -231,12 +293,7 @@
       a.appendChild(img); a.appendChild(t);
       return a;
     }
-    function footer() {
-      var f = document.createElement('div'); f.className = 'ft';
-      var a = document.createElement('a'); a.href = siteLink; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'azangoo.com';
-      f.appendChild(a);
-      return f;
-    }
+    function footer() { return footerOf(lang, 'prayer'); }
 
     function start(place, P) {
       var zone = place.zone, name = o.name || place.name || '';
@@ -314,7 +371,9 @@
     for (var i = 0; i < list.length; i++) render(list[i]);
   }
 
-  root.AzangooWidget = { render: render, init: init, base: BASE };
+  root.AzangooWidget = { render: render, init: init, base: BASE,
+    /* what the moon type (js/azangoo-moon.js) shares with this file */
+    x: { CSS: CSS, LANGS: LANGS, BASE: BASE, fmtTime: fmtTime, place: placeOf, applyLook: applyLook, footer: footerOf } };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { init(); });
   else init();

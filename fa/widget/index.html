@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>افزودن اوقات شرعی به سایت شما | Azangoo</title>
-<meta name="description" content="ویجت رایگان اوقات شرعی اذان گو برای سایت شما: شهر یا مختصات را بدهید، تم و رنگ را انتخاب کنید و کد آماده را کپی کنید.">
+<title>افزودن اوقات شرعی و رؤیت ماه به سایت شما | Azangoo</title>
+<meta name="description" content="ویجت رایگان اوقات شرعی و رؤیت ماه اذان گو برای سایت شما: شهر یا مختصات را بدهید، تم و رنگ را انتخاب کنید و کد آماده را کپی کنید.">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="افزودن اوقات شرعی به سایت شما | Azangoo">
-<meta property="og:description" content="ویجت رایگان اوقات شرعی اذان گو برای سایت شما: شهر یا مختصات را بدهید، تم و رنگ را انتخاب کنید و کد آماده را کپی کنید.">
+<meta property="og:title" content="افزودن اوقات شرعی و رؤیت ماه به سایت شما | Azangoo">
+<meta property="og:description" content="ویجت رایگان اوقات شرعی و رؤیت ماه اذان گو برای سایت شما: شهر یا مختصات را بدهید، تم و رنگ را انتخاب کنید و کد آماده را کپی کنید.">
 <meta property="og:image" content="https://www.azangoo.com/images/og-image.png">
 <link rel="icon" href="../../favicon.ico?v=4" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="../../icons/icon-32.png?v=4">
@@ -51,15 +51,25 @@ table.opt td:first-child{direction:ltr;text-align:left;font-family:Consolas,mono
 <body>
 <main>
 <nav><a class="home" href="../../fa/index.html">صفحهٔ اصلی اذان گو</a></nav>
-<h1>افزودن اوقات شرعی به سایت شما</h1>
+<h1>افزودن اوقات شرعی و رؤیت ماه به سایت شما</h1>
 <p>با یک تکه کد کوتاه، اوقات شرعی هر شهر را با لوگوی اذان گو در سایت خودتان نشان دهید. رایگان است، به چهار زبان کار می‌کند و تم و رنگ آن را می‌توانید به سلیقهٔ خودتان تغییر دهید.</p>
 <section class="card"><h2>شروع سریع</h2><p>کد زیر را هر جای صفحه که می‌خواهید بگذارید. بسته به اینکه نام شهر یا مختصات را دارید، یکی از دو نمونه را انتخاب کنید.</p>
 <p class="count">با نام شهر</p><pre class="wcode">&lt;div class=&quot;azangoo-widget&quot; data-city=&quot;Toronto&quot; data-country=&quot;CA&quot; data-lang=&quot;fa&quot; data-theme=&quot;auto&quot;&gt;&lt;/div&gt;
 &lt;script src=&quot;https://www.azangoo.com/js/azangoo-widget.js&quot; async&gt;&lt;/script&gt;</pre>
 <p class="count">با مختصات</p><pre class="wcode">&lt;div class=&quot;azangoo-widget&quot; data-lat=&quot;43.65&quot; data-lng=&quot;-79.38&quot; data-timezone=&quot;America/Toronto&quot; data-name=&quot;Toronto&quot; data-lang=&quot;fa&quot;&gt;&lt;/div&gt;
 &lt;script src=&quot;https://www.azangoo.com/js/azangoo-widget.js&quot; async&gt;&lt;/script&gt;</pre></section>
+<section class="card"><h2>ویجت رؤیت ماه</h2><p>همین ویجت می‌تواند به‌جای اوقات شرعی، رؤیت ماه را نشان بدهد: تصویر و درصد روشنایی ماه همین لحظه، طلوع و غروب ماه، و آسمان در غروب روز ۲۹ ماه قمری با بهترین زمان، جهت و ارتفاع هلال و اینکه با چشم یا دوربین دیده می‌شود یا نه. فقط «data-type» را «moon» بگذارید.</p>
+<pre class="wcode" dir="ltr">&lt;div class=&quot;azangoo-widget&quot; data-type=&quot;moon&quot; data-view=&quot;full&quot; data-lat=&quot;43.65&quot; data-lng=&quot;-79.38&quot; data-timezone=&quot;America/Toronto&quot; data-name=&quot;Toronto&quot; data-lang=&quot;fa&quot;&gt;&lt;/div&gt;
+&lt;script src=&quot;https://www.azangoo.com/js/azangoo-widget.js&quot; async&gt;&lt;/script&gt;</pre>
+<div class="gal">
+<div class="azangoo-widget" data-type="moon" data-view="full" data-lat="21.4225" data-lng="39.8262" data-timezone="Asia/Riyadh" data-name="مکه" data-lang="fa" data-theme="night"></div>
+<div class="azangoo-widget" data-type="moon" data-view="now" data-lat="35.6892" data-lng="51.389" data-timezone="Asia/Tehran" data-name="تهران" data-lang="fa" data-theme="light"></div>
+</div>
+<p class="hint">نتیجه تخمینی و بر پایهٔ معیار عودة است و اعلام رسمی نیست؛ این جمله همیشه زیر ویجت نوشته می‌شود. تصویرهای ماه از سایت اذان گو بارگذاری می‌شوند.</p></section>
 <section class="card" id="wb" data-lang="fa" data-copied="کپی شد"><h2>ساخت کد</h2>
 <div class="wb-grid">
+<label>نوع ویجت<select id="b-type"><option value="prayer" selected>اوقات شرعی</option><option value="moon">رؤیت ماه</option></select></label>
+<label>نمای رؤیت ماه<select id="b-view"><option value="full" selected>کامل (ماه همین لحظه + غروب روز ۲۹)</option><option value="now">فقط ماه همین لحظه</option><option value="sight">فقط هلال ماه بعد</option></select></label>
 <label>شهر<input id="b-city" value="Toronto"></label>
 <label>کد کشور (اختیاری)<input id="b-cc" value="CA" maxlength="2" dir="ltr"></label>
 <label>عرض جغرافیایی<input id="b-lat" dir="ltr" placeholder="43.65"></label>
@@ -79,6 +89,8 @@ table.opt td:first-child{direction:ltr;text-align:left;font-family:Consolas,mono
 <div class="wb-code"><textarea id="wb-out" readonly aria-label="کد"></textarea><button class="wb-btn" id="wb-copy" type="button">کپی کد</button></div></div></section>
 <section class="card"><h2>تم‌ها</h2><div class="gal" id="wb-gallery"></div></section>
 <section class="card"><h2>گزینه‌ها</h2><table class="opt">
+<tr><td>type</td><td>prayer (پیش‌فرض) یا moon: ویجت رؤیت ماه.</td></tr>
+<tr><td>view</td><td>فقط برای moon: full (ماه همین لحظه + هلال ماه بعد) · now · sight</td></tr>
 <tr><td>city, country</td><td>نام شهر و کد دو حرفی کشور (مثلاً CA). شهر یک بار پیدا و در مرورگر بازدیدکننده نگه داشته می‌شود.</td></tr>
 <tr><td>lat, lng</td><td>مختصات به‌جای نام شهر.</td></tr>
 <tr><td>timezone</td><td>مثل Asia/Tehran. همراه با lat و lng هیچ درخواستی به بیرون فرستاده نمی‌شود.</td></tr>
@@ -102,8 +114,8 @@ table.opt td:first-child{direction:ltr;text-align:left;font-family:Consolas,mono
 <p class="count">با مختصات</p><pre class="wcode">https://www.azangoo.com/go/?lat=43.65&amp;lng=-79.38&amp;lang=fa</pre>
 <p class="count">نمونهٔ لینک در صفحهٔ شما</p><pre class="wcode">&lt;a href=&quot;https://www.azangoo.com/go/?city=Toronto&amp;country=Canada&amp;lang=fa&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;اوقات شرعی تورنتو&lt;/a&gt;</pre>
 <p>پارامتر lang یکی از fa، en، ur یا ar است. این لینک‌ها برای موتورهای جستجو شناخته نمی‌شوند. بازدیدکننده‌ای که قبلاً مکان دیگری را در اذان گو ذخیره کرده باشد هم با این لینک شهر شما را می‌بیند. برای ساخت راحت‌تر لینک، <a href="../../go/">فرم ساخت لینک</a> را باز کنید.</p></section>
-<script src="../../js/azangoo-widget.js"></script>
-<script src="../../js/widget-builder.js"></script>
+<script src="../../js/azangoo-widget.js?v=20261212"></script>
+<script src="../../js/widget-builder.js?v=20261212"></script>
 </main>
 </body>
 </html>

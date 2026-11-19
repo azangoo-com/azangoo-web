@@ -31,7 +31,9 @@
   function cen(ms) { return (ms / DAY + 2440587.5 - 2451545) / 36525; }
   function p2(n) { return n < 10 ? "0" + n : "" + n; }
   var FA = "۰۱۲۳۴۵۶۷۸۹";
-  function fa(s) { return root.AzanLang ? root.AzanLang.num(s) : String(s); }
+  var LANGSRC = null;                                   /* a language provider given by the embeddable widget (see withLang) */
+  function AL() { return LANGSRC || root.AzanLang; }
+  function fa(s) { var a = AL(); return a ? a.num(s) : String(s); }
 
   function eqFromEcl(lon, lat, t) {
     var e = (23.439291 - 0.0130042 * t) * RAD, l = lon * RAD, b = lat * RAD;
@@ -287,7 +289,7 @@
   function hijriName(ms, off) {
     var m = +hijriNum.formatToParts(new Date(dayStart(ms, off) + 12 * 3600000))
       .filter(function (x) { return x.type === "month"; })[0].value;
-    return root.AzanLang.names("hijri")[m - 1];
+    return AL().names("hijri")[m - 1];
   }
 
   function hm(ms, off) {
@@ -305,8 +307,8 @@
       card = "N";
       if (az >= 315) { dev = 360 - az; side = "W"; } else { dev = az; side = "E"; }
     }
-    var names = root.AzanLang.names("card"), sides = root.AzanLang.names("side");
-    return root.AzanLang.t("dir", { card: names[card], deg: fa(Math.round(dev)), side: sides[side] });
+    var names = AL().names("card"), sides = AL().names("side");
+    return AL().t("dir", { card: names[card], deg: fa(Math.round(dev)), side: sides[side] });
   }
 
   /* the pictures (images/moon): 0.2 % steps from 0 to 10 % and from 90 to 100 %, 0.5 % steps in between; the file with the
@@ -325,7 +327,7 @@
   /* "first day of the next Hijri month" line */
   function buildStartText(o) {
     if (!o.nextStart) return "";
-    var A = root.AzanLang, g = new Date(o.nextStart), p = {};
+    var A = AL(), g = new Date(o.nextStart), p = {};
     persianNum.formatToParts(g).forEach(function (x) { if (x.type !== "literal") p[x.type] = +x.value; });
     return A.t("moon_start", {
       next: o.next, weekday: A.names("weekdays")[g.getUTCDay()],
@@ -336,7 +338,7 @@
 
   function buildText(o) {
     if (!o.last) return "";
-    var A = root.AzanLang, illum = A.percent(o.last.illum.toFixed(2));
+    var A = AL(), illum = A.percent(o.last.illum.toFixed(2));
     if (o.last.visible) {
       return A.t("moon_visible", { cur: o.cur, len: fa(o.len), next: o.next, illum: illum, dur: fa(o.last.dur) });
     }
@@ -348,7 +350,7 @@
        and how it differs from the site's own prediction when it does;
      - predicted month: why it has 29 or 30 days (the crescent of the evening of day 29 is visible or not); for 30 days also the best moment to try. */
   function buildWhy(o, entry, start, nextStart, lat, lng, off, now) {
-    var A = root.AzanLang;
+    var A = AL();
     if (entry) {
       var pm = null;
       try { pm = currentMonth(now, lat, lng, off, true); } catch (e) { pm = null; }
@@ -366,7 +368,7 @@
       return A.t("moon_follow_official", { cur: o.cur, len: fa(o.len) });
     }
     /* predicted month: why it has 29 or 30 days, judged by the sunset of day 29 */
-    var A2 = root.AzanLang;
+    var A2 = AL();
     if (o.len === 30) {
       var ev = evening(nextStart - 2 * DAY, lat, lng);       /* sunset of day 29 */
       if (!ev || ev.visible) return "";
@@ -384,7 +386,7 @@
   /* for a 30-day month: the best moment to try to see the crescent on the evening of day 29 anyway
      (same moment as in buildBest: 4/9 of the way from sunset to moonset); nothing once that moment has passed */
   function tryText(ev, lat, lng, off, now) {
-    var A = root.AzanLang, bt = null, m = null;
+    var A = AL(), bt = null, m = null;
     if (ev.age > 0 && ev.dur > 0) { bt = ev.t + (4 / 9) * ev.dur * MIN; m = moonAt(bt, lat, lng); }
     if (now > (bt !== null ? bt : ev.t)) return "";
     if (bt === null || ev.V < -0.96) return " " + A.t("moon_try_none");
@@ -402,7 +404,7 @@
      V >= 5.65 naked eye, V >= 2 optical aid and possibly naked eye, V >= -0.96 optical aid only, below: not visible).
      Nothing is shown once that moment has passed. */
   function buildBest(o, nextStart, lat, lng, off, now) {
-    var A = root.AzanLang, ev = evening(nextStart - DAY, lat, lng);
+    var A = AL(), ev = evening(nextStart - DAY, lat, lng);
     if (!ev) return "";
     var bt = null, m = null;
     if (ev.age > 0 && ev.dur > 0) { bt = ev.t + (4 / 9) * ev.dur * MIN; m = moonAt(bt, lat, lng); }
@@ -445,7 +447,7 @@
     var today = evening(td, lat, lng);
     if (today) out.sunsetIllum = today.illum;
 
-    var OFF = root.AzanOfficial, names = root.AzanLang.names("hijri");
+    var OFF = root.AzanOfficial, names = AL().names("hijri");
     var entry = OFF ? OFF.covering(ymdOf(now, off)) : null;          /* official month, if the owner listed it */
     var cm = entry ? null : currentMonth(now, lat, lng, off);
     var start = entry ? OFF.dayMs(entry.start) - off * 3600000 : (cm ? cm.start : null);
@@ -472,7 +474,7 @@
       out.hijriYear = entry ? +entry.hijriYear : +hijriYearFmt.formatToParts(new Date(start + 12 * 3600000 + off * 3600000))
         .filter(function (x) { return x.type === "year"; })[0].value;
       out.text = buildText(out);
-      out.startText = buildStartText(out) + " " + root.AzanLang.t(entry ? "official_mark" : "predicted_mark");
+      out.startText = buildStartText(out) + " " + AL().t(entry ? "official_mark" : "predicted_mark");
       out.whyText = buildWhy(out, entry, start, nextStart, lat, lng, off, now);
       out.bestText = buildBest(out, nextStart, lat, lng, off, now);
       out.sight = buildSight(out, start, lat, lng, off, now);
@@ -512,6 +514,7 @@
     for (var gx = 0; gx <= 360; gx += 12) gp += " L" + gx + "," + (24 - (3.2 + 2.6 * Math.sin(gx * 0.028 + 1.3) + 1.8 * Math.sin(gx * 0.071 + 0.4)) * 1.2).toFixed(1);
     return '<svg viewBox="0 0 360 40" preserveAspectRatio="none" width="100%" height="100%" aria-hidden="true"><path d="' + gp + ' L360,40 Z" fill="' + col + '"/></svg>';
   }
+  var imgBase = "";
   function sceneSVG(s, uid, moonD, label, zoom) {
     var W = 360, H = 210, hy = 168, i;
     var d = Math.max(0, -s.sunAlt), sk = skyColors(d), top = rgbS(sk[2]), mid = rgbS(sk[1]), hor = rgbS(sk[0]);
@@ -550,7 +553,7 @@
     if (s.show) {
       /* a faint dotted ring marks the place of the Moon (a very thin crescent is hard to see); the unlit part of the picture is made transparent */
       o += '<circle cx="' + mx.toFixed(1) + '" cy="' + my.toFixed(1) + '" r="' + (moonD / 2 + 7) + '" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="1" stroke-dasharray="2 5" stroke-linecap="round"/>';
-      o += '<image href="images/moon/' + s.img + '" x="' + (mx - moonD / 2).toFixed(1) + '" y="' + (my - moonD / 2).toFixed(1) + '" width="' + moonD +
+      o += '<image href="' + imgBase + 'images/moon/' + s.img + '" x="' + (mx - moonD / 2).toFixed(1) + '" y="' + (my - moonD / 2).toFixed(1) + '" width="' + moonD +
         '" height="' + moonD + '" opacity="' + s.alpha + '" filter="url(#mk' + uid + ')" transform="rotate(' + ang.toFixed(1) + ' ' + mx.toFixed(1) + ' ' + my.toFixed(1) + ')"/>';
     }
     var gp = "M0," + H + " L0," + (hy + 1);
@@ -586,7 +589,7 @@
     '<path d="M15 15l5.4 5.4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>' +
     '<path d="M10 7.5v5M7.5 10h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
   function sightBits(s, o) {
-    var A = root.AzanLang, g = new Date(s.t + state.off * 3600000);
+    var A = AL(), g = new Date(s.t + state.off * 3600000);
     return {
       when: A.t("moon_sight_when", { weekday: A.names("weekdays")[g.getUTCDay()], gd: fa(g.getUTCDate()), gm: A.names("greg")[g.getUTCMonth()], d: fa(s.day), cur: o.cur }),
       label: s.bt !== null
@@ -598,7 +601,7 @@
     };
   }
   function sceneBox(s, o, uid, moonD, withBtn, zoom) {
-    var A = root.AzanLang, b = sightBits(s, o);
+    var A = AL(), b = sightBits(s, o);
     return '<div class="moon-scene">' + sceneSVG(s, uid, moonD, A.t("moon_sight_alt"), zoom) + '<div class="moon-scene-label">' + b.label + '</div>' +
       (withBtn ? '<button type="button" class="moon-zoom" aria-label="' + A.t("moon_zoom") + '" title="' + A.t("moon_zoom") + '">' + ZOOM_SVG + '</button>' : '') + '</div>';
   }
@@ -618,7 +621,7 @@
     var s = o.sight;
     if (!s) { el.hidden = true; el.innerHTML = ""; sightKey = ""; return; }
     var b = sightBits(s, o);
-    var A = root.AzanLang;
+    var A = AL();
     var look = s.bt !== null
       ? '<section class="moon-card moon-look"><h3 class="moon-card-t">' + A.t("moon_sight_look_l") + '</h3>' +
         '<p class="moon-look-dir">' + dirText(s.moonAz) + '</p>' +
@@ -646,19 +649,19 @@
     catch (err) { return; }
     lastOut = o;
     try { window.dispatchEvent(new CustomEvent("azan:hijri")); } catch (e) { /* old browser: the other scripts read MoonInfo.current() when they next run */ }
-    put("mNow", root.AzanLang.percent(o.illumNow.toFixed(2)));
+    put("mNow", AL().percent(o.illumNow.toFixed(2)));
     put("mRise", o.rise ? hm(o.rise.t, state.off) : "—");
     put("mRiseDir", o.rise ? dirText(o.rise.az) : "");
     put("mSet", o.set ? hm(o.set.t, state.off) : "—");
     put("mSetDir", o.set ? dirText(o.set.az) : "");
-    put("mSunset", o.sunsetIllum !== null ? root.AzanLang.percent(o.sunsetIllum.toFixed(2)) : "—");
+    put("mSunset", o.sunsetIllum !== null ? AL().percent(o.sunsetIllum.toFixed(2)) : "—");
     if (o.hijriDay) {
-      put("d-h-day", root.AzanLang.num(o.hijriDay));
-      put("d-h-my", o.cur + " " + root.AzanLang.num(o.hijriYear));
+      put("d-h-day", AL().num(o.hijriDay));
+      put("d-h-my", o.cur + " " + AL().num(o.hijriYear));
     }
     putCard("mStart", o.startText || "");
     /* the title says what the text explains (the month has 29 or 30 days) */
-    put("mWhyT", o.len ? root.AzanLang.t("moon_lbl_why_n", { n: fa(o.len) }) : root.AzanLang.t("moon_lbl_why"));
+    put("mWhyT", o.len ? AL().t("moon_lbl_why_n", { n: fa(o.len) }) : AL().t("moon_lbl_why"));
     putCard("mWhy", o.whyText || "");
     putCard("mBest", o.bestText || "");
     put("mIntro", "");
@@ -668,10 +671,10 @@
     if (img) {
       var src = "images/moon/" + o.img;
       if (img.getAttribute("src") !== src) img.setAttribute("src", src);
-      img.alt = root.AzanLang.t("moon_alt", { p: fa(o.illumNow.toFixed(1)) });
+      img.alt = AL().t("moon_alt", { p: fa(o.illumNow.toFixed(1)) });
     }
     var zb = document.getElementById("moonZoom");
-    if (zb) { var zl = root.AzanLang.t("moon_zoom"); zb.setAttribute("aria-label", zl); zb.title = zl; }
+    if (zb) { var zl = AL().t("moon_zoom"); zb.setAttribute("aria-label", zl); zb.title = zl; }
     rendering = true;
     try { applyHorizon(o); } finally { rendering = false; }
   }
@@ -704,7 +707,7 @@
     el.textContent = fa(p2s(h) + ":" + p2s(m) + ":" + p2s(s % 60));
   }
   function applyHorizon(o) {
-    var E = horizonEls(), A = root.AzanLang;
+    var E = horizonEls(), A = AL();
     if (!E) return;
     var isBelow = !o.up;
     E.box.classList.toggle("is-below", isBelow);
@@ -737,7 +740,7 @@
     if (!b) return;
     /* the second tab always names the next month ("Ramadan sighting"); without a known next month the old "more info" text is used */
     var nx = lastOut && lastOut.next;
-    b.textContent = nx ? root.AzanLang.t("moon_sight", { next: nx }) : root.AzanLang.t("moon_more");
+    b.textContent = nx ? AL().t("moon_sight", { next: nx }) : AL().t("moon_more");
   }
   function showTab(which) {
     var now = document.getElementById("moonPanelNow"), more = document.getElementById("moonMore");
@@ -770,7 +773,7 @@
     clip.classList.toggle("is-clipped", !clipOpen);
     clip.style.maxHeight = clipOpen ? "none" : limit + "px";
     btn.setAttribute("aria-expanded", clipOpen ? "true" : "false");
-    btn.textContent = root.AzanLang.t(clipOpen ? "moon_less" : "moon_more");
+    btn.textContent = AL().t(clipOpen ? "moon_less" : "moon_more");
   }
   if (typeof document !== "undefined") {
     var tgl = document.getElementById("moonToggle");
@@ -791,7 +794,7 @@
     if (popOpener && popOpener.focus) popOpener.focus();
   }
   function openPop(opener, mode) {
-    var o = lastOut, A = root.AzanLang;
+    var o = lastOut, A = AL();
     if (!o) return;
     if (!pop) {
       pop = document.createElement("div"); pop.className = "moon-pop"; pop.hidden = true;
@@ -859,7 +862,7 @@
   /* Hijri months that start in [fromMs, toMs) for this place, with their lengths (same rule as above) */
   var hijriYearFmt = new Intl.DateTimeFormat("en-u-ca-islamic-tbla-nu-latn", { year: "numeric", timeZone: "UTC" });
   function monthsBetween(fromMs, toMs, lat, lng, off) {
-    var OFF = root.AzanOfficial, names = root.AzanLang.names("hijri");
+    var OFF = root.AzanOfficial, names = AL().names("hijri");
     var offList = OFF ? OFF.all() : [];
     function fieldsOf(s) {
       var local = new Date(s + 12 * 3600000 + off * 3600000), sh = {};
@@ -904,7 +907,11 @@
     return monthsBetween(dayStart(from, off), dayStart(to, off), lat, lng, off);
   }
 
-  var api = { update: update, compute: compute, render: render, yearMonths: yearMonths, current: function () { return lastOut; } };
+  /* for the embeddable widget (js/azangoo-moon.js): run fn with the widget's own language provider (names / num / percent / t) */
+  function withLang(L, fn) { var prev = LANGSRC; LANGSRC = L; try { return fn(); } finally { LANGSRC = prev; } }
+  var api = { update: update, compute: compute, render: render, yearMonths: yearMonths, current: function () { return lastOut; },
+              withLang: withLang, scene: function (st, uid, d, label) { return sceneSVG(st, uid, d, label, 1); }, dirText: dirText,
+              setImageBase: function (b) { imgBase = b || ""; } };
   if (root) root.MoonInfo = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
 })(typeof window !== "undefined" ? window : (typeof globalThis !== "undefined" ? globalThis : this));

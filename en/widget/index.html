@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Add prayer times to your website | Azangoo</title>
-<meta name="description" content="The free Azangoo prayer-times widget for your website: give a city or coordinates, choose a theme and colors, and copy the ready code.">
+<title>Add prayer times and moon sighting to your website | Azangoo</title>
+<meta name="description" content="The free Azangoo prayer-times and moon-sighting widget for your website: give a city or coordinates, choose a theme and colors, and copy the ready code.">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Add prayer times to your website | Azangoo">
-<meta property="og:description" content="The free Azangoo prayer-times widget for your website: give a city or coordinates, choose a theme and colors, and copy the ready code.">
+<meta property="og:title" content="Add prayer times and moon sighting to your website | Azangoo">
+<meta property="og:description" content="The free Azangoo prayer-times and moon-sighting widget for your website: give a city or coordinates, choose a theme and colors, and copy the ready code.">
 <meta property="og:image" content="https://www.azangoo.com/images/og-image.png">
 <link rel="icon" href="../../favicon.ico?v=4" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="../../icons/icon-32.png?v=4">
@@ -51,15 +51,25 @@ table.opt td:first-child{direction:ltr;text-align:left;font-family:Consolas,mono
 <body>
 <main>
 <nav><a class="home" href="../../en/index.html">Azangoo home</a></nav>
-<h1>Add prayer times to your website</h1>
+<h1>Add prayer times and moon sighting to your website</h1>
 <p>With one short piece of code, show the prayer times of any city on your own website, with the Azangoo logo. It is free, works in four languages, and its theme and colors can be changed to match your site.</p>
 <section class="card"><h2>Quick start</h2><p>Put the code below anywhere in your page. Choose one of the two examples, depending on whether you have a city name or coordinates.</p>
 <p class="count">With a city name</p><pre class="wcode">&lt;div class=&quot;azangoo-widget&quot; data-city=&quot;Toronto&quot; data-country=&quot;CA&quot; data-lang=&quot;en&quot; data-theme=&quot;auto&quot;&gt;&lt;/div&gt;
 &lt;script src=&quot;https://www.azangoo.com/js/azangoo-widget.js&quot; async&gt;&lt;/script&gt;</pre>
 <p class="count">With coordinates</p><pre class="wcode">&lt;div class=&quot;azangoo-widget&quot; data-lat=&quot;43.65&quot; data-lng=&quot;-79.38&quot; data-timezone=&quot;America/Toronto&quot; data-name=&quot;Toronto&quot; data-lang=&quot;en&quot;&gt;&lt;/div&gt;
 &lt;script src=&quot;https://www.azangoo.com/js/azangoo-widget.js&quot; async&gt;&lt;/script&gt;</pre></section>
+<section class="card"><h2>Moon sighting widget</h2><p>The same widget can show the Moon instead of the prayer times: the picture and illumination of the Moon right now, moonrise and moonset, and the sky at sunset on day 29 of the Hijri month with the best time, direction and height of the new crescent and whether it can be seen with the naked eye or only with binoculars. Just set data-type to moon.</p>
+<pre class="wcode" dir="ltr">&lt;div class=&quot;azangoo-widget&quot; data-type=&quot;moon&quot; data-view=&quot;full&quot; data-lat=&quot;43.65&quot; data-lng=&quot;-79.38&quot; data-timezone=&quot;America/Toronto&quot; data-name=&quot;Toronto&quot; data-lang=&quot;en&quot;&gt;&lt;/div&gt;
+&lt;script src=&quot;https://www.azangoo.com/js/azangoo-widget.js&quot; async&gt;&lt;/script&gt;</pre>
+<div class="gal">
+<div class="azangoo-widget" data-type="moon" data-view="full" data-lat="21.4225" data-lng="39.8262" data-timezone="Asia/Riyadh" data-name="Makkah" data-lang="en" data-theme="night"></div>
+<div class="azangoo-widget" data-type="moon" data-view="now" data-lat="35.6892" data-lng="51.389" data-timezone="Asia/Tehran" data-name="Tehran" data-lang="en" data-theme="light"></div>
+</div>
+<p class="hint">The result is an estimate by the Odeh criterion, not an official announcement; the widget always says so under the result. The Moon pictures are loaded from the Azangoo site.</p></section>
 <section class="card" id="wb" data-lang="en" data-copied="Copied"><h2>Build your code</h2>
 <div class="wb-grid">
+<label>Widget type<select id="b-type"><option value="prayer" selected>Prayer times</option><option value="moon">Moon sighting</option></select></label>
+<label>Moon view<select id="b-view"><option value="full" selected>Full (Moon now + sunset on day 29)</option><option value="now">Moon now only</option><option value="sight">Next crescent only</option></select></label>
 <label>City<input id="b-city" value="Toronto"></label>
 <label>Country code (optional)<input id="b-cc" value="CA" maxlength="2" dir="ltr"></label>
 <label>Latitude<input id="b-lat" dir="ltr" placeholder="43.65"></label>
@@ -79,6 +89,8 @@ table.opt td:first-child{direction:ltr;text-align:left;font-family:Consolas,mono
 <div class="wb-code"><textarea id="wb-out" readonly aria-label="Code"></textarea><button class="wb-btn" id="wb-copy" type="button">Copy code</button></div></div></section>
 <section class="card"><h2>Themes</h2><div class="gal" id="wb-gallery"></div></section>
 <section class="card"><h2>Options</h2><table class="opt">
+<tr><td>type</td><td>prayer (default) or moon: the moon sighting widget.</td></tr>
+<tr><td>view</td><td>moon only: full (Moon now + next crescent) · now · sight</td></tr>
 <tr><td>city, country</td><td>A city name and a 2-letter country code (e.g. CA). The city is looked up once and remembered in the visitor’s browser.</td></tr>
 <tr><td>lat, lng</td><td>Coordinates instead of a city name.</td></tr>
 <tr><td>timezone</td><td>For example Asia/Tehran. Together with lat and lng, no request is sent outside.</td></tr>
@@ -102,8 +114,8 @@ table.opt td:first-child{direction:ltr;text-align:left;font-family:Consolas,mono
 <p class="count">With coordinates</p><pre class="wcode">https://www.azangoo.com/go/?lat=43.65&amp;lng=-79.38&amp;lang=en</pre>
 <p class="count">Example of the link in your page</p><pre class="wcode">&lt;a href=&quot;https://www.azangoo.com/go/?city=Toronto&amp;country=Canada&amp;lang=en&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Prayer times of Toronto&lt;/a&gt;</pre>
 <p>The lang parameter is one of fa, en, ur or ar. These links are not meant for search engines. A visitor who saved another place in Azangoo still sees your city when using them. To build a link more easily, open the <a href="../../go/">link builder</a>.</p></section>
-<script src="../../js/azangoo-widget.js"></script>
-<script src="../../js/widget-builder.js"></script>
+<script src="../../js/azangoo-widget.js?v=20261212"></script>
+<script src="../../js/widget-builder.js?v=20261212"></script>
 </main>
 </body>
 </html>

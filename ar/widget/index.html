@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>أضف أوقات الصلاة إلى موقعك | Azangoo</title>
-<meta name="description" content="أداة أذان غو المجانية لأوقات الصلاة: أدخل المدينة أو الإحداثيات، واختر القالب والألوان، ثم انسخ الشيفرة الجاهزة.">
+<title>أضف أوقات الصلاة ورؤية الهلال إلى موقعك | Azangoo</title>
+<meta name="description" content="أداة أذان غو المجانية لأوقات الصلاة ورؤية الهلال: أدخل المدينة أو الإحداثيات، واختر القالب والألوان، ثم انسخ الشيفرة الجاهزة.">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="أضف أوقات الصلاة إلى موقعك | Azangoo">
-<meta property="og:description" content="أداة أذان غو المجانية لأوقات الصلاة: أدخل المدينة أو الإحداثيات، واختر القالب والألوان، ثم انسخ الشيفرة الجاهزة.">
+<meta property="og:title" content="أضف أوقات الصلاة ورؤية الهلال إلى موقعك | Azangoo">
+<meta property="og:description" content="أداة أذان غو المجانية لأوقات الصلاة ورؤية الهلال: أدخل المدينة أو الإحداثيات، واختر القالب والألوان، ثم انسخ الشيفرة الجاهزة.">
 <meta property="og:image" content="https://www.azangoo.com/images/og-image.png">
 <link rel="icon" href="../../favicon.ico?v=4" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="../../icons/icon-32.png?v=4">
@@ -51,15 +51,25 @@ table.opt td:first-child{direction:ltr;text-align:left;font-family:Consolas,mono
 <body>
 <main>
 <nav><a class="home" href="../../ar/index.html">الصفحة الرئيسية</a></nav>
-<h1>أضف أوقات الصلاة إلى موقعك</h1>
+<h1>أضف أوقات الصلاة ورؤية الهلال إلى موقعك</h1>
 <p>بقطعة شيفرة قصيرة اعرض أوقات الصلاة لأي مدينة في موقعك مع شعار أذان غو. الأداة مجانية وتعمل بأربع لغات، ويمكنك تغيير قالبها وألوانها كما تشاء.</p>
 <section class="card"><h2>بداية سريعة</h2><p>ضع الشيفرة التالية حيث تريد في صفحتك. اختر أحد المثالين بحسب ما لديك: اسم المدينة أو الإحداثيات.</p>
 <p class="count">باسم المدينة</p><pre class="wcode">&lt;div class=&quot;azangoo-widget&quot; data-city=&quot;Toronto&quot; data-country=&quot;CA&quot; data-lang=&quot;ar&quot; data-theme=&quot;auto&quot;&gt;&lt;/div&gt;
 &lt;script src=&quot;https://www.azangoo.com/js/azangoo-widget.js&quot; async&gt;&lt;/script&gt;</pre>
 <p class="count">بالإحداثيات</p><pre class="wcode">&lt;div class=&quot;azangoo-widget&quot; data-lat=&quot;43.65&quot; data-lng=&quot;-79.38&quot; data-timezone=&quot;America/Toronto&quot; data-name=&quot;Toronto&quot; data-lang=&quot;ar&quot;&gt;&lt;/div&gt;
 &lt;script src=&quot;https://www.azangoo.com/js/azangoo-widget.js&quot; async&gt;&lt;/script&gt;</pre></section>
+<section class="card"><h2>ودجت رؤية الهلال</h2><p>يمكن لهذا الودجت نفسه أن يعرض القمر بدل أوقات الصلاة: صورة القمر ونسبة إضاءته الآن، وطلوعه وغروبه، والسماء عند غروب اليوم ٢٩ من الشهر الهجري مع أفضل وقت لرؤية الهلال واتجاهه وارتفاعه وهل يُرى بالعين المجردة أم بالمنظار فقط. اجعل data-type يساوي moon.</p>
+<pre class="wcode" dir="ltr">&lt;div class=&quot;azangoo-widget&quot; data-type=&quot;moon&quot; data-view=&quot;full&quot; data-lat=&quot;43.65&quot; data-lng=&quot;-79.38&quot; data-timezone=&quot;America/Toronto&quot; data-name=&quot;Toronto&quot; data-lang=&quot;ar&quot;&gt;&lt;/div&gt;
+&lt;script src=&quot;https://www.azangoo.com/js/azangoo-widget.js&quot; async&gt;&lt;/script&gt;</pre>
+<div class="gal">
+<div class="azangoo-widget" data-type="moon" data-view="full" data-lat="21.4225" data-lng="39.8262" data-timezone="Asia/Riyadh" data-name="مكة المكرمة" data-lang="ar" data-theme="night"></div>
+<div class="azangoo-widget" data-type="moon" data-view="now" data-lat="35.6892" data-lng="51.389" data-timezone="Asia/Tehran" data-name="طهران" data-lang="ar" data-theme="light"></div>
+</div>
+<p class="hint">النتيجة تقدير بمعيار عودة وليست إعلانًا رسميًا، ويكتب الودجت ذلك دائمًا تحت النتيجة. تُحمَّل صور القمر من موقع أذان غو.</p></section>
 <section class="card" id="wb" data-lang="ar" data-copied="تم النسخ"><h2>إنشاء الشيفرة</h2>
 <div class="wb-grid">
+<label>نوع الودجت<select id="b-type"><option value="prayer" selected>أوقات الصلاة</option><option value="moon">رؤية الهلال</option></select></label>
+<label>عرض القمر<select id="b-view"><option value="full" selected>كامل (القمر الآن + غروب اليوم ٢٩)</option><option value="now">القمر الآن فقط</option><option value="sight">الهلال القادم فقط</option></select></label>
 <label>المدينة<input id="b-city" value="Toronto"></label>
 <label>رمز الدولة (اختياري)<input id="b-cc" value="CA" maxlength="2" dir="ltr"></label>
 <label>خط العرض<input id="b-lat" dir="ltr" placeholder="43.65"></label>
@@ -79,6 +89,8 @@ table.opt td:first-child{direction:ltr;text-align:left;font-family:Consolas,mono
 <div class="wb-code"><textarea id="wb-out" readonly aria-label="الشيفرة"></textarea><button class="wb-btn" id="wb-copy" type="button">نسخ الشيفرة</button></div></div></section>
 <section class="card"><h2>القوالب</h2><div class="gal" id="wb-gallery"></div></section>
 <section class="card"><h2>الخيارات</h2><table class="opt">
+<tr><td>type</td><td>prayer (الافتراضي) أو moon: ودجت رؤية الهلال.</td></tr>
+<tr><td>view</td><td>لـ moon فقط: full (القمر الآن + الهلال القادم) · now · sight</td></tr>
 <tr><td>city, country</td><td>اسم المدينة ورمز الدولة من حرفين (مثل CA). يُبحث عن المدينة مرة واحدة ويُحفظ في متصفح الزائر.</td></tr>
 <tr><td>lat, lng</td><td>الإحداثيات بدلًا من اسم المدينة.</td></tr>
 <tr><td>timezone</td><td>مثل Asia/Riyadh. مع lat وlng لا يُرسل أي طلب إلى الخارج.</td></tr>
@@ -102,8 +114,8 @@ table.opt td:first-child{direction:ltr;text-align:left;font-family:Consolas,mono
 <p class="count">بالإحداثيات</p><pre class="wcode">https://www.azangoo.com/go/?lat=43.65&amp;lng=-79.38&amp;lang=ar</pre>
 <p class="count">مثال للرابط في صفحتك</p><pre class="wcode">&lt;a href=&quot;https://www.azangoo.com/go/?city=Toronto&amp;country=Canada&amp;lang=ar&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;مواقيت الصلاة في تورنتو&lt;/a&gt;</pre>
 <p>المعامل lang هو أحد: fa أو en أو ur أو ar. هذه الروابط غير مخصصة لمحركات البحث. ومن حفظ مكانًا آخر في Azangoo سيرى مدينتك عند استخدامها. ولإنشاء الرابط بسهولة افتح <a href="../../go/">نموذج إنشاء الرابط</a>.</p></section>
-<script src="../../js/azangoo-widget.js"></script>
-<script src="../../js/widget-builder.js"></script>
+<script src="../../js/azangoo-widget.js?v=20261212"></script>
+<script src="../../js/widget-builder.js?v=20261212"></script>
 </main>
 </body>
 </html>

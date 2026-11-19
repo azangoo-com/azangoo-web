@@ -220,3 +220,7 @@ html.moon-pop-open{overflow:hidden}
   .moon-card .moon-look-dir{font-size:.88rem}
   .moon-card .moon-look-alt{font-size:.74rem}
 }
+
+/* the invitation to put the card on one's own website (under the "next month" tab) */
+.moon-cta{display:block;margin:10px auto 0;text-align:center;font-size:.8rem;font-weight:700;color:var(--gold2);text-decoration:none;border-bottom:1px dashed var(--gold);width:max-content;max-width:100%}
+.moon-cta:hover,.moon-cta:focus-visible{color:var(--ivory);border-bottom-style:solid}
