@@ -618,8 +618,14 @@
     var s = o.sight;
     if (!s) { el.hidden = true; el.innerHTML = ""; sightKey = ""; return; }
     var b = sightBits(s, o);
+    var A = root.AzanLang;
+    var look = s.bt !== null
+      ? '<section class="moon-card moon-look"><h3 class="moon-card-t">' + A.t("moon_sight_look_l") + '</h3>' +
+        '<p class="moon-look-dir">' + dirText(s.moonAz) + '</p>' +
+        '<p class="moon-look-alt">' + A.t("moon_sight_look_alt", { alt: fa(Math.max(1, Math.round(s.moonAlt))) }) + '</p></section>'
+      : "";
     var html = '<p class="moon-sight-when">' + b.when + '</p>' + sceneBox(s, o, "c", 44, true) +
-      '<p class="moon-sight-len">' + b.len + '</p><p class="moon-eye is-' + s.level + '">' + b.eye + '</p>';
+      '<p class="moon-sight-len">' + b.len + '</p><p class="moon-eye is-' + s.level + '">' + b.eye + '</p>' + look;
     if (html !== sightKey) { el.innerHTML = html; sightKey = html; }
     el.hidden = false;
   }
@@ -627,6 +633,12 @@
   /* ---- page ---- */
   var state = null, lastOut = null;
   function put(id, t) { var e = document.getElementById(id); if (e) e.textContent = t; }
+  /* a card of the "next month" tab (gold title + text): hidden as a whole when it has nothing to say */
+  function putCard(id, t) {
+    put(id, t);
+    var e = document.getElementById(id), c = e && e.closest ? e.closest(".moon-card") : null;
+    if (c) c.hidden = !t;
+  }
   function render() {
     if (!state || typeof document === "undefined") return;
     var o;
@@ -640,14 +652,15 @@
     put("mSet", o.set ? hm(o.set.t, state.off) : "—");
     put("mSetDir", o.set ? dirText(o.set.az) : "");
     put("mSunset", o.sunsetIllum !== null ? root.AzanLang.percent(o.sunsetIllum.toFixed(2)) : "—");
-    put("mText", o.text);
     if (o.hijriDay) {
       put("d-h-day", root.AzanLang.num(o.hijriDay));
       put("d-h-my", o.cur + " " + root.AzanLang.num(o.hijriYear));
     }
-    put("mStart", o.startText || "");
-    put("mWhy", o.whyText || "");
-    put("mBest", o.bestText || "");
+    putCard("mStart", o.startText || "");
+    /* the title says what the text explains (the month has 29 or 30 days) */
+    put("mWhyT", o.len ? root.AzanLang.t("moon_lbl_why_n", { n: fa(o.len) }) : root.AzanLang.t("moon_lbl_why"));
+    putCard("mWhy", o.whyText || "");
+    putCard("mBest", o.bestText || "");
     put("mIntro", "");
     renderSight(o);
     arrangeMessages();
@@ -713,7 +726,7 @@
   function arrangeMessages() {
     var tabs = document.getElementById("moonTabs");
     if (!tabs) return;
-    var extra = !!(lastOut && lastOut.sight) || ["mText", "mStart", "mWhy", "mBest", "mNote"].some(function (id) { var e = document.getElementById(id); return e && e.textContent; });
+    var extra = !!(lastOut && lastOut.sight) || ["mStart", "mWhy", "mBest", "mNote"].some(function (id) { var e = document.getElementById(id); return e && e.textContent; });
     tabs.hidden = !extra;
     if (!extra) showTab("now");
     setTabLabels();

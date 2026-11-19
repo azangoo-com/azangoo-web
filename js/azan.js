@@ -657,7 +657,7 @@
     ramFired[key]=true;
     ramMsg.textContent=text;
     if(window.Notification&&Notification.permission==="granted"){
-      try{new Notification(text,{icon:"images/logo-azangoo-120.png"})}catch(e){}
+      try{new Notification(text,{icon:"icons/icon-192.png?v=4"})}catch(e){}
     }
   }
   function updateRamadan(){

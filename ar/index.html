@@ -28,8 +28,8 @@
 <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png?v=4">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=4">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png?v=4">
-<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-title" content="اذان گو">
+<link rel="manifest" href="manifest-ar.json">
+<meta name="apple-mobile-web-app-title" content="أذان گو">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="اذان گو">
 <meta property="og:title" content="أذان گو - أوقات الصلاة، رؤية الهلال وتقويم أوقات الصلاة">
@@ -49,7 +49,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&family=Amiri+Quran&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'">
 <link rel="stylesheet" href="css/azan.css?v=20261209">
-<link rel="stylesheet" href="css/moon.css?v=20261208">
+<link rel="stylesheet" href="css/moon.css?v=20261210">
 </head>
 <body>
 <div class="sound-bar" id="soundBar" role="status" hidden><span class="sound-bar-text" data-i18n="sound_bar">لتشغيل الأذان والدعاء تلقائيًا، انقر على الصفحة مرة واحدة</span></div>
@@ -192,17 +192,14 @@
         <div class="moon-more" id="moonMore" role="tabpanel" aria-labelledby="mtab-next" hidden>
           <div class="moon-clip" id="moonClip">
             <p class="moon-note moon-intro" id="mIntro"></p>
-            <div id="moonMsgs">
-              <p class="moon-text" id="mText"></p>
-              <p class="moon-text moon-start" id="mStart"></p>
-            </div>
-            <div class="moon-text moon-sky" id="moonSky" hidden>
-              <span class="sky-line" id="skySunset"></span>
-              <span class="sky-note" id="skyNote"></span>
-            </div>
-            <p class="moon-text moon-why" id="mWhy"></p>
-            <p class="moon-text moon-best" id="mBest"></p>
-            <p class="moon-note" id="mNote" data-i18n="moon_odeh">تُقدَّر رؤية الهلال بمعيار عودة (Odeh V-criterion)؛ وهو تقدير وليس إعلانًا رسميًا.</p>
+            <section class="moon-card" hidden><h3 class="moon-card-t" data-i18n="moon_lbl_start">بداية الشهر القادم</h3><p class="moon-card-b" id="mStart"></p></section>
+            <section class="moon-card moon-sky" id="moonSky" hidden>
+              <h3 class="moon-card-t" data-i18n="moon_lbl_sky">حالة السماء عند الغروب</h3>
+              <p class="moon-card-b"><span class="sky-line" id="skySunset"></span><span class="sky-note" id="skyNote"></span></p>
+            </section>
+            <section class="moon-card" hidden><h3 class="moon-card-t" id="mWhyT"></h3><p class="moon-card-b" id="mWhy"></p></section>
+            <section class="moon-card" hidden><h3 class="moon-card-t" data-i18n="moon_lbl_best">أفضل وقت لرؤية الهلال</h3><p class="moon-card-b" id="mBest"></p></section>
+            <section class="moon-card"><h3 class="moon-card-t" data-i18n="moon_lbl_odeh">حول المعيار</h3><p class="moon-card-b" id="mNote" data-i18n="moon_odeh">تُقدَّر رؤية الهلال بمعيار عودة (Odeh V-criterion)؛ وهو تقدير وليس إعلانًا رسميًا.</p></section>
           </div>
           <button type="button" class="moon-toggle" id="moonToggle" aria-expanded="false" aria-controls="moonClip" hidden></button>
         </div>
@@ -312,10 +309,10 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>window.L||document.write('<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"><\/script>')</script>
-<script src="js/lang.js?v=20261207"></script>
+<script src="js/lang.js?v=20261208"></script>
 <script src="js/official.js?v=20261120"></script>
 <script src="js/azangoo-prayer-times.js?v=20261190"></script>
-<script src="js/moon-info.js?v=20261206"></script>
+<script src="js/moon-info.js?v=20261207"></script>
 <script src="js/calendar-pdf.js?v=20261109"></script>
 <script src="js/contact.js?v=20261146"></script>
 <script src="js/theme.js"></script>
