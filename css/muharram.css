@@ -1,42 +1,15 @@
 /* Copyright (c) 2026 azangoo.com. All rights reserved.
-   Muharram mood: the same layout in black and deep red. Nothing here applies unless <html data-season="muharram"> is set
-   (js/muharram.js sets it: ?theme=muharram for a preview, and automatically in the first ten days of Muharram). */
-:root[data-season="muharram"]{
-  --night:#0c0506; --night2:#1a0b0d; --lapis:#2a0e12; --turq:#b3262e;
-  --gold:#d9534f; --gold2:#ff9a94; --ivory:#f3e9e7; --ink:#14090a;
-  --tile:rgba(26,11,13,.88); --line:rgba(217,83,79,.45);
-  --bg-a:#40101a; --bg-b:#0c0506;
-  --panel:rgba(12,5,6,.55); --panel-strong:rgba(12,5,6,.9); --panel-soft:rgba(12,5,6,.4);
-  --text:#f3e9e7; --heading:#ff9a94; --muted:rgba(243,233,231,.65);
-  --mosque-top:rgba(130,28,34,.55); --mosque-bottom:rgba(6,2,3,.95);
-}
-:root[data-season="muharram"][data-theme="light"]{
-  --night:#ffffff; --night2:#f8eeee; --lapis:#f0dada; --turq:#a31f26;
-  --gold:#a31f26; --gold2:#7a1219; --ivory:#2a1315; --ink:#14090a;
-  --tile:rgba(255,255,255,.92); --line:rgba(163,31,38,.5);
-  --bg-a:#f6e8e8; --bg-b:#e6caca;
-  --panel:rgba(255,255,255,.94); --panel-strong:#ffffff; --panel-soft:rgba(255,255,255,.78);
-  --text:#2a1315; --heading:#7a1219; --muted:rgba(42,19,21,.62);
-  --mosque-top:rgba(42,19,21,.12); --mosque-bottom:rgba(42,19,21,.30);
-}
-/* the title: dark red glow instead of gold */
-:root[data-season="muharram"] .logo{text-shadow:0 2px 0 #3a0a0d,0 0 30px rgba(179,38,46,.5)}
-:root[data-season="muharram"][data-theme="light"] .logo{text-shadow:0 1px 0 rgba(255,255,255,.7)}
-/* a few borders were written in gold directly */
-:root[data-season="muharram"] .moon-card,
-:root[data-season="muharram"] .qibla,
-:root[data-season="muharram"] .moon-sight{border-color:rgba(217,83,79,.3)}
-:root[data-season="muharram"] .moon-cta{border-bottom-color:var(--gold)}
+   Muharram: the site keeps its own colours. Two things are added in the first ten days of Muharram:
+   a black band at the top, and a black mourning ribbon across the corner of the events panel.
+   Nothing here applies unless <html data-season="muharram"> is set (js/muharram.js: automatically in those days, or ?theme=muharram for a preview). */
 
-/* the places that were written in turquoise directly */
-:root[data-season="muharram"] .times li.next{background:linear-gradient(135deg,#7a1219,#a31f26);border-color:#ff9a94;box-shadow:0 0 0 1px #ff9a94,0 3px 10px rgba(163,31,38,.4)}
-:root[data-season="muharram"] .stage:not(.is-card){background:radial-gradient(120% 80% at 50% 0%,rgba(179,38,46,.3),transparent 62%),linear-gradient(165deg,var(--night2),var(--night))}
-:root[data-season="muharram"] .stage.is-card:not([data-tone="mourn"]):not([data-tone="karbala"]):not([data-tone="joy"]),:root[data-season="muharram"] .ev-dlg:not([data-tone="mourn"]):not([data-tone="karbala"]):not([data-tone="joy"]){--t1:#2a0b0e;--t2:#0e0405;--tg:rgba(217,83,79,.28);--ta:#ffb4ae;--tb1:#ff9a94;--tb2:#d9534f;--tk:#2a0608}
-:root[data-season="muharram"]{--glow-b:rgba(179,38,46,.1)}
-:root[data-season="muharram"] .hadith-btn{border-color:rgba(217,83,79,.65)}
-:root[data-season="muharram"] .hadith-tag{background:linear-gradient(135deg,#7a1219,#a31f26)}
-:root[data-season="muharram"] .hadith-card{border-color:rgba(217,83,79,.75)}
-:root[data-season="muharram"] .hadith-x:hover{background:rgba(217,83,79,.25)}
+/* the black ribbon across the top-left corner of the events panel (the left corner in every language).
+   Its length is --mh-b; js/muharram.js shortens it when the text of the panel would otherwise touch it. */
+:root[data-season="muharram"] .stage.is-card{--mh-b:118px}
+:root[data-season="muharram"] .stage.is-card::after{
+  content:"";position:absolute;top:0;left:0;width:var(--mh-b);height:var(--mh-b);z-index:6;pointer-events:none;
+  background:#050506;
+  clip-path:polygon(calc(var(--mh-b) - 28px) 0,var(--mh-b) 0,0 var(--mh-b),0 calc(var(--mh-b) - 28px))}
 
 /* the black band at the top, with a fringe of pennants */
 .mh-bar{position:relative;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 14px;
@@ -50,4 +23,5 @@
 .mh-bar .mh-day[hidden]{display:none}
 .mh-bar.is-big{background:#000}
 .mh-bar.is-big .mh-day{background:#b3262e;color:#fff;border-color:#ff9a94}
-@media(max-width:639px){.mh-bar{font-size:.8rem;padding:8px 12px 30px}@media print{.mh-bar{display:none}}
+@media(max-width:639px){.mh-bar{font-size:.8rem;padding:8px 12px}}
+@media print{.mh-bar{display:none}}
