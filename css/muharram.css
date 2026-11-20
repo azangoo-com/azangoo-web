@@ -1,6 +1,6 @@
 /* Copyright (c) 2026 azangoo.com. All rights reserved.
    Muharram mood: the same layout in black and deep red. Nothing here applies unless <html data-season="muharram"> is set
-   (js/muharram.js sets it: ?theme=muharram for a preview, and in the first ten days of Muharram once it is switched on). */
+   (js/muharram.js sets it: ?theme=muharram for a preview, and automatically in the first ten days of Muharram). */
 :root[data-season="muharram"]{
   --night:#0c0506; --night2:#1a0b0d; --lapis:#2a0e12; --turq:#b3262e;
   --gold:#d9534f; --gold2:#ff9a94; --ivory:#f3e9e7; --ink:#14090a;
@@ -40,7 +40,7 @@
 
 /* the black band at the top, with a fringe of pennants */
 .mh-bar{position:relative;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 14px;
-  padding:9px 44px 9px 14px;background:#0a0405;color:#f3e9e7;text-align:center;border-bottom:2px solid #b3262e;
+  padding:9px 14px;background:#0a0405;color:#f3e9e7;text-align:center;border-bottom:2px solid #b3262e;
   font-size:.92rem;font-weight:700;line-height:1.7}
 .mh-bar[hidden]{display:none}
 .mh-bar::after{content:"";position:absolute;left:0;right:0;top:100%;height:10px;pointer-events:none;
@@ -50,8 +50,4 @@
 .mh-bar .mh-day[hidden]{display:none}
 .mh-bar.is-big{background:#000}
 .mh-bar.is-big .mh-day{background:#b3262e;color:#fff;border-color:#ff9a94}
-.mh-bar .mh-off{position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);height:28px;padding:0 10px;border-radius:999px;
-  border:1px solid rgba(217,83,79,.6);background:transparent;color:#f3e9e7;font:inherit;font-size:.74rem;font-weight:600;cursor:pointer}
-.mh-bar .mh-off:hover{background:rgba(217,83,79,.25)}
-@media(max-width:639px){.mh-bar{font-size:.8rem;padding:8px 12px 30px}.mh-bar .mh-off{top:auto;bottom:4px;transform:none;inset-inline-end:50%;margin-inline-end:-40px}}
-@media print{.mh-bar{display:none}}
+@media(max-width:639px){.mh-bar{font-size:.8rem;padding:8px 12px 30px}@media print{.mh-bar{display:none}}

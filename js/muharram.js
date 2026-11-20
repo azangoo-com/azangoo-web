@@ -4,16 +4,16 @@
 /* Muharram mood (css/muharram.css).
    - Automatic: on the first ten days of Muharram (the Hijri date of the place the visitor chose, from js/moon-info.js).
    - Preview any time: ?theme=muharram   (and ?theme=muharram&day=9 or 10 to see Tasu'a and Ashura). The preview always wins.
-   - "Normal theme" in the band switches the automatic mood off in that browser. */
+   The mood is the site's own design and has no switch for the visitor. */
 (function () {
   'use strict';
-  var root = document.documentElement, KEY = 'azMuharramOff', UNTIL = 'azMuharramUntil', DAY = 86400000;
+  var root = document.documentElement, UNTIL = 'azMuharramUntil', DAY = 86400000;
   var AUTO_LANGS = { fa: 1, en: 1, ur: 1, ar: 1 };            /* the languages the automatic mood is on for; delete a line to leave a language out */
   var TXT = {
-    fa: { line: 'ایام عزاداری <b>محرم الحرام</b> — السلام علیک یا اباعبدالله الحسین (ع)', off: 'تم عادی', day: '{d} محرم {y}', d9: 'تاسوعای حسینی — {d} محرم', d10: 'عاشورای حسینی — {d} محرم' },
-    en: { line: 'Days of mourning — <b>Muharram</b> — Peace be upon you, O Aba ʿAbdillāh al-Ḥusayn', off: 'Normal theme', day: '{d} Muharram {y}', d9: 'Tasuʿa — {d} Muharram', d10: 'Ashura — {d} Muharram' },
-    ur: { line: 'ایامِ عزا — <b>محرم الحرام</b> — السلام علیک یا ابا عبداللہ الحسین (ع)', off: 'عام تھیم', day: '{d} محرم {y}', d9: 'تاسوعا — {d} محرم', d10: 'عاشورا — {d} محرم' },
-    ar: { line: 'أيام العزاء — <b>محرّم الحرام</b> — السلام عليك يا أبا عبد الله الحسين (ع)', off: 'المظهر العادي', day: '{d} محرّم {y}', d9: 'تاسوعاء — {d} محرّم', d10: 'عاشوراء — {d} محرّم' }
+    fa: { line: 'ایام عزاداری <b>محرم الحرام</b> — السلام علیک یا اباعبدالله الحسین (ع)', day: '{d} محرم {y}', d9: 'تاسوعای حسینی — {d} محرم', d10: 'عاشورای حسینی — {d} محرم' },
+    en: { line: 'Days of mourning — <b>Muharram</b> — Peace be upon you, O Aba ʿAbdillāh al-Ḥusayn', day: '{d} Muharram {y}', d9: 'Tasuʿa — {d} Muharram', d10: 'Ashura — {d} Muharram' },
+    ur: { line: 'ایامِ عزا — <b>محرم الحرام</b> — السلام علیک یا ابا عبداللہ الحسین (ع)', day: '{d} محرم {y}', d9: 'تاسوعا — {d} محرم', d10: 'عاشورا — {d} محرم' },
+    ar: { line: 'أيام العزاء — <b>محرّم الحرام</b> — السلام عليك يا أبا عبد الله الحسين (ع)', day: '{d} محرّم {y}', d9: 'تاسوعاء — {d} محرّم', d10: 'عاشوراء — {d} محرّم' }
   };
   var qs = location.search;
   var preview = /[?&]theme=muharram\b/.test(qs);
@@ -35,7 +35,6 @@
     dayEl.textContent = d ? (T[d === 9 ? 'd9' : d === 10 ? 'd10' : 'day'].replace('{d}', num(d)).replace('{y}', y)).trim() : '';
     dayEl.hidden = !d;
     bar.classList.toggle('is-big', d === 9 || d === 10);
-    bar.querySelector('.mh-off').textContent = T.off;
   }
   function show() {
     if (bar) { bar.hidden = false; paint(); return; }
@@ -44,11 +43,8 @@
     bar = document.createElement('div');
     bar.className = 'mh-bar';
     bar.setAttribute('role', 'note');
-    bar.innerHTML = '<span class="mh-line"></span><span class="mh-day" hidden></span><button type="button" class="mh-off"></button>';
+    bar.innerHTML = '<span class="mh-line"></span><span class="mh-day" hidden></span>';
     document.body.insertBefore(bar, document.body.firstChild);
-    bar.querySelector('.mh-off').addEventListener('click', function () {
-      hide(); if (!preview) store(KEY, '1'); store(UNTIL, null);
-    });
     paint();
   }
   function hide() {
@@ -65,7 +61,7 @@
     info = { day: o.hijriDay, year: o.hijriYear, month: o.hijriMonth };
     if (preview) { paint(); return; }
     var inDays = info.month === 1 && info.day >= 1 && info.day <= 10 && AUTO_LANGS[lang()];
-    if (inDays && load(KEY) !== '1') {
+    if (inDays) {
       auto = true; on();
       store(UNTIL, String(Date.now() + (11 - info.day) * DAY));   /* remembered, so the next page opens in the mood at once */
     } else if (!inDays) {
@@ -77,7 +73,7 @@
 
   function start() {
     if (preview) { on(); read(); }
-    else if (load(KEY) !== '1' && +load(UNTIL) > Date.now() && AUTO_LANGS[lang()]) { auto = true; on(); }
+    else if (+load(UNTIL) > Date.now() && AUTO_LANGS[lang()]) { auto = true; on(); }
     window.addEventListener('azan:hijri', read);
     window.addEventListener('azan:langchange', function () { paint(); if (!preview) read(); });
     read();
