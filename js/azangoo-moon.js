@@ -67,7 +67,7 @@
 
   function render(el, o) {
     var lang = TXT[o.lang] ? o.lang : 'en', L0 = X.LANGS[lang], T = TXT[lang];
-    var theme = /^(auto|light|night|dark|emerald|ocean|sand|rose)$/.test(o.theme) ? o.theme : 'auto';
+    var theme = /^(auto|light|night|dark|emerald|ocean|sand|rose|muharram)$/.test(o.theme) ? o.theme : 'auto';
     var view = /^(full|now|sight)$/.test(o.view) ? o.view : 'full';
     var clock = o.clock === '12' ? '12' : '24';
     var latin = o.digits === 'latin' || lang === 'en';

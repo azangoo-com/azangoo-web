@@ -15,7 +15,7 @@
      name            the name written in the widget (default: the city name)
      timezone        IANA zone, e.g. "America/Toronto". With lat + lng + timezone the widget makes no request at all
      lang            fa | en | ur | ar            (default en)
-     theme           auto | light | night | dark | emerald | ocean | sand | rose   (default auto)
+     theme           auto | light | night | dark | emerald | ocean | sand | rose | muharram   (default auto)
      layout          list | grid | row            (default list)
      show            comma list of: fajr,sunrise,dhuhr,sunset,maghrib,midnight   (default: all)
      clock           24 | 12                      (default 24)
@@ -68,6 +68,7 @@
     '.t-emerald{--_bg:#0f3d2e;--_fg:#e9f7ef;--_mut:rgba(233,247,239,.64);--_acc:#5fd3a0;--_line:rgba(95,211,160,.35);--_hl:rgba(95,211,160,.18);--_hlfg:#9be8c4}',
     '.t-ocean{--_bg:#0d2f55;--_fg:#eaf3ff;--_mut:rgba(234,243,255,.64);--_acc:#6cb8ff;--_line:rgba(108,184,255,.35);--_hl:rgba(108,184,255,.18);--_hlfg:#a9d5ff}',
     '.t-sand{--_bg:#f6efe0;--_fg:#3b2f1e;--_mut:rgba(59,47,30,.6);--_acc:#a8741a;--_line:rgba(168,116,26,.3);--_hl:rgba(168,116,26,.14);--_hlfg:#7d5410}',
+    '.t-muharram{--_bg:#120708;--_fg:#f3e9e7;--_mut:rgba(243,233,231,.62);--_acc:#ff9a94;--_line:rgba(217,83,79,.42);--_hl:rgba(217,83,79,.2);--_hlfg:#ffb4ae}',
     '.t-rose{--_bg:#fff1f3;--_fg:#4a1f2a;--_mut:rgba(74,31,42,.6);--_acc:#c2415d;--_line:rgba(194,65,93,.25);--_hl:rgba(194,65,93,.12);--_hlfg:#9c2c46}',
     '@media (prefers-color-scheme:dark){.t-auto{--_bg:#0b2530;--_fg:#f4ecd8;--_mut:rgba(244,236,216,.62);--_acc:#d2a94b;--_line:rgba(210,169,75,.38);--_hl:rgba(210,169,75,.18);--_hlfg:#f0d58a}}',
     '.hd{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}',
@@ -246,7 +247,7 @@
     var o = readOptions(el, given);
     if (o.type === 'moon') { renderMoon(el, o); return; }
     var lang = LANGS[o.lang] ? o.lang : 'en', L = LANGS[lang];
-    var theme = /^(auto|light|night|dark|emerald|ocean|sand|rose)$/.test(o.theme) ? o.theme : 'auto';
+    var theme = /^(auto|light|night|dark|emerald|ocean|sand|rose|muharram)$/.test(o.theme) ? o.theme : 'auto';
     var layout = /^(list|grid|row)$/.test(o.layout) ? o.layout : 'list';
     var clock = o.clock === '12' ? '12' : '24';
     var dg = o.digits === 'latin' ? 'latin' : 'native';

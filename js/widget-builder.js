@@ -22,7 +22,7 @@
     { lat: '41.0082', lng: '28.9784', tz: 'Europe/Istanbul', n: { fa: 'استانبول', en: 'Istanbul', ur: 'استنبول', ar: 'إسطنبول' } },
     { lat: '31.5497', lng: '74.3436', tz: 'Asia/Karachi',   n: { fa: 'لاهور', en: 'Lahore', ur: 'لاہور', ar: 'لاهور' } }
   ];
-  var THEMES = ['auto', 'light', 'night', 'dark', 'emerald', 'ocean', 'sand', 'rose'];
+  var THEMES = ['auto', 'light', 'night', 'dark', 'emerald', 'ocean', 'sand', 'rose', 'muharram'];
   var gal = document.getElementById('wb-gallery');
   if (gal) {
     THEMES.forEach(function (t, i) {
