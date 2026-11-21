@@ -56,14 +56,19 @@
 .moon dt{opacity:.75}
 .moon dd{font-weight:700;text-align:left;direction:ltr}
 
-.moon-info{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 10px;margin-top:12px;font-size:.88rem}
-.moon-info dt{opacity:.8}
-.moon-info dd{font-weight:700;text-align:left;direction:ltr;margin:0}
+.moon-info{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:0;margin-top:12px;font-size:.88rem;align-items:baseline}
+.moon-info dt{opacity:.85;margin:0}
+.moon-info dd{font-weight:700;direction:ltr;margin:0;padding-inline-start:12px;white-space:nowrap}
+/* all values sit in one column and are aligned to the same outer edge, whatever their kind (time, percent, degrees, km) */
+[dir="rtl"] .moon-info dd,[dir="rtl"] #mNow,[dir="rtl"] #mSunset{text-align:left}
+[dir="ltr"] .moon-info dd{text-align:right}
+/* every item (label + value + its direction line) is one tidy row, thin line between rows */
+.moon-info dt,.moon-info dt+dd{padding:8px 0 0;margin-top:8px;border-top:1px solid rgba(128,128,128,.22);border-top-color:color-mix(in srgb,currentColor 14%,transparent)}
+.moon-info>dt:first-child,.moon-info>dt:first-child+dd{margin-top:0;padding-top:0;border-top:0}
 /* RTL languages: the percent sign goes after the number on its left, e.g. ۶٫۶۵٪ */
 [dir="rtl"] #mNow,[dir="rtl"] #mSunset{direction:rtl;unicode-bidi:isolate}
-.moon-info dd.sub{grid-column:1/-1;margin:-4px 0 4px;font-size:.8rem;font-weight:400;opacity:.85;text-align:right;direction:rtl}
+.moon-info dd.sub{grid-column:1/-1;width:0;min-width:100%;margin:2px 0 0;padding:0;border:0;font-size:.78rem;font-weight:400;opacity:.7;text-align:start !important;direction:inherit;white-space:normal}
 /* English: the direction line ("28° south of east") reads left to right; it stays on the right edge like the other languages */
-[dir="ltr"] .moon-info dd.sub{direction:ltr;text-align:right}
 .moon-text{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--panel);border:1px solid rgba(210,169,75,.25);font-size:.85rem;line-height:1.9}
 .moon-start{font-weight:700;color:var(--ivory);margin-top:10px}
 .moon-why{margin-top:10px}
@@ -95,8 +100,9 @@
 @media(max-width:639px){
   .moon{padding:10px}
   .moon-img{width:84px;height:84px}
-  .moon-info{margin-top:8px;gap:4px 8px;font-size:.8rem}
-  .moon-info dd.sub{font-size:.72rem;margin:-3px 0 3px}
+  .moon-info{margin-top:8px;gap:0;font-size:.8rem}
+  .moon-info dt,.moon-info dt+dd{padding-top:6px;margin-top:6px}
+  .moon-info dd.sub{font-size:.72rem;margin:2px 0 0}
   .moon-text{margin-top:8px;padding:7px 10px;font-size:.78rem;line-height:1.8}
   .moon-note{font-size:.7rem}
   .help-pop{padding:8px 10px;padding-inline-end:32px}

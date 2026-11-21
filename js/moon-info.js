@@ -677,7 +677,19 @@
     if (zb) { var zl = AL().t("moon_zoom"); zb.setAttribute("aria-label", zl); zb.title = zl; }
     rendering = true;
     try { applyHorizon(o); } finally { rendering = false; }
+    updateDir(true);
   }
+
+  /* "Moon direction now": the Moon's compass bearing at this minute, or "below the horizon" when it is not up (same test as o.up).
+     Light calculation (one Moon position), so it runs every minute; if the Moon crossed the horizon since the last full render, the whole card is rendered again. */
+  function updateDir(fromRender) {
+    if (!state || typeof document === "undefined") return;
+    var m = moonAt(Date.now(), state.lat, state.lng), up = m.alt > 0, A = AL();
+    put("mDirNow", up ? fa(Math.round(m.az)) + "°" : A.t("moon_dir_below"));
+    put("mDirNowSub", up ? dirText(m.az) : "");
+    if (!fromRender && lastOut && lastOut.up !== up && !rendering) render();
+  }
+  if (typeof document !== "undefined") setInterval(function () { updateDir(false); }, 60 * 1000);
 
   /* Moon below the horizon: the picture is more transparent and a plain label sits under it; the countdown card shows the time left until moonrise (below the horizon) or moonset (above it). The countdown ticks every second from the
      time found in compute(); when it reaches zero the card is computed again. */
