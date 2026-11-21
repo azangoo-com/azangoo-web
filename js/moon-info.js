@@ -680,12 +680,12 @@
     updateDir(true);
   }
 
-  /* "Moon direction now": the Moon's compass bearing at this minute, or "below the horizon" when it is not up (same test as o.up).
+  /* "Moon direction now": the Moon's height above the horizon (value) and its compass direction (line below) at this minute, or "below the horizon" when it is not up (same test as o.up).
      Light calculation (one Moon position), so it runs every minute; if the Moon crossed the horizon since the last full render, the whole card is rendered again. */
   function updateDir(fromRender) {
     if (!state || typeof document === "undefined") return;
     var m = moonAt(Date.now(), state.lat, state.lng), up = m.alt > 0, A = AL();
-    put("mDirNow", up ? fa(Math.round(m.az)) + "°" : A.t("moon_dir_below"));
+    put("mDirNow", up ? A.t("moon_alt_up", { deg: fa(Math.max(0, Math.round(m.alt))) + "°" }) : A.t("moon_dir_below"));
     put("mDirNowSub", up ? dirText(m.az) : "");
     if (!fromRender && lastOut && lastOut.up !== up && !rendering) render();
   }

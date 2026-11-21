@@ -66,7 +66,7 @@
 .moon-info dt,.moon-info dt+dd{padding:8px 0 0;margin-top:8px;border-top:1px solid rgba(128,128,128,.22);border-top-color:color-mix(in srgb,currentColor 14%,transparent)}
 .moon-info>dt:first-child,.moon-info>dt:first-child+dd{margin-top:0;padding-top:0;border-top:0}
 /* RTL languages: the percent sign goes after the number on its left, e.g. ۶٫۶۵٪ */
-[dir="rtl"] #mNow,[dir="rtl"] #mSunset{direction:rtl;unicode-bidi:isolate}
+[dir="rtl"] #mNow,[dir="rtl"] #mSunset,[dir="rtl"] #mDirNow{direction:rtl;unicode-bidi:isolate}
 .moon-info dd.sub{grid-column:1/-1;width:0;min-width:100%;margin:2px 0 0;padding:0;border:0;font-size:.78rem;font-weight:400;opacity:.7;text-align:start !important;direction:inherit;white-space:normal}
 /* English: the direction line ("28° south of east") reads left to right; it stays on the right edge like the other languages */
 .moon-text{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--panel);border:1px solid rgba(210,169,75,.25);font-size:.85rem;line-height:1.9}
