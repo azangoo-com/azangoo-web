@@ -101854,4 +101854,36 @@
     <loc>https://www.azangoo.com/ar/widget/</loc>
     <lastmod>2026-11-19</lastmod>
   </url>
+  <url>
+    <loc>https://www.azangoo.com/fa/app-privacy/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://www.azangoo.com/fa/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.azangoo.com/en/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.azangoo.com/ar/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ur" href="https://www.azangoo.com/ur/app-privacy/"/>
+  </url>
+  <url>
+    <loc>https://www.azangoo.com/en/app-privacy/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://www.azangoo.com/fa/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.azangoo.com/en/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.azangoo.com/ar/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ur" href="https://www.azangoo.com/ur/app-privacy/"/>
+  </url>
+  <url>
+    <loc>https://www.azangoo.com/ar/app-privacy/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://www.azangoo.com/fa/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.azangoo.com/en/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.azangoo.com/ar/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ur" href="https://www.azangoo.com/ur/app-privacy/"/>
+  </url>
+  <url>
+    <loc>https://www.azangoo.com/ur/app-privacy/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://www.azangoo.com/fa/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.azangoo.com/en/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.azangoo.com/ar/app-privacy/"/>
+    <xhtml:link rel="alternate" hreflang="ur" href="https://www.azangoo.com/ur/app-privacy/"/>
+  </url>
 </urlset>
