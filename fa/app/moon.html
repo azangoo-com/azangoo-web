@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>رؤیت ماه و ماه قمری | برنامه اندروید اذان گو</title>
+<meta name="theme-color" content="#071c27">
+<link rel="canonical" href="https://www.azangoo.com/fa/app/moon.html">
+<link rel="icon" href="../../favicon.ico?v=4" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="../../icons/icon-32.png?v=4">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:site_name" content="اذان گو">
+<meta property="og:title" content="رؤیت ماه و ماه قمری | برنامه اندروید اذان گو">
+<meta property="og:description" content="ماه لحظه‌ای، بهترین زمان و جهت دیدن هلال و پیش‌بینی ۲۹ یا ۳۰ روزه بودن ماه قمری با معیار عودة در اذان گو.">
+<meta property="og:url" content="https://www.azangoo.com/fa/app/moon.html">
+<meta property="og:image" content="https://www.azangoo.com/images/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="ماه لحظه‌ای، بهترین زمان و جهت دیدن هلال و پیش‌بینی ۲۹ یا ۳۰ روزه بودن ماه قمری با معیار عودة در اذان گو.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="css/app.css?v=20261124">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.2 8.2 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9.5a6 6 0 0 1 12 0c0 6 2 7.5 2 7.5H4s2-1.500 2-7.500zM10 20.500a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-bell-off" viewBox="0 0 24 24"><path d="M6 9.500a6 6 0 0 1 9.500-4.800M18 10c.2 5.500 2 7 2 7H8M10 20.500a2 2 0 0 0 4 0M3 3l18 18"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.500v13l11-6.500z"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.800 8.200l-2.100 5.500-5.500 2.100 2.100-5.500z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19V5.500A2.500 2.500 0 0 1 6.500 3H20v15H6.500A2.500 2.500 0 0 0 4 20.500 2.500 2.500 0 0 0 6.500 23H20"/></symbol>
+    <symbol id="i-beads" viewBox="0 0 24 24"><circle cx="12" cy="4.500" r="1.600"/><circle cx="18" cy="8" r="1.600"/><circle cx="18" cy="15" r="1.600"/><circle cx="12" cy="18.500" r="1.600"/><circle cx="6" cy="15" r="1.600"/><circle cx="6" cy="8" r="1.600"/><path d="M12 20.200V23"/></symbol>
+    <symbol id="i-widget" viewBox="0 0 24 24"><rect x="3.500" y="3.500" width="7" height="7" rx="2"/><rect x="13.500" y="3.500" width="7" height="7" rx="2"/><rect x="3.500" y="13.500" width="7" height="7" rx="2"/><rect x="13.500" y="13.500" width="7" height="7" rx="2"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.200 7-11.500a7 7 0 0 0-14 0C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.500 2"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.500" y="5" width="17" height="15.500" rx="3"/><path d="M3.500 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 10v4M7 7v10M11 4v16M15 8v8M19 10v4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.500l4.500 4.500L19 7.500"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.500" r="7.500"/><path d="M12 9.500v4l2.500 1.500M9.500 2.500h5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.800-7 10-7 10 7 10 7-3.800 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-crescent" viewBox="0 0 24 24"><path d="M19 14.500A7.500 7.500 0 0 1 9.500 5a7.500 7.500 0 1 0 9.500 9.500z"/><path d="M17 3.500l.7 1.600 1.600.7-1.600.7-.7 1.600-.7-1.600-1.600-.7 1.600-.7z"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-5-5m5 5l5-5M5 20h14"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.500" y="10.500" width="15" height="10" rx="3"/><path d="M8 10.500V8a4 4 0 0 1 8 0v2.500"/></symbol>
+    <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M2 9a15 15 0 0 1 5-3M22 9a15 15 0 0 0-8.500-4M5.500 12.500a10 10 0 0 1 3-1.800M18.500 12.500a10 10 0 0 0-2.500-1.600M9 16a5 5 0 0 1 6 0M12 19.500h.01M3 3l18 18"/></symbol>
+  </defs>
+</svg>
+<div id="app" dir="rtl" lang="fa">
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="برنامه اندروید اذان گو، صفحهٔ اصلی"><img src="img/logo.webp" alt="" width="40" height="40"><span>برنامه اندروید اذان گو</span></a>
+    <nav class="nav" aria-label="صفحه‌ها"><a href="adhan.html">اذان و اوقات شرعی</a><a href="moon.html" aria-current="page">رؤیت ماه</a><a href="widgets.html">ویجت‌ها</a><a href="more.html">سایر امکانات</a></nav>
+    <details class="menu"><summary aria-label="منوی صفحه‌ها"><span class="bars"></span>منو</summary><nav class="panel" aria-label="صفحه‌ها"><a href="index.html">صفحهٔ اصلی</a><a href="adhan.html">اذان و اوقات شرعی</a><a href="moon.html" aria-current="page">رؤیت ماه</a><a href="widgets.html">ویجت‌ها</a><a href="more.html">سایر امکانات</a></nav></details>
+  </div>
+</header>
+
+<section class="hero phero pattern">
+  <div class="wrap">
+    <div class="copy">
+      <span class="eyebrow"><svg class="ico"><use href="#i-moon"/></svg>رؤیت ماه و ماه قمری</span>
+      <h1>ماه را ببینید، هلال بعدی را پیش‌بینی کنید</h1>
+      <p class="lead">ماه همین امشب، بهترین زمان و جهت دیدن هلال، و پیش‌بینی ۲۹ یا ۳۰ روزه بودن ماه قمری، همه برای مکان شما.</p>
+      <div class="cta-row">
+        <a class="btn gold" href="#download"><svg class="ico"><use href="#i-down"/></svg>شرکت در آزمایش برنامه</a>
+        <a class="btn" href="#moon">ماه را ببینید</a>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="phone"><img src="img/moon-live.webp" alt="ماه لحظه‌ای" width="500" height="1083" fetchpriority="high"></div>
+      <div class="fcard b"><img class="m" src="img/moon.webp" alt="" width="42" height="42"><div><small>روشنایی ماه</small><b>٪۹۵٫۷۶</b></div></div>
+      <div class="fcard a teal"><div><small>تا غروب ماه</small><div class="big">۱۲:۵۸:۰۵</div></div></div>
+      <div class="fcard d"><svg class="ico"><use href="#i-eye"/></svg><div><small>بهترین زمان رؤیت</small><b>۱۷:۰۹</b></div></div>
+    </div>
+  </div>
+</section>
+<section class="sec band teal" id="moon">
+  <div class="wrap">
+    <div class="feat" data-tabs data-active="live">
+      <div class="copy reveal">
+        <span class="kicker"><svg class="ico"><use href="#i-moon"/></svg>ماه و رؤیت هلال</span>
+        <h2>آسمان شما، ماه شما</h2>
+        <p>ماه را همین حالا ببینید و بدانید هلال بعدی کی، کجا و با چه شرایطی دیده می‌شود.</p>
+        <div class="tabs" role="tablist" aria-label="بخش‌های ماه">
+          <button role="tab" data-tab="live" aria-selected="true"><svg class="ico"><use href="#i-moon"/></svg>ماه لحظه‌ای</button>
+          <button role="tab" data-tab="best" aria-selected="false"><svg class="ico"><use href="#i-eye"/></svg>بهترین زمان رؤیت</button>
+          <button role="tab" data-tab="predict" aria-selected="false"><svg class="ico"><use href="#i-cal"/></svg>پیش‌بینی ماه</button>
+        </div>
+        <div class="tabpanel">
+          <div data-for="live">
+            <ul class="points">
+              <li><svg class="ico"><use href="#i-check"/></svg>ماه واقعی همین امشب، در آسمانی که با ساعت روز و وضع هوا عوض می‌شود.</li>
+              <li><svg class="ico"><use href="#i-check"/></svg>زمان باقی‌مانده تا طلوع یا غروب بعدی ماه، درصد روشنایی، نام فاز، و ساعت و جهت طلوع و غروب.</li>
+              <li><svg class="ico"><use href="#i-check"/></svg>موقعیت ماه همین حالا: چند درجه بالای افق و در کدام جهت. با یک لمس هم بزرگ می‌شود.</li>
+            </ul>
+          </div>
+          <div data-for="best" hidden>
+            <ul class="points">
+              <li><svg class="ico"><use href="#i-check"/></svg>بهترین ساعت دیدن هلال (حدود چهار نهمِ فاصلهٔ غروب خورشید تا غروب ماه)، مثلاً ۱۷:۰۹.</li>
+              <li><svg class="ico"><use href="#i-check"/></svg>جهت هلال، مثلاً از غرب به سمت جنوب.</li>
+              <li><svg class="ico"><use href="#i-check"/></svg>ارتفاع بالای افق و تصویر آسمان در همان لحظه، با ماه در جای واقعی‌اش.</li>
+            </ul>
+          </div>
+          <div data-for="predict" hidden>
+            <ul class="points">
+              <li><svg class="ico"><use href="#i-check"/></svg>با معیار عودة و بر اساس مکان شما: ماه ۲۹ روزه است یا ۳۰ روزه؟</li>
+              <li><svg class="ico"><use href="#i-check"/></svg>چهار حالت با نقطهٔ رنگی: با چشم غیرمسلح، با دوربین (و شاید با چشم)، فقط با وسیلهٔ نوری، یا غیرقابل رؤیت.</li>
+              <li><svg class="ico"><use href="#i-check"/></svg>آغاز ماه بعد با برچسب «پیش‌بینی»، یا «اعلام رسمی» وقتی تاریخ رسمی تعیین شده باشد.</li>
+            </ul>
+            <p class="note">این نتیجه یک برآورد علمی است، نه اعلام رسمی، و ممکن است با اعلام مرجع تقلید یا مرجع رسمی شهر شما تفاوت داشته باشد. «دید افق» فقط وضع هوا را نشان می‌دهد و حکم رؤیت را تغییر نمی‌دهد. برای رمضان و عید به مرجع خودتان رجوع کنید.</p>
+          </div>
+        </div>
+      </div>
+      <div class="pair reveal">
+        <div data-for="live" style="display:contents">
+          <div class="phone"><img src="img/moon-live.webp" alt="ماه لحظه‌ای با درصد روشنایی" width="500" height="1083" loading="lazy"></div>
+          <div class="phone"><img src="img/moon-full.webp" alt="نمای تمام‌صفحهٔ ماه" width="500" height="1083" loading="lazy"></div>
+        </div>
+        <div data-for="best" style="display:contents" hidden>
+          <div class="phone"><img src="img/moon-next.webp" alt="بهترین زمان و جهت رؤیت هلال" width="500" height="1083" loading="lazy"></div>
+          <div class="phone"><img src="img/moon-crescent.webp" alt="شبیه‌سازی هلال در آسمان" width="500" height="1083" loading="lazy"></div>
+        </div>
+        <div data-for="predict" style="display:contents" hidden>
+          <div class="phone"><img src="img/moon-predict.webp" alt="پیش‌بینی رؤیت هلال آغاز ماه" width="500" height="1083" loading="lazy"></div>
+          <div class="phone"><img src="img/moon-crescent.webp" alt="شبیه‌سازی هلال در آسمان" width="500" height="1083" loading="lazy"></div>
+        </div>
+        <div class="chipfloat t1"><svg class="ico"><use href="#i-moon"/></svg>روشنایی ٪۹۵٫۷۶</div>
+        <div class="chipfloat t2"><svg class="ico"><use href="#i-eye"/></svg>بهترین زمان ۱۷:۰۹</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="sky">
+  <div class="wrap feat flip">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-moon"/></svg>ماه بعد</span>
+      <h2>هلال را در آسمان غروب ببینید</h2>
+      <p>برای ماه قمری بعد، برنامه نمای آسمان لحظهٔ غروب روز ۲۹ را نشان می‌دهد: افق، جای هلال، بهترین زمان دیدن و درصد روشنایی ماه، همه برای مکان شما.</p>
+      <ul class="points">
+        <li><svg class="ico"><use href="#i-check"/></svg>با دکمهٔ ذره‌بین، هلال را بزرگ‌نمایی کنید و شکل آن را از نزدیک ببینید.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>زیر تصویر، بهترین زمان رؤیت و درصد روشنایی ماه را می‌خوانید، مثلاً «بهترین زمان ساعت ۱۷:۰۹».</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>ردیف‌ها نشان می‌دهند ماه در غروب روز ۲۹ کدام روز است، طول ماه (پیش‌بینی ما) ۲۹ روز است یا ۳۰ روز، و با چشم غیرمسلح دیده می‌شود یا نه، همراه با علامت رنگی.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>جهت مشاهده را هم می‌گوید، مثلاً «از جهت غرب، ۴۵ درجه به سمت جنوب» و «حدود ۵ درجه بالای افق».</li>
+      </ul>
+      <p class="note">این نتیجه پیش‌بینی برنامه است، نه اعلام رسمی؛ اعلام رسمی را مرجع دینی یا رسمی محل شما می‌دهد.</p>
+    </div>
+    <div class="reveal">
+      <div class="duo">
+        <figure style="margin:0"><img src="img/moon-sky.webp" alt="نمای آسمان غروب با هلال، افق و دکمهٔ ذره‌بین در تب رؤیت ماه بعد" width="900" height="527" loading="lazy" style="display:block;width:100%;height:auto;border-radius:22px;border:1px solid var(--line)"><figcaption class="cap">نمای آسمان لحظهٔ غروب</figcaption></figure>
+        <figure style="margin:0;width:min(100%,360px);margin-inline:auto"><img src="img/moon-zoom.webp" alt="هلال بزرگ‌نمایی‌شده با بهترین زمان، درصد روشنایی، طول ماه و جهت مشاهده" width="700" height="1517" loading="lazy" style="display:block;width:100%;height:auto;border-radius:22px;border:1px solid var(--line)"><figcaption class="cap">هلال بزرگ‌نمایی‌شده و جزئیات رؤیت</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section><section class="sec band teal" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-eye"/></svg>معیار عودة</span>
+      <h2>هلال چطور بررسی می‌شود؟</h2>
+      <p>برنامه در غروب روز بیست‌ونهم ماه قمری، موقعیت خورشید و ماه را برای مکان شما حساب می‌کند و با معیار عودة (Odeh) بررسی می‌کند که هلال تازه در آن مکان دیده می‌شود یا نه. این معیار بر پایهٔ ارتفاع ماه از افق و پهنای هلال هنگام غروب است.</p>
+    </div>
+    <div class="states reveal">
+      <article class="state g"><h3>با چشم غیرمسلح</h3><p>هلال با چشم عادی دیده می‌شود.</p><span class="len">ماه ۲۹ روزه</span></article>
+      <article class="state y"><h3>با دوربین، و شاید با چشم</h3><p>با دوربین یا تلسکوپ دیده می‌شود و شاید با چشم غیرمسلح هم ممکن باشد.</p><span class="len">ماه ۲۹ روزه</span></article>
+      <article class="state o"><h3>فقط با وسیلهٔ نوری</h3><p>فقط با دوربین یا تلسکوپ دیده می‌شود.</p><span class="len">ماه ۳۰ روزه</span></article>
+      <article class="state r"><h3>با هیچ وسیله‌ای</h3><p>هلال در آن مکان دیده نمی‌شود.</p><span class="len">ماه ۳۰ روزه</span></article>
+    </div>
+    <p class="note center">اگر هلال در حالت‌های سبز یا زرد باشد، ماه جاری همان روز ۲۹ تمام می‌شود. در حالت‌های نارنجی و قرمز ماه ۳۰ روز کامل می‌شود. آغاز ماه بعد هم بر همین پایه نشان داده می‌شود.</p>
+  </div>
+</section>
+<section class="sec" id="card">
+  <div class="wrap feat flip">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-crescent"/></svg>رؤیت هلال ماه بعد</span>
+      <h2>کارتی که خودش سر وقت باز می‌شود</h2>
+      <p>این زبانه پیش‌بینی می‌کند که در غروب روز ۲۹ ماه قمری جاری، هلال ماه نو در مکان شما دیده می‌شود یا نه. در روزهای ۲۸، ۲۹ و ۳۰ ماه، کارت خودش روی همین زبانه باز می‌شود و تا وقتی آن را باز نکرده‌اید، یک نقطهٔ طلایی روی زبانه است.</p>
+      <ul class="points">
+        <li><svg class="ico"><use href="#i-check"/></svg>تصویر، آسمان را در بهترین لحظهٔ دیدن هلال نشان می‌دهد. ماه در جای واقعی‌اش کشیده شده، بزرگ‌تر از اندازهٔ واقعی تا دیده شود، و حلقهٔ نقطه‌چین جای دقیقش را نشان می‌دهد.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>ردیف‌های زیر تصویر: غروب روز ۲۹، طول ماه (پیش‌بینی ما)، با چشم غیرمسلح، و جهت مشاهده با ارتفاع حدودی بالای افق.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>آغاز ماه بعد با «(پیش‌بینی)» نشان داده می‌شود و وقتی تاریخ رسمی تعیین شده باشد با «(اعلام رسمی)».</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>وضعیت آسمان در غروب (ابر و دید افق) فقط پیش‌بینی هواست و حکم رؤیت را تغییر نمی‌دهد.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>در تقویم شرعی هم برای هر ماه دکمه‌ای به نام «هلال …» هست که همین کارت را باز می‌کند.</li>
+      </ul>
+    </div>
+    <div class="pair reveal">
+      <div class="phone"><img src="img/moon-predict.webp" alt="کارت رؤیت هلال ماه بعد" width="500" height="1083" loading="lazy"></div>
+      <div class="phone"><img src="img/cal-month.webp" alt="دکمهٔ هلال در تقویم شرعی" width="500" height="1083" loading="lazy"></div>
+      <div class="chipfloat t1"><svg class="ico"><use href="#i-moon"/></svg>نقطهٔ طلایی روز ۲۸ تا ۳۰</div>
+    </div>
+  </div>
+  <div class="wrap reveal">
+    <div class="callout"><b style="color:var(--heading)">یادآوری مهم.</b> این فقط یک برآورد علمی با معیار عودة است و اعلام رسمی نیست؛ ممکن است با اعلام مرجع تقلید یا مرجع رسمی شهر شما تفاوت داشته باشد. هر مرجع معیار و روش خودش را دارد و ممکن است رؤیت با چشم را شرط بداند. برای احکام شرعی مثل آغاز ماه رمضان و عید، به مرجع تقلید خود یا مرجع رسمی محل مراجعه کنید.</div>
+  </div>
+</section>
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="kicker"><svg class="ico"><use href="#i-crescent"/></svg>ادامهٔ امکانات</span><h2>بقیهٔ برنامه را هم ببینید</h2></div>
+    <div class="doors three reveal"><a class="door" href="adhan.html"><div class="door-img"><img src="img/home.webp" alt="" width="500" height="1083" loading="lazy"></div><div class="door-body"><h3>اذان و اوقات شرعی</h3><p>اوقات برای مکان شما، پخش یا اعلان برای هر اذان، دعا قبل و بعد از اذان، دعاهای رمضان و روش‌های محاسبه.</p><span class="go">مشاهده ←</span></div></a><a class="door" href="widgets.html"><div class="door-img wide"><img src="img/widget-large.webp" alt="" width="500" height="226" loading="lazy"></div><div class="door-body"><h3>ویجت و اعلان‌ها</h3><p>اذان بعدی و شمارش معکوس روی صفحهٔ اصلی گوشی، ویجت ماه و اعلان‌های اذان و دعا.</p><span class="go">مشاهده ←</span></div></a><a class="door" href="more.html"><div class="door-img"><img src="img/qibla-sat.webp" alt="" width="500" height="1083" loading="lazy"></div><div class="door-body"><h3>سایر امکانات</h3><p>قبله‌نما، دعا و زیارت، تسبیح، چهار زبان، پوسته، قالب ساعت، کار بدون اینترنت و حریم خصوصی.</p><span class="go">مشاهده ←</span></div></a></div>
+  </div>
+</section>
+
+<section class="dl pattern" id="download">
+  <div class="wrap reveal">
+    <img class="logo" src="img/logo.webp" alt="" width="112" height="112">
+    <span class="kicker"><svg class="ico"><use href="#i-check"/></svg>آزمایش بستهٔ گوگل پلی</span>
+    <h2>به آزمایش‌کنندگان اذان گو بپیوندید</h2>
+    <p>اذان گو در حال آزمایش بسته در گوگل پلی است. اگر آزمایش‌کننده‌اید، با سه قدم برنامه را نصب کنید و نظرتان را برایمان بفرستید.</p>
+    <ol class="tsteps">
+      <li><b>۱</b><span>ایمیل حساب گوگل خود را برای ما بفرستید تا به فهرست آزمایش‌کنندگان اضافه شود.</span></li>
+      <li><b>۲</b><span>با همان حساب گوگل، لینک زیر را باز کنید و گزینهٔ پیوستن به آزمایش را بزنید.</span></li>
+      <li><b>۳</b><span>اذان گو را از گوگل پلی نصب کنید و هر مشکل یا پیشنهاد را برای <bdi>app@azangoo.com</bdi> بنویسید.</span></li>
+    </ol>
+    <div class="cta-row"><span class="btn gold soon" aria-disabled="true"><svg class="ico"><use href="#i-down"/></svg>لینک آزمایش به‌زودی اضافه می‌شود</span></div>
+    <p class="tnote">لینک فقط برای ایمیل‌هایی کار می‌کند که در فهرست آزمایش‌کنندگان باشند.</p>
+  </div>
+</section>
+<footer>
+  <div class="wrap">
+    <div class="foot-links"><a href="index.html">صفحهٔ اصلی</a><a href="adhan.html">اذان و اوقات شرعی</a><a href="moon.html">رؤیت ماه</a><a href="widgets.html">ویجت‌ها</a><a href="more.html">سایر امکانات</a><a class="ext" href="../app-privacy/index.html">حریم خصوصی برنامه</a><a class="ext" href="../index.html">وب‌سایت اذان گو</a></div>
+    <b>اذان گو</b> · AzanGoo.com · از سال ۲۰۱۱ همراه نمازگزاران<br>
+    اذان گو وابسته به هیچ سازمان، نهاد یا گروه دولتی و غیردولتی نیست.<br>
+    پرسش‌های کلی: <bdi>info@azangoo.com</bdi> · پرسش و گزارش مشکل برنامه: <bdi>app@azangoo.com</bdi>
+  </div>
+</footer>
+
+</div>
+<script src="js/app.js?v=20261124" defer></script>
+</body>
+</html>

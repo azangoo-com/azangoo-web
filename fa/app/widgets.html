@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ویجت و اعلان | برنامه اندروید اذان گو</title>
+<meta name="theme-color" content="#071c27">
+<link rel="canonical" href="https://www.azangoo.com/fa/app/widgets.html">
+<link rel="icon" href="../../favicon.ico?v=4" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="../../icons/icon-32.png?v=4">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:site_name" content="اذان گو">
+<meta property="og:title" content="ویجت و اعلان | برنامه اندروید اذان گو">
+<meta property="og:description" content="ویجت اوقات شرعی و ویجت ماه، شمارش معکوس اذان بعدی و یادآور پیش از اذان در اذان گو.">
+<meta property="og:url" content="https://www.azangoo.com/fa/app/widgets.html">
+<meta property="og:image" content="https://www.azangoo.com/images/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="ویجت اوقات شرعی و ویجت ماه، شمارش معکوس اذان بعدی و یادآور پیش از اذان در اذان گو.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="css/app.css?v=20261124">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.2 8.2 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9.5a6 6 0 0 1 12 0c0 6 2 7.5 2 7.5H4s2-1.500 2-7.500zM10 20.500a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-bell-off" viewBox="0 0 24 24"><path d="M6 9.500a6 6 0 0 1 9.500-4.800M18 10c.2 5.500 2 7 2 7H8M10 20.500a2 2 0 0 0 4 0M3 3l18 18"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.500v13l11-6.500z"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.800 8.200l-2.100 5.500-5.500 2.100 2.100-5.500z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19V5.500A2.500 2.500 0 0 1 6.500 3H20v15H6.500A2.500 2.500 0 0 0 4 20.500 2.500 2.500 0 0 0 6.500 23H20"/></symbol>
+    <symbol id="i-beads" viewBox="0 0 24 24"><circle cx="12" cy="4.500" r="1.600"/><circle cx="18" cy="8" r="1.600"/><circle cx="18" cy="15" r="1.600"/><circle cx="12" cy="18.500" r="1.600"/><circle cx="6" cy="15" r="1.600"/><circle cx="6" cy="8" r="1.600"/><path d="M12 20.200V23"/></symbol>
+    <symbol id="i-widget" viewBox="0 0 24 24"><rect x="3.500" y="3.500" width="7" height="7" rx="2"/><rect x="13.500" y="3.500" width="7" height="7" rx="2"/><rect x="3.500" y="13.500" width="7" height="7" rx="2"/><rect x="13.500" y="13.500" width="7" height="7" rx="2"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.200 7-11.500a7 7 0 0 0-14 0C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.500 2"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.500" y="5" width="17" height="15.500" rx="3"/><path d="M3.500 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 10v4M7 7v10M11 4v16M15 8v8M19 10v4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.500l4.500 4.500L19 7.500"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.500" r="7.500"/><path d="M12 9.500v4l2.500 1.500M9.500 2.500h5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.800-7 10-7 10 7 10 7-3.800 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-crescent" viewBox="0 0 24 24"><path d="M19 14.500A7.500 7.500 0 0 1 9.500 5a7.500 7.500 0 1 0 9.500 9.500z"/><path d="M17 3.500l.7 1.600 1.600.7-1.600.7-.7 1.600-.7-1.600-1.600-.7 1.600-.7z"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-5-5m5 5l5-5M5 20h14"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.500" y="10.500" width="15" height="10" rx="3"/><path d="M8 10.500V8a4 4 0 0 1 8 0v2.500"/></symbol>
+    <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M2 9a15 15 0 0 1 5-3M22 9a15 15 0 0 0-8.500-4M5.500 12.500a10 10 0 0 1 3-1.800M18.500 12.500a10 10 0 0 0-2.500-1.600M9 16a5 5 0 0 1 6 0M12 19.500h.01M3 3l18 18"/></symbol>
+  </defs>
+</svg>
+<div id="app" dir="rtl" lang="fa">
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="برنامه اندروید اذان گو، صفحهٔ اصلی"><img src="img/logo.webp" alt="" width="40" height="40"><span>برنامه اندروید اذان گو</span></a>
+    <nav class="nav" aria-label="صفحه‌ها"><a href="adhan.html">اذان و اوقات شرعی</a><a href="moon.html">رؤیت ماه</a><a href="widgets.html" aria-current="page">ویجت‌ها</a><a href="more.html">سایر امکانات</a></nav>
+    <details class="menu"><summary aria-label="منوی صفحه‌ها"><span class="bars"></span>منو</summary><nav class="panel" aria-label="صفحه‌ها"><a href="index.html">صفحهٔ اصلی</a><a href="adhan.html">اذان و اوقات شرعی</a><a href="moon.html">رؤیت ماه</a><a href="widgets.html" aria-current="page">ویجت‌ها</a><a href="more.html">سایر امکانات</a></nav></details>
+  </div>
+</header>
+
+<section class="hero phero pattern">
+  <div class="wrap">
+    <div class="copy">
+      <span class="eyebrow"><svg class="ico"><use href="#i-widget"/></svg>ویجت و اعلان</span>
+      <h1>اذان بعدی و ماه، روی صفحهٔ اصلی</h1>
+      <p class="lead">ویجت اوقات و ویجت ماه را به صفحهٔ اصلی گوشی اضافه کنید و اذان بعدی، شمارش معکوس و فاز ماه را بدون باز کردن برنامه ببینید.</p>
+      <div class="cta-row">
+        <a class="btn gold" href="#download"><svg class="ico"><use href="#i-down"/></svg>شرکت در آزمایش برنامه</a>
+        <a class="btn" href="#add">چطور اضافه کنم؟</a>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="wstack">
+        <img src="img/widget-moon-full.webp" alt="ویجت ماه با درصد روشنایی، طلوع، بهترین دید و غروب ماه" width="900" height="499" fetchpriority="high">
+        <img src="img/widget-large.webp" alt="ویجت بزرگ اوقات شرعی با شمارش معکوس" width="922" height="485" fetchpriority="high">
+        <img src="img/widget-small.webp" alt="ویجت کوچک شمارش معکوس تا اذان بعدی" width="434" height="228" fetchpriority="high">
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sec" id="widgets">
+  <div class="wrap feat">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-widget"/></svg>ویجت اوقات</span>
+      <h2>اذان بعدی، بدون باز کردن برنامه</h2>
+      <p>اذان بعدی و شمارش معکوس را روی صفحهٔ اصلی گوشی ببینید. ویجت دو اندازه دارد.</p>
+      <ul class="points">
+        <li><svg class="ico"><use href="#i-check"/></svg><span><b>کوچک:</b> اذان بعدی و شمارش معکوس، با حلقهٔ پیشرفت دور نشان اذان گو.</span></li>
+        <li><svg class="ico"><use href="#i-check"/></svg><span><b>بزرگ:</b> علاوه بر آن، نام مکان، تاریخ و اوقات شرعی همهٔ روز را نشان می‌دهد و اذان بعدی در آن مشخص است.</span></li>
+        <li><svg class="ico"><use href="#i-check"/></svg><span>هنگام پخش دعا پیش از اذان، دکمهٔ «قطع دعا» روی ویجت می‌آید.</span></li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="wcol">
+        <figure><img src="img/widget-large.webp" alt="ویجت بزرگ اوقات شرعی" width="922" height="485" loading="lazy"><figcaption>ویجت بزرگ: شمارش معکوس و اوقات همهٔ روز</figcaption></figure>
+        <figure class="small"><img src="img/widget-small.webp" alt="ویجت کوچک شمارش معکوس" width="434" height="228" loading="lazy"><figcaption>ویجت کوچک: اذان بعدی و شمارش معکوس</figcaption></figure>
+        <figure><img src="img/widget-dua.webp" alt="ویجت هنگام پخش دعا با دکمهٔ قطع دعا" width="900" height="488" loading="lazy"><figcaption>هنگام پخش دعا: «دعا پیش از اذان مغرب در حال پخش…» با دکمهٔ «قطع دعا»</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sec band teal" id="moonwidget">
+  <div class="wrap feat flip">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-moon"/></svg>ویجت ماه</span>
+      <h2>ماه را روی صفحهٔ اصلی ببینید</h2>
+      <p>تاریخ قمری، حالت و درصد روشنایی ماه، زمان طلوع و غروب آن و بهترین زمان دیدن هلال، همه روی صفحهٔ اصلی گوشی. تصویر ماه با فاز واقعی همان شب عوض می‌شود.</p>
+      <ul class="points">
+        <li><svg class="ico"><use href="#i-check"/></svg>تاریخ قمری و حالت ماه، مثلاً «رو به بدر» یا «هلال افزایشی».</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>درصد روشنایی ماه هم‌اکنون، و اینکه ماه بالای افق است یا نه.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>سه زمان: طلوع ماه، بهترین دید و غروب ماه.</li>
+      </ul>
+      <p class="note">جزئیات رؤیت ماه را در <a href="moon.html" style="color:var(--gold)">صفحهٔ رؤیت ماه</a> ببینید.</p>
+    </div>
+    <div class="reveal">
+      <div class="wcol">
+        <figure><img src="img/widget-moon-full.webp" alt="ویجت ماه در حالت رو به بدر با ۹۶٫۴ درصد روشنایی" width="900" height="499" loading="lazy"><figcaption>ماه رو به بدر: ۹۶٫۴ درصد روشن</figcaption></figure>
+        <figure><img src="img/widget-moon-crescent.webp" alt="ویجت ماه در حالت هلال افزایشی با ۷٫۵ درصد روشنایی" width="910" height="496" loading="lazy"><figcaption>هلال افزایشی: ۷٫۵ درصد روشن</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sec" id="add">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-widget"/></svg>اضافه کردن ویجت</span>
+      <h2>چهار حرکت تا صفحهٔ اصلی</h2>
+      <p>روش اضافه کردن هر دو ویجت یکی است.</p>
+    </div>
+    <div class="steps reveal">
+      <article class="step"><i>۱</i><h3>نگه دارید</h3><p>انگشت را روی جای خالی صفحهٔ اصلی گوشی نگه دارید.</p></article>
+      <article class="step"><i>۲</i><h3>ویجت‌ها</h3><p>گزینهٔ «ویجت‌ها» را بزنید.</p></article>
+      <article class="step"><i>۳</i><h3>اذان گو</h3><p>«اذان گو» را در فهرست پیدا کنید.</p></article>
+      <article class="step"><i>۴</i><h3>بکشید</h3><p>ویجت اوقات (در اندازهٔ دلخواه) یا ویجت ماه را به صفحه بکشید.</p></article>
+    </div>
+  </div>
+</section>
+<section class="sec band" id="notif">
+  <div class="wrap feat flip">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-timer"/></svg>اعلان‌ها</span>
+      <h2>اذان و دعا در نوتیفیکیشن هم هست</h2>
+      <p>هنگام پخش اذان یا دعا و پیش از هر اذان، اعلان اذان گو را می‌بینید و می‌توانید از همان‌جا پخش را قطع کنید.</p>
+      <ul class="points">
+        <li><svg class="ico"><use href="#i-check"/></svg>هنگام پخش اذان، اعلانی با دکمهٔ «قطع اذان» می‌آید و هنگام پخش دعا، اعلانی با دکمهٔ «قطع دعا».</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>چند دقیقه قبل از هر اذان، یک اعلان بی‌صدای زمان باقی‌مانده؛ ۵، ۱۰ یا ۱۵ دقیقه را در «تنظیمات ← اذان» (بخش شمارش معکوس اذان) انتخاب کنید.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>شب قبل، اگر صدای رسانهٔ گوشی بلند باشد، اعلانی با دکمهٔ «کم کن» هشدار می‌دهد تا اذان صبح بی‌موقع بلند پخش نشود. این در «تنظیمات ← صدا و اعلان» قابل تنظیم است.</li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="wcol">
+        <figure><img src="img/noti-adhan.webp" alt="اعلان اذان صبح با دکمهٔ قطع اذان" width="800" height="326" loading="lazy"><figcaption>هنگام پخش اذان: دکمهٔ «قطع اذان»</figcaption></figure>
+        <figure><img src="img/noti-countdown.webp" alt="اعلان شمارش معکوس تا اذان مغرب" width="800" height="270" loading="lazy"><figcaption>پیش از اذان: «تا اذان مغرب»، ساعت اذان</figcaption></figure>
+        <figure><img src="img/noti-dua.webp" alt="اعلان دعای پیش از اذان با دکمهٔ قطع دعا" width="800" height="323" loading="lazy"><figcaption>هنگام پخش دعا: دکمهٔ «قطع دعا»</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="kicker"><svg class="ico"><use href="#i-crescent"/></svg>ادامهٔ امکانات</span><h2>بقیهٔ برنامه را هم ببینید</h2></div>
+    <div class="doors three reveal"><a class="door" href="adhan.html"><div class="door-img"><img src="img/home.webp" alt="" width="500" height="1083" loading="lazy"></div><div class="door-body"><h3>اذان و اوقات شرعی</h3><p>اوقات برای مکان شما، پخش یا اعلان برای هر اذان، دعا قبل و بعد از اذان، دعاهای رمضان و روش‌های محاسبه.</p><span class="go">مشاهده ←</span></div></a><a class="door" href="moon.html"><div class="door-img"><img src="img/moon-live.webp" alt="" width="500" height="1083" loading="lazy"></div><div class="door-body"><h3>رؤیت ماه و ماه قمری</h3><p>ماه همین امشب، بهترین زمان و جهت دیدن هلال و پیش‌بینی ۲۹ یا ۳۰ روزه بودن ماه.</p><span class="go">مشاهده ←</span></div></a><a class="door" href="more.html"><div class="door-img"><img src="img/qibla-sat.webp" alt="" width="500" height="1083" loading="lazy"></div><div class="door-body"><h3>سایر امکانات</h3><p>قبله‌نما، دعا و زیارت، تسبیح، چهار زبان، پوسته، قالب ساعت، کار بدون اینترنت و حریم خصوصی.</p><span class="go">مشاهده ←</span></div></a></div>
+  </div>
+</section>
+
+<section class="dl pattern" id="download">
+  <div class="wrap reveal">
+    <img class="logo" src="img/logo.webp" alt="" width="112" height="112">
+    <span class="kicker"><svg class="ico"><use href="#i-check"/></svg>آزمایش بستهٔ گوگل پلی</span>
+    <h2>به آزمایش‌کنندگان اذان گو بپیوندید</h2>
+    <p>اذان گو در حال آزمایش بسته در گوگل پلی است. اگر آزمایش‌کننده‌اید، با سه قدم برنامه را نصب کنید و نظرتان را برایمان بفرستید.</p>
+    <ol class="tsteps">
+      <li><b>۱</b><span>ایمیل حساب گوگل خود را برای ما بفرستید تا به فهرست آزمایش‌کنندگان اضافه شود.</span></li>
+      <li><b>۲</b><span>با همان حساب گوگل، لینک زیر را باز کنید و گزینهٔ پیوستن به آزمایش را بزنید.</span></li>
+      <li><b>۳</b><span>اذان گو را از گوگل پلی نصب کنید و هر مشکل یا پیشنهاد را برای <bdi>app@azangoo.com</bdi> بنویسید.</span></li>
+    </ol>
+    <div class="cta-row"><span class="btn gold soon" aria-disabled="true"><svg class="ico"><use href="#i-down"/></svg>لینک آزمایش به‌زودی اضافه می‌شود</span></div>
+    <p class="tnote">لینک فقط برای ایمیل‌هایی کار می‌کند که در فهرست آزمایش‌کنندگان باشند.</p>
+  </div>
+</section>
+<footer>
+  <div class="wrap">
+    <div class="foot-links"><a href="index.html">صفحهٔ اصلی</a><a href="adhan.html">اذان و اوقات شرعی</a><a href="moon.html">رؤیت ماه</a><a href="widgets.html">ویجت‌ها</a><a href="more.html">سایر امکانات</a><a class="ext" href="../app-privacy/index.html">حریم خصوصی برنامه</a><a class="ext" href="../index.html">وب‌سایت اذان گو</a></div>
+    <b>اذان گو</b> · AzanGoo.com · از سال ۲۰۱۱ همراه نمازگزاران<br>
+    اذان گو وابسته به هیچ سازمان، نهاد یا گروه دولتی و غیردولتی نیست.<br>
+    پرسش‌های کلی: <bdi>info@azangoo.com</bdi> · پرسش و گزارش مشکل برنامه: <bdi>app@azangoo.com</bdi>
+  </div>
+</footer>
+
+</div>
+<script src="js/app.js?v=20261124" defer></script>
+</body>
+</html>

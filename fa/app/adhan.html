@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>اذان و اوقات شرعی | برنامه اندروید اذان گو</title>
+<meta name="theme-color" content="#071c27">
+<link rel="canonical" href="https://www.azangoo.com/fa/app/adhan.html">
+<link rel="icon" href="../../favicon.ico?v=4" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="../../icons/icon-32.png?v=4">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:site_name" content="اذان گو">
+<meta property="og:title" content="اذان و اوقات شرعی | برنامه اندروید اذان گو">
+<meta property="og:description" content="اوقات شرعی برای مکان شما، پخش اذان یا فقط اعلان برای هر نماز، دعا قبل و بعد از اذان، دعاهای رمضان، تقویم شرعی و روش‌های محاسبه در اذان گو.">
+<meta property="og:url" content="https://www.azangoo.com/fa/app/adhan.html">
+<meta property="og:image" content="https://www.azangoo.com/images/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="اوقات شرعی برای مکان شما، پخش اذان یا فقط اعلان برای هر نماز، دعا قبل و بعد از اذان، دعاهای رمضان، تقویم شرعی و روش‌های محاسبه در اذان گو.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="css/app.css?v=20261124">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4a8.2 8.2 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9.5a6 6 0 0 1 12 0c0 6 2 7.5 2 7.5H4s2-1.500 2-7.500zM10 20.500a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-bell-off" viewBox="0 0 24 24"><path d="M6 9.500a6 6 0 0 1 9.500-4.800M18 10c.2 5.500 2 7 2 7H8M10 20.500a2 2 0 0 0 4 0M3 3l18 18"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.500v13l11-6.500z"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.800 8.200l-2.100 5.500-5.500 2.100 2.100-5.500z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19V5.500A2.500 2.500 0 0 1 6.500 3H20v15H6.500A2.500 2.500 0 0 0 4 20.500 2.500 2.500 0 0 0 6.500 23H20"/></symbol>
+    <symbol id="i-beads" viewBox="0 0 24 24"><circle cx="12" cy="4.500" r="1.600"/><circle cx="18" cy="8" r="1.600"/><circle cx="18" cy="15" r="1.600"/><circle cx="12" cy="18.500" r="1.600"/><circle cx="6" cy="15" r="1.600"/><circle cx="6" cy="8" r="1.600"/><path d="M12 20.200V23"/></symbol>
+    <symbol id="i-widget" viewBox="0 0 24 24"><rect x="3.500" y="3.500" width="7" height="7" rx="2"/><rect x="13.500" y="3.500" width="7" height="7" rx="2"/><rect x="3.500" y="13.500" width="7" height="7" rx="2"/><rect x="13.500" y="13.500" width="7" height="7" rx="2"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.200 7-11.500a7 7 0 0 0-14 0C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.500 2"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.500" y="5" width="17" height="15.500" rx="3"/><path d="M3.500 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 10v4M7 7v10M11 4v16M15 8v8M19 10v4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.500l4.500 4.500L19 7.500"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.500" r="7.500"/><path d="M12 9.500v4l2.500 1.500M9.500 2.500h5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.800-7 10-7 10 7 10 7-3.800 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-crescent" viewBox="0 0 24 24"><path d="M19 14.500A7.500 7.500 0 0 1 9.500 5a7.500 7.500 0 1 0 9.500 9.500z"/><path d="M17 3.500l.7 1.600 1.600.7-1.600.7-.7 1.600-.7-1.600-1.600-.7 1.600-.7z"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-5-5m5 5l5-5M5 20h14"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.500" y="10.500" width="15" height="10" rx="3"/><path d="M8 10.500V8a4 4 0 0 1 8 0v2.500"/></symbol>
+    <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M2 9a15 15 0 0 1 5-3M22 9a15 15 0 0 0-8.500-4M5.500 12.500a10 10 0 0 1 3-1.800M18.500 12.500a10 10 0 0 0-2.500-1.600M9 16a5 5 0 0 1 6 0M12 19.500h.01M3 3l18 18"/></symbol>
+  </defs>
+</svg>
+<div id="app" dir="rtl" lang="fa">
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="برنامه اندروید اذان گو، صفحهٔ اصلی"><img src="img/logo.webp" alt="" width="40" height="40"><span>برنامه اندروید اذان گو</span></a>
+    <nav class="nav" aria-label="صفحه‌ها"><a href="adhan.html" aria-current="page">اذان و اوقات شرعی</a><a href="moon.html">رؤیت ماه</a><a href="widgets.html">ویجت‌ها</a><a href="more.html">سایر امکانات</a></nav>
+    <details class="menu"><summary aria-label="منوی صفحه‌ها"><span class="bars"></span>منو</summary><nav class="panel" aria-label="صفحه‌ها"><a href="index.html">صفحهٔ اصلی</a><a href="adhan.html" aria-current="page">اذان و اوقات شرعی</a><a href="moon.html">رؤیت ماه</a><a href="widgets.html">ویجت‌ها</a><a href="more.html">سایر امکانات</a></nav></details>
+  </div>
+</header>
+
+<section class="hero phero pattern">
+  <div class="wrap">
+    <div class="copy">
+      <span class="eyebrow"><svg class="ico"><use href="#i-bell"/></svg>اذان و اوقات شرعی</span>
+      <h1>اوقات شرعی و اذانِ سر وقت</h1>
+      <p class="lead">اوقات برای مکان شما محاسبه می‌شود، اذان در پس‌زمینه پخش می‌شود و برای هر نماز خودتان تعیین می‌کنید که اذان پخش شود، فقط اعلان بیاید یا خاموش باشد.</p>
+      <div class="cta-row">
+        <a class="btn gold" href="#download"><svg class="ico"><use href="#i-down"/></svg>شرکت در آزمایش برنامه</a>
+        <a class="btn" href="#times">اوقات شرعی را ببینید</a>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="phone"><img src="img/home.webp" alt="صفحهٔ اصلی اذان گو با اوقات شرعی" width="500" height="1083" fetchpriority="high"></div>
+      <div class="fcard teal a"><div><small>اذان صبح، باقی‌مانده</small><div class="big cd">۰۱:۴۵:۱۲</div></div></div>
+      <div class="fcard c"><svg class="ico"><use href="#i-bell"/></svg><div><small>اذان ظهر · ۱۱:۵۱</small><b>فقط اعلان</b></div></div>
+      <div class="fcard d"><svg class="ico"><use href="#i-play"/></svg><div><small>اذان مغرب · ۱۷:۱۳</small><b>پخش اذان</b></div></div>
+    </div>
+  </div>
+</section>
+<section id="times" class="sec band">
+  <div class="wrap feat">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-pin"/></svg>اوقات شرعی</span>
+      <h2>برای همان‌جایی که شما هستید</h2>
+      <p>اوقات شرعی بر پایهٔ محاسبهٔ نجومی و با طول و عرض جغرافیایی محل اقامت شما محاسبه می‌شود: اذان صبح، طلوع آفتاب، اذان ظهر، غروب، اذان مغرب و نیمه‌شب شرعی. اذان عصر و عشاء را هم با یک تنظیم می‌توانید به صفحه اضافه کنید. تاریخ شمسی، قمری و میلادی هم در همان صفحه است.</p>
+      <ul class="points">
+        <li><svg class="ico"><use href="#i-check"/></svg>با لمس پین، مکان فعلی را با GPS بخوانید؛ یا شهر و آدرس را جست‌وجو کنید، روی نقشه دوبار ضربه بزنید یا مختصات را وارد کنید.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>تقویم شرعی هفتگی و ماهانه، با وقایع هر روز و امکان ذخیرهٔ PDF تقویم ماه یا کل سال.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>اوقات، قبله و تقویم بدون اینترنت کار می‌کنند. موقعیت شما فقط وقتی برنامه باز است و با اجازهٔ خودتان خوانده می‌شود.</li>
+      </ul>
+    </div>
+    <div class="solo reveal">
+      <div class="phone"><img src="img/location.webp" alt="انتخاب مکان روی نقشه" width="500" height="1083" loading="lazy"></div>
+      <div class="chipfloat t1"><svg class="ico"><use href="#i-pin"/></svg>GPS یا جست‌وجوی شهر</div>
+      <div class="chipfloat t2"><svg class="ico"><use href="#i-globe"/></svg>دوبار ضربه روی نقشه</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="next">
+  <div class="wrap feat">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-timer"/></svg>اذان بعدی</span>
+      <h2>شمارش معکوس تا اذان بعدی</h2>
+      <p>صفحهٔ خانه اوقات امروز، زمان باقی‌مانده تا اذان بعدی و دعایی را که پیش از آن پخش می‌شود نشان می‌دهد.</p>
+      <ul class="points">
+        <li><svg class="ico"><use href="#i-check"/></svg>حلقهٔ طلایی نشان می‌دهد چقدر از زمان مانده است. حلقه پر شروع می‌شود و هرچه اذان نزدیک‌تر شود خالی‌تر می‌شود.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>در دقایق خیلی نزدیک به اذان، رنگ حلقه، نماد و زمان باقی‌مانده آرام‌آرام از طلایی به کهربایی گرم‌تر تبدیل می‌شود.</li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="duo">
+        <figure style="margin:0"><img src="img/next-calm.webp" alt="کارت اذان بعدی با دوازده دقیقه و نوزده ثانیه مانده" width="800" height="262" loading="lazy" style="display:block;width:100%;height:auto;border-radius:20px;border:1px solid var(--line-soft)"><figcaption class="cap">چند ساعت یا دقیقه مانده به اذان</figcaption></figure>
+        <figure style="margin:0"><img src="img/next-amber.webp" alt="کارت اذان بعدی با رنگ کهربایی در دقایق پایانی" width="800" height="299" loading="lazy" style="display:block;width:100%;height:auto;border-radius:20px;border:1px solid var(--line-soft)"><figcaption class="cap">در دقایق خیلی نزدیک به اذان رنگ آن گرم‌تر می‌شود</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sec band" id="calendar">
+  <div class="wrap feat flip">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-cal"/></svg>تقویم شرعی</span>
+      <h2>اوقات یک هفته یا یک ماه، یک‌جا</h2>
+      <p>تقویم شرعی اوقات شرعی را با تاریخ میلادی و روز قمری نشان می‌دهد و در فارسی تاریخ شمسی هم دارد.</p>
+      <ul class="points">
+        <li><svg class="ico"><use href="#i-check"/></svg>سه زبانه: «هفتگی»، «ماهانه» و «وقایع».</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>هر ردیف یک روز است: تاریخ و روز هفته، روز قمری و اوقات شرعی همان مکان با روشی که انتخاب کرده‌اید.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>لوزی طلایی کنار روز قمری یعنی آن روز وقایعی دارد؛ روی ردیف بزنید تا بخوانید.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>در فارسی می‌توانید تقویم اصلی را بین شمسی و میلادی عوض کنید.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>«دانلود PDF»: فقط همین ماه (یک صفحهٔ A4) یا کل سال (۱۲ صفحهٔ A4) را برای مکان خودتان ذخیره کنید.</li>
+      </ul>
+      <p class="note">تاریخ‌های قمری بر پایهٔ رؤیت هلال برای مکان شما محاسبه می‌شوند و ممکن است تا یک روز با اعلام رسمی فرق کنند.</p>
+    </div>
+    <div class="pair reveal">
+      <div class="phone"><img src="img/cal-week.webp" alt="تقویم هفتگی اوقات شرعی" width="500" height="1083" loading="lazy"></div>
+      <div class="phone"><img src="img/cal-month.webp" alt="تقویم ماهانهٔ اوقات شرعی" width="500" height="1083" loading="lazy"></div>
+      <div class="chipfloat t1"><svg class="ico"><use href="#i-cal"/></svg>هفتگی · ماهانه · وقایع</div>
+      <div class="chipfloat t2"><svg class="ico"><use href="#i-down"/></svg>PDF ماه یا کل سال</div>
+    </div>
+  </div>
+</section>
+<section class="sec" id="events">
+  <div class="wrap feat">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-cal"/></svg>وقایع تقویم</span>
+      <h2>مناسبت‌های هر روز، با توضیح کامل</h2>
+      <p>در تب «وقایع» روزهایی که مناسبتی دارند با لوزی طلایی مشخص شده‌اند. روی روز بزنید تا فهرست مناسبت‌هایش باز شود.</p>
+      <ul class="points">
+        <li><svg class="ico"><use href="#i-check"/></svg>هر مناسبت یک عنوان دارد؛ با لمس آن توضیح کامل و ریشهٔ تاریخی‌اش باز می‌شود.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>پایین مناسبت‌های آن روز، بخش «تتمهٔ این ماه» مناسبت‌های دیگر همان ماه قمری را هم نشان می‌دهد.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>تقویم را ماه به ماه ورق بزنید و بدون ترک صفحه، مناسبت هر روز را بخوانید.</li>
+      </ul>
+    </div>
+    <div class="evpair reveal">
+      <div class="phone"><img src="img/events-day.webp" alt="فهرست مناسبت‌های یک روز قمری با توضیح کامل هر مناسبت" width="500" height="1081" loading="lazy"></div>
+      <figure><img src="img/events-sheet.webp" alt="مناسبت‌های یک روز، روی تقویم ماهانه" width="680" height="885" loading="lazy"><figcaption>مناسبت‌های هر روز از روی تقویم باز می‌شود</figcaption></figure>
+    </div>
+  </div>
+</section>
+<section class="sec" id="adhan">
+  <div class="wrap feat flip">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-bell"/></svg>پخش اذان</span>
+      <h2>اذان را سر وقت بشنوید</h2>
+      <p>اذان در پس‌زمینه و روی صفحهٔ قفل پخش می‌شود، بدون اینکه برنامه باز باشد. برای هر اذان خودتان تصمیم می‌گیرید که چه اتفاقی بیفتد: پخش اذان، فقط اعلان یا خاموش. روی دکمه‌ها بزنید و نتیجه را ببینید.</p>
+      <div class="modes" id="modes" role="group" aria-label="نمونهٔ تنظیم هر اذان">
+        <div class="mrow" data-p="صبح" data-t="۰۵:۵۸">
+          <div class="mname"><svg class="ico"><use href="#i-moon"/></svg>اذان صبح<time>۰۵:۵۸</time></div>
+          <div class="seg" role="radiogroup" aria-label="اذان صبح"></div>
+        </div>
+        <div class="mrow" data-p="ظهر" data-t="۱۲:۰۴">
+          <div class="mname"><svg class="ico"><use href="#i-sun"/></svg>اذان ظهر<time>۱۲:۰۴</time></div>
+          <div class="seg" role="radiogroup" aria-label="اذان ظهر"></div>
+        </div>
+        <div class="mrow" data-p="مغرب" data-t="۱۷:۰۵">
+          <div class="mname"><svg class="ico"><use href="#i-sun"/></svg>اذان مغرب<time>۱۷:۰۵</time></div>
+          <div class="seg" role="radiogroup" aria-label="اذان مغرب"></div>
+        </div>
+        <div class="mout" id="mout" data-state="play" aria-live="polite">
+          <svg class="ico"><use href="#i-bell"/></svg>
+          <div><b id="moutT">اذان ظهر</b><small id="moutS">فقط اعلان نمایش داده می‌شود.</small></div>
+          <div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+      <p class="note">سه صدای اذان داخل برنامه است و صداهای بیشتری برای شنیدن و دانلود هست. انتخاب کانال صدا، لرزش جداگانه برای هر نماز و دکمهٔ قطع اذان در اعلان هم در تنظیمات هست.</p>
+      <p class="note">برای پخش مطمئن، اجازهٔ اعلان و آلارم دقیق را بدهید و در تنظیمات باتری، اذان گو را روی «بدون محدودیت» بگذارید. در بعضی گوشی‌ها (شیائومی، سامسونگ، هواوی، اوپو و…) بدون این کار ممکن است سیستم اذان را متوقف کند. در جلسه، کلاس یا مسجد هم کافی است اذان را روی «فقط اعلان» بگذارید.</p>
+    </div>
+    <div class="pair reveal">
+      <div class="phone"><img src="img/adhan-settings.webp" alt="تنظیمات اذان صبح و ظهر: پخش، فقط اعلان یا خاموش" width="500" height="1083" loading="lazy"></div>
+      <div class="phone"><img src="img/playmode.webp" alt="روش پخش خودکار اذان" width="500" height="1083" loading="lazy"></div>
+      <div class="chipfloat t1"><svg class="ico"><use href="#i-bell-off"/></svg>ظهر: فقط اعلان</div>
+      <div class="chipfloat t2"><svg class="ico"><use href="#i-play"/></svg>صبح و مغرب: پخش اذان</div>
+    </div>
+  </div>
+</section>
+
+<style>.quiet{display:flex;gap:20px;align-items:center;max-width:860px;margin:0 auto;padding:26px 28px;border-radius:26px;background:linear-gradient(135deg,rgba(14,90,87,.55),rgba(9,32,44,.9));border:1px solid var(--line)}
+.quiet h2{font-size:clamp(22px,4vw,30px);margin-bottom:6px}.quiet p{color:var(--muted);font-size:16.5px;line-height:1.9}
+.qic{flex:none;width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:rgba(210,169,75,.14);border:1px solid var(--line);color:var(--gold)}.qic svg{width:28px;height:28px}
+@media(max-width:560px){.quiet{flex-direction:column;align-items:flex-start;padding:22px 20px}}</style><section class="sec" id="quiet">
+  <div class="wrap">
+    <div class="quiet reveal">
+      <span class="qic"><svg class="ico"><use href="#i-bell"/></svg></span>
+      <div>
+        <h2>همهٔ صداها در اختیار شماست</h2>
+        <p>همهٔ صداهای خودکار برنامه قابل تنظیم‌اند. هر زمان خواستید، در تنظیمات می‌توانید همهٔ صداهای خودکار، از جمله اذان و دعا، را خاموش کنید و فقط برای دیدن اوقات شرعی و رؤیت ماه از برنامه استفاده کنید.</p>
+      </div>
+    </div>
+  </div>
+</section><section id="duas" class="sec band">
+  <div class="wrap feat">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-wave"/></svg>دعا و اذان</span>
+      <h2>دعا، پیش و پس از اذان</h2>
+      <p>اذان را با دعا کامل کنید. هر دعا را برای صبح، ظهر یا مغرب جداگانه روشن کنید و هر وقت خواستید خاموشش کنید. فایل صوتی دعاها داخل برنامه نیست و یک‌بار دانلود می‌شود؛ بعد از آن بدون اینترنت هم پخش می‌شوند.</p>
+      <ul class="points">
+        <li><svg class="ico"><use href="#i-check"/></svg>دعای روزهای هفته، پیش از اذان.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>دعای فرج امام زمان (عج)، پیش از اذان.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>دعای عهد، پس از اذان.</li>
+        <li><svg class="ico"><use href="#i-check"/></svg>دکمهٔ پخش کنار هر دعا برای شنیدن آن، حتی پیش از دانلود.</li>
+      </ul>
+    </div>
+    <div class="solo reveal">
+      <div class="phone"><img src="img/dua-around.webp" alt="تنظیم دعا قبل و بعد از اذان" width="500" height="1083" loading="lazy"></div>
+      <div class="chipfloat t1"><svg class="ico"><use href="#i-wave"/></svg>قبل از اذان صبح</div>
+      <div class="chipfloat t2"><svg class="ico"><use href="#i-wave"/></svg>بعد از اذان ظهر</div>
+    </div>
+  </div>
+</section>
+
+<section id="ramadan" class="sec">
+  <div class="wrap feat flip">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-crescent"/></svg>ویژهٔ ماه مبارک رمضان</span>
+      <h2>رمضان، با دعاهای خودش</h2>
+      <p>پیش از اذان صبح دعای سحر و پیش از اذان مغرب دعای افطار پخش می‌شود. دعای مخصوص ماه رمضان هم بعد از اذان می‌آید. همه را می‌توانید فقط برای نوبت‌های دلخواه فعال کنید.</p>
+      <div class="chips">
+        <span class="chip">دعای ویژهٔ سحر</span>
+        <span class="chip">دعای ویژهٔ افطار</span>
+        <span class="chip">دعای مخصوص رمضان</span>
+      </div>
+    </div>
+    <div class="solo reveal">
+      <div class="phone"><img src="img/dua-ramadan.webp" alt="دعاهای ویژهٔ ماه مبارک رمضان" width="500" height="1083" loading="lazy"></div>
+      <div class="chipfloat t3"><svg class="ico"><use href="#i-crescent"/></svg>سحر و افطار</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec band" id="methods">
+  <div class="wrap feat flip">
+    <div class="copy reveal">
+      <span class="kicker"><svg class="ico"><use href="#i-sliders"/></svg>روش محاسبه</span>
+      <h2>روشی را که به آن اعتماد دارید انتخاب کنید</h2>
+      <p>روش پیش‌فرض هنگام نخستین راه‌اندازی بر اساس مکانی که انتخاب می‌کنید تعیین می‌شود: در ایران روش مؤسسهٔ ژئوفیزیک دانشگاه تهران، در افغانستان روش کراچی و در بیشتر جاهای دیگر روش اذان گو. اگر روش دیگری را ترجیح می‌دهید، از تنظیمات عمومی عوضش کنید؛ اوقات و زمان پخش اذان همان لحظه با روش جدید محاسبه می‌شوند.</p>
+      <div class="methods" id="methodList" role="radiogroup" aria-label="روش‌های محاسبه">
+        <button class="method" role="radio" aria-checked="true"><span class="dot"></span><span><b>اذان گو<em>پیش‌فرض خارج از ایران و افغانستان</em></b><small>فجر از ۱۸° تا ۱۲° بر حسب عرض جغرافیایی · مغرب ۴° · عشاء ۱۵°</small></span></button>
+        <button class="method" role="radio" aria-checked="false"><span class="dot"></span><span><b>جعفری (مؤسسهٔ لِوا، قم)</b><small>فجر ۱۶° · مغرب ۴° · عشاء ۱۴°</small></span></button>
+        <button class="method" role="radio" aria-checked="false"><span class="dot"></span><span><b>تهران (مؤسسهٔ ژئوفیزیک)<em>پیش‌فرض ایران</em></b><small>فجر ۱۷٫۷° · مغرب ۴٫۵° · عشاء ۱۴°</small></span></button>
+        <button class="method" role="radio" aria-checked="false"><span class="dot"></span><span><b>کراچی (دانشگاه علوم اسلامی)<em>پیش‌فرض افغانستان</em></b><small>فجر ۱۸° · عشاء ۱۸°</small></span></button>
+        <button class="method" role="radio" aria-checked="false"><span class="dot"></span><span><b>ISNA (اتحادیهٔ اسلامی آمریکای شمالی)</b><small>فجر ۱۵° · عشاء ۱۵°</small></span></button>
+      </div>
+      <p class="note">روش محاسبه فقط فجر، مغرب، عشاء و نیمه‌شب را تغییر می‌دهد؛ ظهر، طلوع و غروب در همهٔ روش‌ها یکسان است. عصر هم فقط با انتخاب «حنفی» در «وقت عصر» تغییر می‌کند. روش کمیتهٔ رؤیت هلال (Moonsighting) هم در فهرست هست.</p>
+    </div>
+    <div class="solo reveal">
+      <div class="phone"><img src="img/methods.webp" alt="انتخاب روش محاسبهٔ اوقات شرعی در تنظیمات" width="500" height="1083" loading="lazy"></div>
+      <div class="chipfloat t1"><svg class="ico"><use href="#i-sliders"/></svg>تنظیمات ← عمومی</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="kicker"><svg class="ico"><use href="#i-crescent"/></svg>ادامهٔ امکانات</span><h2>بقیهٔ برنامه را هم ببینید</h2></div>
+    <div class="doors three reveal"><a class="door" href="moon.html"><div class="door-img"><img src="img/moon-live.webp" alt="" width="500" height="1083" loading="lazy"></div><div class="door-body"><h3>رؤیت ماه و ماه قمری</h3><p>ماه همین امشب، بهترین زمان و جهت دیدن هلال و پیش‌بینی ۲۹ یا ۳۰ روزه بودن ماه.</p><span class="go">مشاهده ←</span></div></a><a class="door" href="widgets.html"><div class="door-img wide"><img src="img/widget-large.webp" alt="" width="500" height="226" loading="lazy"></div><div class="door-body"><h3>ویجت و اعلان‌ها</h3><p>اذان بعدی و شمارش معکوس روی صفحهٔ اصلی گوشی، ویجت ماه و اعلان‌های اذان و دعا.</p><span class="go">مشاهده ←</span></div></a><a class="door" href="more.html"><div class="door-img"><img src="img/qibla-sat.webp" alt="" width="500" height="1083" loading="lazy"></div><div class="door-body"><h3>سایر امکانات</h3><p>قبله‌نما، دعا و زیارت، تسبیح، چهار زبان، پوسته، قالب ساعت، کار بدون اینترنت و حریم خصوصی.</p><span class="go">مشاهده ←</span></div></a></div>
+  </div>
+</section>
+
+<section class="dl pattern" id="download">
+  <div class="wrap reveal">
+    <img class="logo" src="img/logo.webp" alt="" width="112" height="112">
+    <span class="kicker"><svg class="ico"><use href="#i-check"/></svg>آزمایش بستهٔ گوگل پلی</span>
+    <h2>به آزمایش‌کنندگان اذان گو بپیوندید</h2>
+    <p>اذان گو در حال آزمایش بسته در گوگل پلی است. اگر آزمایش‌کننده‌اید، با سه قدم برنامه را نصب کنید و نظرتان را برایمان بفرستید.</p>
+    <ol class="tsteps">
+      <li><b>۱</b><span>ایمیل حساب گوگل خود را برای ما بفرستید تا به فهرست آزمایش‌کنندگان اضافه شود.</span></li>
+      <li><b>۲</b><span>با همان حساب گوگل، لینک زیر را باز کنید و گزینهٔ پیوستن به آزمایش را بزنید.</span></li>
+      <li><b>۳</b><span>اذان گو را از گوگل پلی نصب کنید و هر مشکل یا پیشنهاد را برای <bdi>app@azangoo.com</bdi> بنویسید.</span></li>
+    </ol>
+    <div class="cta-row"><span class="btn gold soon" aria-disabled="true"><svg class="ico"><use href="#i-down"/></svg>لینک آزمایش به‌زودی اضافه می‌شود</span></div>
+    <p class="tnote">لینک فقط برای ایمیل‌هایی کار می‌کند که در فهرست آزمایش‌کنندگان باشند.</p>
+  </div>
+</section>
+<footer>
+  <div class="wrap">
+    <div class="foot-links"><a href="index.html">صفحهٔ اصلی</a><a href="adhan.html">اذان و اوقات شرعی</a><a href="moon.html">رؤیت ماه</a><a href="widgets.html">ویجت‌ها</a><a href="more.html">سایر امکانات</a><a class="ext" href="../app-privacy/index.html">حریم خصوصی برنامه</a><a class="ext" href="../index.html">وب‌سایت اذان گو</a></div>
+    <b>اذان گو</b> · AzanGoo.com · از سال ۲۰۱۱ همراه نمازگزاران<br>
+    اذان گو وابسته به هیچ سازمان، نهاد یا گروه دولتی و غیردولتی نیست.<br>
+    پرسش‌های کلی: <bdi>info@azangoo.com</bdi> · پرسش و گزارش مشکل برنامه: <bdi>app@azangoo.com</bdi>
+  </div>
+</footer>
+
+</div>
+<script src="js/app.js?v=20261124" defer></script>
+</body>
+</html>
