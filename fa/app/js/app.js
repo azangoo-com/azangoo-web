@@ -85,6 +85,41 @@
     })});
   }
 
+  /* reel: auto-advancing story showcase. Language-neutral: every visible string lives in the HTML (data-pause / data-play on the button). */
+  (function(){
+    var root=document.getElementById('rl'); if(!root)return;
+    var S=[].slice.call(root.querySelectorAll('.rl-s')),C=[].slice.call(root.querySelectorAll('.rl-c')),
+        B=[].slice.call(root.querySelectorAll('.rl-bar')),G=[].slice.call(root.querySelectorAll('.rl-g')),
+        pp=root.querySelector('.rl-pp'),ppt=pp&&pp.querySelector('span');
+    var N=S.length,DUR=4200,cur=0,el=0,last=0,raf=0,inView=!('IntersectionObserver' in window),hold=false,
+        paused=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches);
+    function label(){if(!pp)return;pp.setAttribute('aria-pressed',paused?'true':'false');if(ppt)ppt.textContent=paused?pp.dataset.play:pp.dataset.pause}
+    function set(i){
+      cur=(i%N+N)%N;el=0;last=0;
+      S.forEach(function(s,k){s.classList.toggle('on',k===cur);s.setAttribute('aria-hidden',k===cur?'false':'true')});
+      C.forEach(function(c,k){c.classList.toggle('on',k===cur);c.setAttribute('aria-hidden',k===cur?'false':'true')});
+      B.forEach(function(b,k){b.style.setProperty('--p',k<cur||(k===cur&&paused)?1:0);b.setAttribute('aria-current',k===cur?'true':'false')});
+      var gi=+S[cur].dataset.g;G.forEach(function(g,k){g.setAttribute('aria-current',k===gi?'true':'false')});
+    }
+    function running(){return inView&&!hold&&!paused&&!document.hidden}
+    function frame(ts){
+      raf=0;if(!running()){last=0;return}
+      if(last)el+=ts-last;last=ts;
+      var p=Math.min(el/DUR,1);B[cur].style.setProperty('--p',p);
+      if(p>=1)set(cur+1);
+      raf=requestAnimationFrame(frame);
+    }
+    function kick(){if(!raf&&running()){last=0;raf=requestAnimationFrame(frame)}}
+    B.forEach(function(b){b.addEventListener('click',function(){set(+b.dataset.i);kick()})});
+    G.forEach(function(g){g.addEventListener('click',function(){set(+g.dataset.go);kick()})});
+    if(pp)pp.addEventListener('click',function(){paused=!paused;label();el=0;last=0;B[cur].style.setProperty('--p',paused?1:0);kick()});
+    root.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse')hold=true});
+    root.addEventListener('pointerleave',function(e){if(e.pointerType==='mouse'){hold=false;kick()}});
+    document.addEventListener('visibilitychange',kick);
+    if('IntersectionObserver' in window)new IntersectionObserver(function(es){inView=es[es.length-1].isIntersecting;kick()}).observe(root.querySelector('.rl-stage')||root);
+    set(0);label();
+  })();
+
   /* reveal */
   var rv=document.querySelectorAll('.reveal');
   if('IntersectionObserver' in window){
@@ -92,4 +127,25 @@
     rv.forEach(function(e){io.observe(e)});
     setTimeout(function(){rv.forEach(function(e){e.classList.add('in')})},4000);
   }else rv.forEach(function(e){e.classList.add('in')});
+
+  /* tester signup: opens the visitor's own mail app with a ready message (nothing is stored or sent by this page) */
+  var tf=document.getElementById('testerForm');
+  if(tf){
+    var ti=document.getElementById('testerEmail'),tm=document.getElementById('testerMsg'),ta=document.getElementById('testerMail');
+    tf.addEventListener('submit',function(ev){
+      ev.preventDefault();
+      var v=(ti.value||'').trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){
+        ti.setAttribute('aria-invalid','true'); tm.className='terr bad';
+        tm.textContent='ایمیل را درست وارد کنید؛ مثلاً name@example.com'; ti.focus(); return;
+      }
+      ti.removeAttribute('aria-invalid');
+      var body='سلام،\nمی‌خواهم در آزمایش برنامهٔ اندروید اذان گو شرکت کنم.\nایمیل حساب گوگل من: '+v+'\n';
+      ta.href='mailto:app@azangoo.com?subject='+encodeURIComponent('درخواست پیوستن به آزمایش اذان گو')+'&body='+encodeURIComponent(body);
+      tm.className='terr ok';
+      tm.textContent='برنامهٔ ایمیل شما باید باز شده باشد؛ «ارسال» را بزنید. اگر باز نشد، ایمیل را مستقیم برای app@azangoo.com بفرستید.';
+      ta.click();
+    });
+    ti.addEventListener('input',function(){ti.removeAttribute('aria-invalid')});
+  }
 })();

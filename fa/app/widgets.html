@@ -19,7 +19,7 @@
 <meta name="description" content="ویجت اوقات شرعی و ویجت ماه، شمارش معکوس اذان بعدی و یادآور پیش از اذان در اذان گو.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap">
-<link rel="stylesheet" href="css/app.css?v=20261124">
+<link rel="stylesheet" href="css/app.css?v=20261127">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -170,10 +170,18 @@
     <h2>به آزمایش‌کنندگان اذان گو بپیوندید</h2>
     <p>اذان گو در حال آزمایش بسته در گوگل پلی است. اگر آزمایش‌کننده‌اید، با سه قدم برنامه را نصب کنید و نظرتان را برایمان بفرستید.</p>
     <ol class="tsteps">
-      <li><b>۱</b><span>ایمیل حساب گوگل خود را برای ما بفرستید تا به فهرست آزمایش‌کنندگان اضافه شود.</span></li>
+      <li><b>۱</b><span>ایمیل حساب گوگل خود را در کادر زیر بنویسید و بفرستید تا به فهرست آزمایش‌کنندگان اضافه شود.</span></li>
       <li><b>۲</b><span>با همان حساب گوگل، لینک زیر را باز کنید و گزینهٔ پیوستن به آزمایش را بزنید.</span></li>
       <li><b>۳</b><span>اذان گو را از گوگل پلی نصب کنید و هر مشکل یا پیشنهاد را برای <bdi>app@azangoo.com</bdi> بنویسید.</span></li>
     </ol>
+    <form class="tform" id="testerForm" novalidate>
+      <label class="sr" for="testerEmail">ایمیل حساب گوگل شما</label>
+      <input id="testerEmail" type="email" inputmode="email" autocomplete="email" dir="ltr" placeholder="name@example.com" required>
+      <button class="btn gold" type="submit"><svg class="ico"><use href="#i-down"/></svg>ارسال ایمیل برای پیوستن</button>
+      <p class="terr" id="testerMsg" role="status" aria-live="polite"></p>
+      <a id="testerMail" href="mailto:app@azangoo.com?subject=%D8%AF%D8%B1%D8%AE%D9%88%D8%A7%D8%B3%D8%AA%20%D9%BE%DB%8C%D9%88%D8%B3%D8%AA%D9%86%20%D8%A8%D9%87%20%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%20%D8%A7%D8%B0%D8%A7%D9%86%20%DA%AF%D9%88" hidden>app@azangoo.com</a>
+    </form>
+    <p class="tnote">ایمیل حساب گوگلی را بنویسید که روی گوشی اندرویدتان وارد شده است (لازم نیست حتماً Gmail باشد). با زدن دکمه، برنامهٔ ایمیل خودتان با پیام آماده باز می‌شود؛ فقط «ارسال» را بزنید. این صفحه ایمیل شما را جایی ذخیره یا ارسال نمی‌کند. اگر برنامهٔ ایمیل باز نشد، ایمیل خود را مستقیم برای <bdi>app@azangoo.com</bdi> بفرستید.</p>
     <div class="cta-row"><span class="btn gold soon" aria-disabled="true"><svg class="ico"><use href="#i-down"/></svg>لینک آزمایش به‌زودی اضافه می‌شود</span></div>
     <p class="tnote">لینک فقط برای ایمیل‌هایی کار می‌کند که در فهرست آزمایش‌کنندگان باشند.</p>
   </div>
@@ -188,6 +196,6 @@
 </footer>
 
 </div>
-<script src="js/app.js?v=20261124" defer></script>
+<script src="js/app.js?v=20261127" defer></script>
 </body>
 </html>
