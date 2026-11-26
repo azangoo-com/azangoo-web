@@ -1,7 +1,25 @@
 {
-  "version": 1,
+  "version": 4,
   "base_url": "https://www.azangoo.com/audio/",
   "voices": [
+    {
+      "file": "AZAN-Rahim-Moazenzadeh.mp3",
+      "names": {
+        "fa": "رحیم مؤذن‌زاده",
+        "en": "Rahim Moazenzadeh",
+        "ar": "رحيم مؤذن‌زاده",
+        "ur": "رحیم مؤذن‌زاده"
+      }
+    },
+    {
+      "file": "AZAN-Mohammad-Aghati.mp3",
+      "names": {
+        "fa": "محمد آقاتی",
+        "en": "Mohammad Aghati",
+        "ar": "محمد آقاتي",
+        "ur": "محمد آقاتی"
+      }
+    },
     {
       "file": "AZAN-Salim-Moazen-zadeh.mp3",
       "names": {
@@ -12,13 +30,22 @@
       }
     },
     {
+      "file": "AZAN-Najafi.mp3",
+      "names": {
+        "fa": "فرید نجفی",
+        "en": "Farid Najafi",
+        "ar": "فريد نجفي",
+        "ur": "فرید نجفی"
+      }
+    },
+    {
       "file": "AZAN-Hasan-Rezaeian.mp3",
       "names": {
         "fa": "حسن رضاییان",
         "en": "Hasan Rezaeian",
         "ar": "حسن رضائيان",
         "ur": "حسن رضاییان"
-       }
+      }
     },
     {
       "file": "AZAN-Rahim-Khaki.mp3",
