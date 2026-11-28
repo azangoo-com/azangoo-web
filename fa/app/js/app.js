@@ -131,7 +131,10 @@
   /* tester signup: opens the visitor's own mail app with a ready message (nothing is stored or sent by this page) */
   var tf=document.getElementById('testerForm');
   if(tf){
+    var TO='app@azangoo.com',SUBJ='درخواست پیوستن به آزمایش اذان گو';
     var ti=document.getElementById('testerEmail'),tm=document.getElementById('testerMsg'),ta=document.getElementById('testerMail');
+    var todo=document.getElementById('testerTodo'),done=document.getElementById('testerDone'),gm=document.getElementById('tGmail');
+    var cm=document.getElementById('tCopyMsg');
     tf.addEventListener('submit',function(ev){
       ev.preventDefault();
       var v=(ti.value||'').trim();
@@ -139,13 +142,25 @@
         ti.setAttribute('aria-invalid','true'); tm.className='terr bad';
         tm.textContent='ایمیل را درست وارد کنید؛ مثلاً name@example.com'; ti.focus(); return;
       }
-      ti.removeAttribute('aria-invalid');
+      ti.removeAttribute('aria-invalid'); tm.className='terr'; tm.textContent='';
       var body='سلام،\nمی‌خواهم در آزمایش برنامهٔ اندروید اذان گو شرکت کنم.\nایمیل حساب گوگل من: '+v+'\n';
-      ta.href='mailto:app@azangoo.com?subject='+encodeURIComponent('درخواست پیوستن به آزمایش اذان گو')+'&body='+encodeURIComponent(body);
-      tm.className='terr ok';
-      tm.textContent='برنامهٔ ایمیل شما باید باز شده باشد؛ «ارسال» را بزنید. اگر باز نشد، ایمیل را مستقیم برای app@azangoo.com بفرستید.';
+      var q='subject='+encodeURIComponent(SUBJ)+'&body='+encodeURIComponent(body);
+      ta.href='mailto:'+TO+'?'+q;
+      gm.href='https://mail.google.com/mail/?view=cm&fs=1&to='+TO+'&su='+encodeURIComponent(SUBJ)+'&body='+encodeURIComponent(body);
+      document.getElementById('tDoneMail').textContent=v;
+      done.hidden=true; cm.textContent=''; todo.hidden=false;
+      todo.scrollIntoView({behavior:'smooth',block:'center'});
       ta.click();
     });
     ti.addEventListener('input',function(){ti.removeAttribute('aria-invalid')});
+    document.getElementById('tMailAgain').addEventListener('click',function(){ta.click()});
+    document.getElementById('tCopy').addEventListener('click',function(){
+      var ok=function(){cm.textContent='کپی شد: '+TO+' — ایمیل خود را از برنامهٔ ایمیل‌تان برای این آدرس بفرستید.'};
+      var no=function(){cm.textContent='آدرس ایمیل ما: '+TO};
+      if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(TO).then(ok,no);else no();
+    });
+    document.getElementById('tSent').addEventListener('click',function(){
+      todo.hidden=true; done.hidden=false; done.scrollIntoView({behavior:'smooth',block:'center'});
+    });
   }
 })();

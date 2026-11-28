@@ -218,20 +218,36 @@
     <img class="logo" src="img/logo.webp" alt="" width="112" height="112">
     <span class="kicker"><svg class="ico"><use href="#i-check"/></svg>آزمایش بستهٔ گوگل پلی</span>
     <h2>به آزمایش‌کنندگان اذان گو بپیوندید</h2>
-    <p>اذان گو در حال آزمایش بسته در گوگل پلی است. اگر آزمایش‌کننده‌اید، با سه قدم برنامه را نصب کنید و نظرتان را برایمان بفرستید.</p>
+    <p>اذان گو در حال آزمایش بسته در گوگل پلی است. اگر آزمایش‌کننده‌اید، با چهار قدم ساده برنامه را نصب کنید و نظرتان را برایمان بفرستید.</p>
     <ol class="tsteps">
-      <li><b>۱</b><span>ایمیل حساب گوگل خود را در کادر زیر بنویسید و بفرستید تا به فهرست آزمایش‌کنندگان اضافه شود.</span></li>
-      <li><b>۲</b><span>بعد از اضافه شدن ایمیل شما، لینک آزمایش برایتان ایمیل می‌شود؛ با همان حساب گوگل آن را باز کنید و گزینهٔ پیوستن به آزمایش را بزنید.</span></li>
-      <li><b>۳</b><span>اذان گو را از گوگل پلی نصب کنید و هر مشکل یا پیشنهاد را برای <bdi>app@azangoo.com</bdi> بنویسید.</span></li>
+      <li><b>۱</b><span><strong>ایمیل را وارد کنید.</strong> ایمیل حساب گوگلی را که روی گوشی اندرویدتان وارد شده است در کادر زیر بنویسید و دکمهٔ «درخواست دسترسی تست» را بزنید.</span></li>
+      <li class="key"><b>۲</b><span><strong>پیام را «ارسال» کنید.</strong> برنامهٔ ایمیل شما با یک پیام آماده باز می‌شود. حتماً دکمهٔ <bdi>Send</bdi> را بزنید؛ تا ارسال نکنید، درخواستتان به دست ما نمی‌رسد.</span></li>
+      <li><b>۳</b><span><strong>منتظر لینک بمانید.</strong> ما ایمیل شما را دستی به فهرست آزمایش‌کنندگان اضافه می‌کنیم و لینک دانلود را به همان ایمیل می‌فرستیم. ممکن است کمی طول بکشد؛ پوشهٔ اسپم را هم نگاه کنید.</span></li>
+      <li><b>۴</b><span><strong>نصب کنید.</strong> لینک را با همان حساب گوگل باز کنید، دکمهٔ آبی <bdi>Download test app</bdi> را بزنید و اذان گو را از گوگل پلی نصب کنید.</span></li>
     </ol>
     <form class="tform" id="testerForm" novalidate>
       <label class="sr" for="testerEmail">ایمیل حساب گوگل شما</label>
       <input id="testerEmail" type="email" inputmode="email" autocomplete="email" dir="ltr" placeholder="name@example.com" required>
       <button class="btn gold" type="submit"><svg class="ico"><use href="#i-send"/></svg>درخواست دسترسی تست</button>
       <p class="terr" id="testerMsg" role="status" aria-live="polite"></p>
-      <a id="testerMail" href="mailto:app@azangoo.com?subject=%D8%AF%D8%B1%D8%AE%D9%88%D8%A7%D8%B3%D8%AA%20%D9%BE%DB%8C%D9%88%D8%B3%D8%AA%D9%86%20%D8%A8%D9%87%20%D8%A2%D8%B2%D9%85%D8%A7%DB%8C%D8%B4%20%D8%A7%D8%B0%D8%A7%D9%86%20%DA%AF%D9%88" hidden>app@azangoo.com</a>
+      <a id="testerMail" href="mailto:app@azangoo.com" hidden>app@azangoo.com</a>
     </form>
-    <p class="tnote">ایمیل حساب گوگلی را بنویسید که روی گوشی اندرویدتان وارد شده است (لازم نیست حتماً Gmail باشد). با زدن دکمه، برنامهٔ ایمیل خودتان با پیام آماده باز می‌شود؛ فقط «ارسال» را بزنید. این صفحه ایمیل شما را جایی ذخیره یا ارسال نمی‌کند. اگر برنامهٔ ایمیل باز نشد، ایمیل خود را مستقیم برای <bdi>app@azangoo.com</bdi> بفرستید.</p>
+    <div class="tpanel todo" id="testerTodo" role="status" aria-live="polite" hidden>
+      <h3><svg class="ico"><use href="#i-send"/></svg>یک قدم مانده: ایمیل را ارسال کنید</h3>
+      <p>درخواست شما <strong>هنوز برای ما نرسیده است</strong>. در برنامهٔ ایمیلی که باز شد دکمهٔ <bdi>Send</bdi> را بزنید. اگر چیزی باز نشد، یکی از راه‌های زیر را امتحان کنید:</p>
+      <div class="tacts">
+        <button type="button" class="btn ghost" id="tMailAgain">باز کردن دوبارهٔ برنامهٔ ایمیل</button>
+        <a class="btn ghost" id="tGmail" target="_blank" rel="noopener">ارسال با Gmail (وب)</a>
+        <button type="button" class="btn ghost" id="tCopy">کپی آدرس ایمیل ما</button>
+      </div>
+      <p class="tsmall" id="tCopyMsg" aria-live="polite"></p>
+      <button type="button" class="btn gold" id="tSent"><svg class="ico"><use href="#i-check"/></svg>ایمیل را ارسال کردم</button>
+    </div>
+    <div class="tpanel done" id="testerDone" role="status" aria-live="polite" hidden>
+      <h3><svg class="ico"><use href="#i-check"/></svg>درخواست شما ثبت شد</h3>
+      <p>به‌محض اینکه ایمیل <bdi id="tDoneMail" dir="ltr"></bdi> را به فهرست اضافه کنیم، لینک دانلود برای همین ایمیل می‌آید. لطفاً کمی صبر کنید و پوشهٔ اسپم را هم نگاه کنید.</p>
+    </div>
+    <p class="tnote">فقط ایمیل حساب گوگلی را بنویسید که روی گوشی اندرویدتان وارد شده است. این صفحه ایمیل شما را خودش ذخیره یا ارسال نمی‌کند؛ ارسال از برنامهٔ ایمیل خودتان انجام می‌شود. هر مشکلی داشتید به <bdi>app@azangoo.com</bdi> بنویسید.</p>
   </div>
 </section>
 <footer>

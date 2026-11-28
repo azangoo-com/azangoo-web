@@ -3,48 +3,12 @@
   "base_url": "https://www.azangoo.com/audio/",
   "voices": [
     {
-      "file": "AZAN-Rahim-Moazenzadeh.mp3",
-      "names": {
-        "fa": "رحیم مؤذن‌زاده",
-        "en": "Rahim Moazenzadeh",
-        "ar": "رحيم مؤذن‌زاده",
-        "ur": "رحیم مؤذن‌زاده"
-      }
-    },
-    {
-      "file": "AZAN-Mohammad-Aghati.mp3",
-      "names": {
-        "fa": "محمد آقاتی",
-        "en": "Mohammad Aghati",
-        "ar": "محمد آقاتي",
-        "ur": "محمد آقاتی"
-      }
-    },
-    {
-      "file": "AZAN-Salim-Moazen-zadeh.mp3",
-      "names": {
-        "fa": "سلیم مؤذن‌زاده",
-        "en": "Salim Moazenzadeh",
-        "ar": "سليم مؤذن‌زاده",
-        "ur": "سلیم مؤذن‌زاده"
-      }
-    },
-    {
-      "file": "AZAN-Najafi.mp3",
-      "names": {
-        "fa": "فرید نجفی",
-        "en": "Farid Najafi",
-        "ar": "فريد نجفي",
-        "ur": "فرید نجفی"
-      }
-    },
-    {
       "file": "AZAN-Hasan-Rezaeian.mp3",
       "names": {
-        "fa": "حسن رضاییان",
-        "en": "Hasan Rezaeian",
-        "ar": "حسن رضائيان",
-        "ur": "حسن رضاییان"
+        "fa": "استاد حسن رضاییان",
+        "en": "Ustad Hasan Rezaeian",
+        "ar": "الأستاذ حسن رضائيان",
+        "ur": "استاد حسن رضاییان"
       }
     },
     {
@@ -54,15 +18,6 @@
         "en": "Rahim Khaki",
         "ar": "رحيم خاكي",
         "ur": "رحیم خاکی"
-      }
-    },
-    {
-      "file": "Azan-Hossein-Sobhdel.mp3",
-      "names": {
-        "fa": "حسین صبحدل",
-        "en": "Hossein Sobhdel",
-        "ar": "حسين صبحدل",
-        "ur": "حسین صبحدل"
       }
     },
     {
@@ -171,6 +126,33 @@
         "en": "Taj Esfahani",
         "ar": "تاج الأصفهاني",
         "ur": "تاج اصفهانی"
+      }
+    },
+    {
+      "file": "AZAN-Salim-Moazen-zadeh.mp3",
+      "names": {
+        "fa": "سلیم مؤذن‌زاده",
+        "en": "Salim Moazenzadeh",
+        "ar": "سليم مؤذن‌زاده",
+        "ur": "سلیم مؤذن‌زاده"
+      }
+    },
+    {
+      "file": "Azan-Abather_Alhalwachi.mp3",
+      "names": {
+        "fa": "اباذر الحلواجی",
+        "en": "Abather Alhalwachi",
+        "ar": "أباذر الحلواجي",
+        "ur": "اباذر الحلواجی"
+      }
+    },
+    {
+      "file": "Azan-Hossein-Sobhdel.mp3",
+      "names": {
+        "fa": "حسین صبحدل",
+        "en": "Hossein Sobhdel",
+        "ar": "حسين صبحدل",
+        "ur": "حسین صبحدل"
       }
     }
   ],

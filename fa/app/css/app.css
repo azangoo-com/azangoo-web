@@ -462,3 +462,19 @@ html[dir=rtl] .rl-bar i{transform-origin:100% 50%}
 .pans{font-size:clamp(18px,3.2vw,22px);line-height:2;color:var(--heading);margin:0 0 12px}
 .pcta{font-size:17px;line-height:1.9;color:#b9c9cf;margin:0 0 20px}
 @media(max-width:560px){.pitchbox{padding:22px 16px}.pq li{font-size:16px}}
+
+/* tester flow */
+.tsteps strong{color:var(--heading);font-weight:700}
+.tsteps li.key{border-color:var(--gold);box-shadow:0 0 0 1px rgba(210,169,75,.35)}
+.tpanel{max-width:600px;margin:18px auto 6px;padding:18px 20px;border-radius:18px;text-align:start;border:1px solid var(--line)}
+.tpanel[hidden]{display:none}
+.tpanel h3{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:18px;color:var(--heading)}
+.tpanel h3 .ico{width:1.2em;height:1.2em}
+.tpanel p{margin:6px 0;font-size:15px;line-height:1.9;color:var(--text)}
+.tpanel.todo{background:rgba(210,169,75,.12);border-color:var(--gold)}
+.tpanel.done{background:rgba(14,90,87,.30);border-color:var(--teal-line)}
+.tpanel.done h3{color:var(--teal-line)}
+.tacts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 6px}
+.tacts .btn{font-size:14px;padding:9px 16px}
+.tsmall{min-height:1.5em;font-size:13.5px!important;color:var(--muted)!important}
+.tpanel .btn.gold{margin-top:8px}
