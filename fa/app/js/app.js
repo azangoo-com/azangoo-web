@@ -131,7 +131,7 @@
   /* tester signup: opens the visitor's own mail app with a ready message (nothing is stored or sent by this page) */
   var tf=document.getElementById('testerForm');
   if(tf){
-    var TO='app@azangoo.com',SUBJ='درخواست پیوستن به آزمایش اذان گو';
+    var TO='app@azangoo.com',SUBJ='درخواست دسترسی زودهنگام به اذان گو';
     var ti=document.getElementById('testerEmail'),tm=document.getElementById('testerMsg'),ta=document.getElementById('testerMail');
     var todo=document.getElementById('testerTodo'),done=document.getElementById('testerDone'),gm=document.getElementById('tGmail');
     var cm=document.getElementById('tCopyMsg');
@@ -143,7 +143,7 @@
         tm.textContent='ایمیل را درست وارد کنید؛ مثلاً name@example.com'; ti.focus(); return;
       }
       ti.removeAttribute('aria-invalid'); tm.className='terr'; tm.textContent='';
-      var body='سلام،\nمی‌خواهم در آزمایش برنامهٔ اندروید اذان گو شرکت کنم.\nایمیل حساب گوگل من: '+v+'\n';
+      var body='سلام،\nمی‌خواهم اپلیکیشن اندروید اذان گو را دریافت کنم.\nایمیل حساب گوگل من: '+v+'\n';
       var q='subject='+encodeURIComponent(SUBJ)+'&body='+encodeURIComponent(body);
       ta.href='mailto:'+TO+'?'+q;
       gm.href='https://mail.google.com/mail/?view=cm&fs=1&to='+TO+'&su='+encodeURIComponent(SUBJ)+'&body='+encodeURIComponent(body);

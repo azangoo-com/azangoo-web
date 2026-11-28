@@ -902,3 +902,12 @@ html.hadith-open{overflow:hidden}
 .cv-dua .slide-orn{width:55%;max-width:220px}
 @media(min-width:640px){.cv-dua-title{font-size:1.2rem}}
 
+
+/* Android app link in the footer: Persian pages only */
+html:not([lang="fa"]) .app-foot-link{display:none}
+.app-link-a{color:var(--heading)}
+.app-link-a{font-weight:700}
+.ap-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#22e06b;box-shadow:0 0 8px 2px rgba(34,224,107,.8);margin-inline-end:6px;vertical-align:middle;animation:ap-blink 1.1s ease-in-out infinite}
+@keyframes ap-blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.75)}}
+@media(prefers-reduced-motion:reduce){.ap-dot{animation:none}}
+.ap-dot-end{margin-inline-end:0;margin-inline-start:6px}
